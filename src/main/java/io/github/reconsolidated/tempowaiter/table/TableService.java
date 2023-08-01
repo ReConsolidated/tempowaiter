@@ -1,0 +1,50 @@
+package io.github.reconsolidated.tempowaiter.table;
+
+import io.github.reconsolidated.tempowaiter.table.exceptions.OutdatedTableRequestException;
+import io.github.reconsolidated.tempowaiter.table.exceptions.SessionExpiredException;
+import io.github.reconsolidated.tempowaiter.table.exceptions.TableNotFoundException;
+import io.github.reconsolidated.tempowaiter.waiter.WaiterService;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@AllArgsConstructor
+@Service
+public class TableService {
+    private final TableSessionRepository sessionRepository;
+    private final TableInfoRepository tableInfoRepository;
+    private final WaiterService waiterService;
+
+    public TableInfo startSession(String sessionId, Long tableId, Long ctr) {
+        Optional<TableSession> tableSession = sessionRepository
+                .findBySessionIdEqualsAndExpirationDateIsNullAndTableIdEquals(sessionId, tableId);
+        if (tableSession.isPresent()) {
+            return tableInfoRepository.findById(tableId).orElseThrow(() -> new TableNotFoundException(tableId));
+        }
+        TableInfo tableInfo = tableInfoRepository.findById(tableId).orElseThrow(() -> new TableNotFoundException(tableId));
+        if (tableInfo.getLastCtr() >= ctr) {
+            throw new OutdatedTableRequestException();
+        }
+        tableInfo.setLastCtr(ctr);
+        tableInfoRepository.save(tableInfo);
+        TableSession newTableSession = new TableSession(tableInfo, sessionId);
+        sessionRepository.save(newTableSession);
+        return tableInfo;
+    }
+
+    public TableInfo callWaiter(String sessionId, Long tableId) {
+        // tableSession has to be polled for security to check if session exists
+        TableSession tableSession = sessionRepository
+                .findBySessionIdEqualsAndExpirationDateIsNullAndTableIdEquals(sessionId, tableId).orElseThrow(SessionExpiredException::new);
+        TableInfo tableInfo = tableInfoRepository.findById(tableId).orElseThrow(() -> new TableNotFoundException(tableId));
+        waiterService.callToTable(tableInfo);
+        return tableInfo;
+    }
+
+    public TableInfo createTable(Long companyId, String tableDisplayName) {
+        TableInfo tableInfo = new TableInfo(null, companyId, tableDisplayName, 0L);
+        tableInfo = tableInfoRepository.save(tableInfo);
+        return tableInfo;
+    }
+}
