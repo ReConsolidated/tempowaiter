@@ -1,19 +1,18 @@
 package io.github.reconsolidated.tempowaiter.table;
 
-import io.github.reconsolidated.tempowaiter.table.exceptions.OutdatedTableRequestException;
-import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.sql.Date;
+import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 
 @Controller
+@RequestMapping("/public")
 @AllArgsConstructor
 public class TableController {
     private final TableService tableService;

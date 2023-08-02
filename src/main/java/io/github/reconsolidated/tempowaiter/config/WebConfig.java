@@ -1,5 +1,7 @@
 package io.github.reconsolidated.tempowaiter.config;
 
+import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUserService;
+import io.github.reconsolidated.tempowaiter.authentication.currentUser.CurrentUserArgumentResolver;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +27,8 @@ import java.util.List;
 @AllArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
+    private final AppUserService appUserService;
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**");
@@ -49,4 +53,9 @@ public class WebConfig implements WebMvcConfigurer {
         return new StandardServletMultipartResolver();
     }
 
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        WebMvcConfigurer.super.addArgumentResolvers(resolvers);
+        resolvers.add(new CurrentUserArgumentResolver(appUserService));
+    }
 }

@@ -1,6 +1,7 @@
 package io.github.reconsolidated.tempowaiter;
 
 import io.github.reconsolidated.tempowaiter.table.exceptions.OutdatedTableRequestException;
+import io.github.reconsolidated.tempowaiter.table.exceptions.SessionExpiredException;
 import io.github.reconsolidated.tempowaiter.table.exceptions.TableNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,21 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
         }
         return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler(value
+            = { SessionExpiredException.class })
+    protected ResponseEntity<Object> handleSessionExpired(
+            SessionExpiredException ex, WebRequest request) {
+        StringBuilder bodyOfResponse = new StringBuilder(ex.getMessage());
+        if (debug) {
+            for (StackTraceElement line : ex.getStackTrace()) {
+                bodyOfResponse.append("\n");
+                bodyOfResponse.append(line.toString());
+            }
+        }
+        return handleExceptionInternal(ex, bodyOfResponse,
+                new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
     }
 
     @ExceptionHandler(value

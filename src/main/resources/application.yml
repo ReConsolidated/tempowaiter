@@ -1,3 +1,5 @@
+server:
+  address: 0.0.0.0
 
 spring:
   datasource:
@@ -12,3 +14,10 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     show-sql: false
+
+keycloak:
+  realm: staffect
+  auth-server-url: http://130.61.252.200:8180/
+  resource: spring-app
+  bearer-only: true
+  ssl-required: NONE
