@@ -1,3 +1,12 @@
+server:
+  address: 0.0.0.0
+
+keycloak:
+  realm: staffect
+  auth-server-url: http://130.61.252.200:8180/
+  resource: spring-app
+  bearer-only: true
+  ssl-required: NONE
 
 spring:
   datasource:
