@@ -7,6 +7,9 @@ import io.github.reconsolidated.tempowaiter.waiter.WaiterService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -28,7 +31,8 @@ public class TableService {
         }
         tableInfo.setLastCtr(ctr);
         tableInfoRepository.save(tableInfo);
-        TableSession newTableSession = new TableSession(tableInfo, sessionId);
+        LocalDateTime expirationDate = LocalDateTime.now().plusMinutes(1);
+        TableSession newTableSession = new TableSession(tableInfo, sessionId, expirationDate);
         sessionRepository.save(newTableSession);
         return tableInfo;
     }
