@@ -21,18 +21,27 @@ public class TableService {
 
     public TableInfo startSession(String sessionId, Long tableId, Long ctr) {
         Optional<TableSession> tableSession = sessionRepository
-                .findBySessionIdEqualsAndTableIdEqualsAndExpirationDateIsGreaterThan(sessionId, tableId, LocalDateTime.now());
+                .findBySessionIdAndTableIdAndExpirationDateGreaterThanAndIsOverwrittenFalse(sessionId, tableId, LocalDateTime.now());
         if (tableSession.isPresent()) {
             return tableInfoRepository.findById(tableId).orElseThrow(() -> new TableNotFoundException(tableId));
         }
+
         TableInfo tableInfo = tableInfoRepository.findById(tableId).orElseThrow(() -> new TableNotFoundException(tableId));
         if (tableInfo.getLastCtr() >= ctr) {
             throw new OutdatedTableRequestException();
         }
+
+        Optional<TableSession> overwrittenSession = sessionRepository
+                .findByTableIdAndIsOverwrittenFalseAndExpirationDateGreaterThan(tableId, LocalDateTime.now());
+        if (overwrittenSession.isPresent()) {
+            overwrittenSession.get().setOverwritten(true);
+            sessionRepository.save(overwrittenSession.get());
+        }
+
         tableInfo.setLastCtr(ctr);
         tableInfoRepository.save(tableInfo);
         LocalDateTime expirationDate = LocalDateTime.now().plusMinutes(1);
-        TableSession newTableSession = new TableSession(tableInfo, sessionId, expirationDate);
+        TableSession newTableSession = new TableSession(tableInfo, sessionId, expirationDate, false);
         sessionRepository.save(newTableSession);
         return tableInfo;
     }
@@ -40,7 +49,7 @@ public class TableService {
     public TableInfo callWaiter(String sessionId, Long tableId) {
         // tableSession has to be polled for security to check if session exists
         TableSession tableSession = sessionRepository
-                .findBySessionIdEqualsAndTableIdEqualsAndExpirationDateIsGreaterThan(
+                .findBySessionIdAndTableIdAndExpirationDateGreaterThanAndIsOverwrittenFalse(
                         sessionId,
                         tableId,
                         LocalDateTime.now())

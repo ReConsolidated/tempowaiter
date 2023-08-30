@@ -9,5 +9,10 @@ public interface TableSessionRepository extends JpaRepository<TableSession, Long
 
     Optional<TableSession> findBySessionIdEqualsAndTableIdEqualsAndExpirationDateIsGreaterThan(String sessionId, long tableId, LocalDateTime expirationDate);
 
+    Optional<TableSession> findBySessionIdAndTableIdAndExpirationDateGreaterThanAndIsOverwrittenFalse(String sessionId, long tableId, LocalDateTime expirationDate);
+
+    Optional<TableSession> findByTableIdAndIsOverwrittenFalseAndExpirationDateGreaterThan(long tableId, LocalDateTime expirationDate);
+
+
 
 }
