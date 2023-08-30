@@ -7,6 +7,9 @@ import io.github.reconsolidated.tempowaiter.waiter.WaiterService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -18,7 +21,7 @@ public class TableService {
 
     public TableInfo startSession(String sessionId, Long tableId, Long ctr) {
         Optional<TableSession> tableSession = sessionRepository
-                .findBySessionIdEqualsAndExpirationDateIsNullAndTableIdEquals(sessionId, tableId);
+                .findBySessionIdEqualsAndTableIdEqualsAndExpirationDateIsGreaterThan(sessionId, tableId, LocalDateTime.now());
         if (tableSession.isPresent()) {
             return tableInfoRepository.findById(tableId).orElseThrow(() -> new TableNotFoundException(tableId));
         }
@@ -28,7 +31,8 @@ public class TableService {
         }
         tableInfo.setLastCtr(ctr);
         tableInfoRepository.save(tableInfo);
-        TableSession newTableSession = new TableSession(tableInfo, sessionId);
+        LocalDateTime expirationDate = LocalDateTime.now().plusMinutes(1);
+        TableSession newTableSession = new TableSession(tableInfo, sessionId, expirationDate);
         sessionRepository.save(newTableSession);
         return tableInfo;
     }
@@ -36,7 +40,11 @@ public class TableService {
     public TableInfo callWaiter(String sessionId, Long tableId) {
         // tableSession has to be polled for security to check if session exists
         TableSession tableSession = sessionRepository
-                .findBySessionIdEqualsAndExpirationDateIsNullAndTableIdEquals(sessionId, tableId).orElseThrow(SessionExpiredException::new);
+                .findBySessionIdEqualsAndTableIdEqualsAndExpirationDateIsGreaterThan(
+                        sessionId,
+                        tableId,
+                        LocalDateTime.now())
+                .orElseThrow(SessionExpiredException::new);
         TableInfo tableInfo = tableInfoRepository.findById(tableId).orElseThrow(() -> new TableNotFoundException(tableId));
         waiterService.callToTable(tableInfo);
         return tableInfo;

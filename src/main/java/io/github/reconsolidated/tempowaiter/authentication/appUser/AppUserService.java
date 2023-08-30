@@ -53,11 +53,6 @@ public class AppUserService {
         return appUserRepository.findById(appUserId).orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 
-    public void setImageUrl(AppUser user, String imageUrl) {
-        user.setImageUrl(imageUrl);
-        appUserRepository.save(user);
-    }
-
     public void deleteUser(AppUser user) {
         appUserRepository.delete(user);
     }

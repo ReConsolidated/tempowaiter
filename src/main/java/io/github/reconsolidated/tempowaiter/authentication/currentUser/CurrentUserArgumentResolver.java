@@ -3,7 +3,6 @@ package io.github.reconsolidated.tempowaiter.authentication.currentUser;
 import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUserService;
 import lombok.AllArgsConstructor;
 import org.keycloak.KeycloakPrincipal;
-import org.keycloak.adapters.springsecurity.account.SimpleKeycloakAccount;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;

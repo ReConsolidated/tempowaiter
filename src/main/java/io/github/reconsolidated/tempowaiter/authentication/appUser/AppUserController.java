@@ -27,12 +27,6 @@ public class AppUserController {
         return ResponseEntity.ok(user);
     }
 
-    @PostMapping("/image_url")
-    public ResponseEntity<AppUser> setImageUrl(@CurrentUser AppUser user, @RequestParam String imageUrl) {
-        appUserService.setImageUrl(user, imageUrl);
-        return ResponseEntity.ok(user);
-    }
-
     // TODO remove before going to production
     @DeleteMapping
     public ResponseEntity<?> deleteUser(@CurrentUser AppUser user) {
