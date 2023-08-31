@@ -56,4 +56,9 @@ public class AppUserService {
     public void deleteUser(AppUser user) {
         appUserRepository.delete(user);
     }
+
+    public void setCompanyId(AppUser user, Long companyId) {
+        user.setCompanyId(companyId);
+        appUserRepository.save(user);
+    }
 }

@@ -20,6 +20,7 @@ public class AppUser {
     private String lastName = "";
     private String email = "";
     private String phoneNumber = "";
+    private Long companyId = null;
     @Enumerated(EnumType.STRING)
     private AppUserRole role = AppUserRole.USER;
 

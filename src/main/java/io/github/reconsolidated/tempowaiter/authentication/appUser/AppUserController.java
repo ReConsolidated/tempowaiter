@@ -27,6 +27,12 @@ public class AppUserController {
         return ResponseEntity.ok(user);
     }
 
+    @PostMapping("/company_id")
+    public ResponseEntity<AppUser> setCompanyId(@CurrentUser AppUser user, @RequestParam Long companyId) {
+        appUserService.setCompanyId(user, companyId);
+        return ResponseEntity.ok(user);
+    }
+
     // TODO remove before going to production
     @DeleteMapping
     public ResponseEntity<?> deleteUser(@CurrentUser AppUser user) {
