@@ -34,7 +34,7 @@ public class WaiterRequestIT {
     public void requestSent() {
         Company company = companyService.createCompany("test company");
         TableInfo tableInfo = tableService.createTable(company.getId(), "test table");
-        waiterService.callToTable("test_request_type", tableInfo);
+        waiterService.callToTable("any_id","test_request_type", tableInfo);
         AppUser appUser = appUserService.getOrCreateUser("test_user",
                 "test@user.com", "Tom", "Hanks");
 

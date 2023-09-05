@@ -55,7 +55,7 @@ public class TableService {
                         LocalDateTime.now())
                 .orElseThrow(SessionExpiredException::new);
         TableInfo tableInfo = tableInfoRepository.findById(tableId).orElseThrow(() -> new TableNotFoundException(tableId));
-        waiterService.callToTable(requestType, tableInfo);
+        waiterService.callToTable(sessionId, requestType, tableInfo);
         return tableInfo;
     }
 

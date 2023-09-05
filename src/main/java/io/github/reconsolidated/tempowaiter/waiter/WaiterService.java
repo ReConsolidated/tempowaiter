@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -12,8 +13,9 @@ import java.util.stream.Collectors;
 public class WaiterService {
     private final WaiterRequestRepository waiterRequestRepository;
 
-    public WaiterRequest callToTable(String requestType, TableInfo tableInfo) {
+    public WaiterRequest callToTable(String clientSessionId, String requestType, TableInfo tableInfo) {
         WaiterRequest request = new WaiterRequest();
+        request.setClientSessionId(clientSessionId);
         request.setRequestedAt(System.currentTimeMillis());
         request.setType(requestType);
         request.setCompanyId(tableInfo.getCompanyId());
@@ -42,5 +44,13 @@ public class WaiterService {
         }
         score += (request.getRequestedAt() - System.currentTimeMillis()) / 1000; // each second is 1 point
         return score;
+    }
+
+    public Optional<WaiterRequest> getRequest(String sessionId, Long requestId) {
+        WaiterRequest request = waiterRequestRepository.findById(requestId).orElseThrow();
+        if (request.getClientSessionId().equals(sessionId)) {
+            return Optional.of(request);
+        }
+        return Optional.empty();
     }
 }
