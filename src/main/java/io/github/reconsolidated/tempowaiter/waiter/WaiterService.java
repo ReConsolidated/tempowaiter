@@ -53,4 +53,20 @@ public class WaiterService {
         }
         return Optional.empty();
     }
+
+    public WaiterRequest setRequestState(Long currentUserId, Long companyId, Long requestId, RequestState state) {
+        WaiterRequest request = waiterRequestRepository.findById(requestId).orElseThrow();
+        if (!request.getCompanyId().equals(companyId)) {
+            throw new RuntimeException("Request does not belong to this company");
+        }
+        request.setState(state);
+        if (state.equals(RequestState.IN_PROGRESS)) {
+            request.setPutInProgressAt(System.currentTimeMillis());
+            request.setInProgressWaiterAppUserId(currentUserId);
+        } else if (state.equals(RequestState.DONE)) {
+            request.setResolvedAt(System.currentTimeMillis());
+        }
+
+        return waiterRequestRepository.save(request);
+    }
 }

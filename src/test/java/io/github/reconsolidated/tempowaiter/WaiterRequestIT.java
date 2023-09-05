@@ -43,4 +43,21 @@ public class WaiterRequestIT {
 
         assertThat(requestList).hasSize(1);
     }
+
+    @Test
+    @Transactional
+    public void processRequest() {
+        Company company = companyService.createCompany("test company");
+        TableInfo tableInfo = tableService.createTable(company.getId(), "test table");
+        waiterService.callToTable("any_id","test_request_type", tableInfo);
+        AppUser appUser = appUserService.getOrCreateUser("test_user",
+                "test@user.com", "Tom", "Hanks");
+
+        appUserService.setCompanyId(appUser, company.getId());
+        List<WaiterRequest> requestList = waiterService.getRequests(appUser.getId(), appUser.getCompanyId());
+
+        assertThat(requestList).hasSize(1);
+
+        // TODO continue work here
+    }
 }
