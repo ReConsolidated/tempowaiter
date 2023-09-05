@@ -46,7 +46,7 @@ public class TableService {
         return tableInfo;
     }
 
-    public TableInfo callWaiter(String sessionId, Long tableId) {
+    public TableInfo callWaiter(String sessionId, String requestType, Long tableId) {
         // tableSession has to be polled for security to check if session exists
         TableSession tableSession = sessionRepository
                 .findBySessionIdAndTableIdAndExpirationDateGreaterThanAndIsOverwrittenFalse(
@@ -55,7 +55,7 @@ public class TableService {
                         LocalDateTime.now())
                 .orElseThrow(SessionExpiredException::new);
         TableInfo tableInfo = tableInfoRepository.findById(tableId).orElseThrow(() -> new TableNotFoundException(tableId));
-        waiterService.callToTable(tableInfo);
+        waiterService.callToTable(requestType, tableInfo);
         return tableInfo;
     }
 

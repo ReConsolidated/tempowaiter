@@ -20,7 +20,7 @@ public class WaiterController {
 
     @GetMapping("/requests")
     public ResponseEntity<List<WaiterRequest>> getRequests(@CurrentUser AppUser currentUser) {
-        List<WaiterRequest> requests = waiterService.getRequests(currentUser.getCompanyId());
+        List<WaiterRequest> requests = waiterService.getRequests(currentUser.getId(), currentUser.getCompanyId());
         return ResponseEntity.ok(requests);
     }
 

@@ -1,6 +1,5 @@
 package io.github.reconsolidated.tempowaiter.company;
 
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -9,6 +8,12 @@ public class CompanyService {
 
     public CompanyService(CompanyRepository companyRepository) {
         this.companyRepository = companyRepository;
+    }
+
+    public Company createCompany(String name) {
+        Company company = new Company();
+        company.setName(name);
+        return companyRepository.save(company);
     }
 
 }

@@ -33,7 +33,7 @@ public class TableController {
     public ResponseEntity<CallResult> callWaiter(HttpSession session,
                                                  @RequestParam Long tableId,
                                                  @RequestParam String callType) {
-        TableInfo tableInfo = tableService.callWaiter(session.getId(), tableId);
+        TableInfo tableInfo = tableService.callWaiter(session.getId(), callType, tableId);
         CallResult result = new CallResult(tableInfo.getTableId(), callType, LocalDateTime.now().plusSeconds(30));
         return ResponseEntity.ok(result);
     }
