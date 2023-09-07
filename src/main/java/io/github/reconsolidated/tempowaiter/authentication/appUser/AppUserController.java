@@ -32,11 +32,4 @@ public class AppUserController {
         appUserService.setCompanyId(user, companyId);
         return ResponseEntity.ok(user);
     }
-
-    // TODO remove before going to production
-    @DeleteMapping
-    public ResponseEntity<?> deleteUser(@CurrentUser AppUser user) {
-        appUserService.deleteUser(user);
-        return ResponseEntity.ok().build();
-    }
 }

@@ -59,6 +59,9 @@ public class WaiterService {
         if (!request.getCompanyId().equals(companyId)) {
             throw new RuntimeException("Request does not belong to this company");
         }
+        if (request.getState().ordinal() >= state.ordinal()) {
+            throw new RuntimeException("Cannot set state to " + state + " because current state is " + request.getState());
+        }
         request.setState(state);
         if (state.equals(RequestState.IN_PROGRESS)) {
             request.setPutInProgressAt(System.currentTimeMillis());
