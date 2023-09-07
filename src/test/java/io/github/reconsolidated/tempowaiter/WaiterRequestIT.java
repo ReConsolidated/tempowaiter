@@ -34,7 +34,7 @@ public class WaiterRequestIT {
     @Transactional
     public void requestSent() {
         Company company = companyService.createCompany("test company");
-        TableInfo tableInfo = tableService.createTable(company.getId(), "test table");
+        TableInfo tableInfo = tableService.createTable(company.getId(), 1L, "test table");
         waiterService.callToTable("any_id","test_request_type", tableInfo);
         AppUser appUser = appUserService.getOrCreateUser("test_user",
                 "test@user.com", "Tom", "Hanks");
@@ -49,7 +49,7 @@ public class WaiterRequestIT {
     @Transactional
     public void processRequest() {
         Company company = companyService.createCompany("test company");
-        TableInfo tableInfo = tableService.createTable(company.getId(), "test table");
+        TableInfo tableInfo = tableService.createTable(company.getId(), 1L, "test table");
         String sessionId = "any_id";
         WaiterRequest request = waiterService.callToTable(sessionId,"test_request_type", tableInfo);
         AppUser appUser = appUserService.getOrCreateUser("test_user",

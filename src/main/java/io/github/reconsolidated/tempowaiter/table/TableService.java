@@ -59,8 +59,11 @@ public class TableService {
         return tableInfo;
     }
 
-    public TableInfo createTable(Long companyId, String tableDisplayName) {
-        TableInfo tableInfo = new TableInfo(null, companyId, tableDisplayName, 0L);
+    public TableInfo createTable(Long companyId, Long tableId, String tableDisplayName) {
+        if (tableInfoRepository.existsById(tableId)) {
+            throw new IllegalArgumentException("Table with id " + tableId + " already exists");
+        }
+        TableInfo tableInfo = new TableInfo(tableId, companyId, tableDisplayName, 0L);
         tableInfo = tableInfoRepository.save(tableInfo);
         return tableInfo;
     }

@@ -28,8 +28,8 @@ public class TableController {
     }
 
     @PostMapping("/table")
-    public ResponseEntity<TableInfo> createTable(@RequestParam Long companyId, @RequestParam String tableDisplayName) {
-        TableInfo tableInfo = tableService.createTable(companyId, tableDisplayName);
+    public ResponseEntity<TableInfo> createTable(@RequestParam Long companyId, @RequestParam Long tableId, @RequestParam String tableDisplayName) {
+        TableInfo tableInfo = tableService.createTable(companyId, tableId, tableDisplayName);
         return ResponseEntity.ok(tableInfo);
     }
 
