@@ -9,7 +9,6 @@ import io.github.reconsolidated.tempowaiter.table.TableService;
 import io.github.reconsolidated.tempowaiter.waiter.RequestState;
 import io.github.reconsolidated.tempowaiter.waiter.WaiterRequest;
 import io.github.reconsolidated.tempowaiter.waiter.WaiterService;
-import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,7 +33,7 @@ public class WaiterRequestIT {
     @Transactional
     public void requestSent() {
         Company company = companyService.createCompany("test company");
-        TableInfo tableInfo = tableService.createTable(company.getId(), 1L, "test table");
+        TableInfo tableInfo = tableService.createTable(company.getId(),  "test table");
         waiterService.callToTable("any_id","test_request_type", tableInfo);
         AppUser appUser = appUserService.getOrCreateUser("test_user",
                 "test@user.com", "Tom", "Hanks");
@@ -49,7 +48,7 @@ public class WaiterRequestIT {
     @Transactional
     public void processRequest() {
         Company company = companyService.createCompany("test company");
-        TableInfo tableInfo = tableService.createTable(company.getId(), 1L, "test table");
+        TableInfo tableInfo = tableService.createTable(company.getId(), "test table");
         String sessionId = "any_id";
         WaiterRequest request = waiterService.callToTable(sessionId,"test_request_type", tableInfo);
         AppUser appUser = appUserService.getOrCreateUser("test_user",

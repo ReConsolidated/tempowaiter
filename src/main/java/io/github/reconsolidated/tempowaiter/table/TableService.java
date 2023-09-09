@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -59,11 +60,28 @@ public class TableService {
         return tableInfo;
     }
 
-    public TableInfo createTable(Long companyId, Long tableId, String tableDisplayName) {
-        if (tableInfoRepository.existsById(tableId)) {
-            throw new IllegalArgumentException("Table with id " + tableId + " already exists");
+    public TableInfo addCardId(Long companyId, Long tableId, Long cardId) {
+        TableInfo tableInfo = tableInfoRepository.findById(tableId).orElseThrow(() -> new TableNotFoundException(tableId));
+        if (!tableInfo.getCompanyId().equals(companyId)) {
+            throw new TableNotFoundException(tableId);
         }
-        TableInfo tableInfo = new TableInfo(tableId, companyId, tableDisplayName, 0L);
+        tableInfo.getCardIds().add(cardId);
+        tableInfoRepository.save(tableInfo);
+        return tableInfo;
+    }
+
+    public TableInfo removeCardId(Long companyId, Long tableId, Long cardId) {
+        TableInfo tableInfo = tableInfoRepository.findById(tableId).orElseThrow(() -> new TableNotFoundException(tableId));
+        if (!tableInfo.getCompanyId().equals(companyId)) {
+            throw new TableNotFoundException(tableId);
+        }
+        tableInfo.getCardIds().remove(cardId);
+        tableInfoRepository.save(tableInfo);
+        return tableInfo;
+    }
+
+    public TableInfo createTable(Long companyId, String tableDisplayName) {
+        TableInfo tableInfo = new TableInfo(null, companyId, new ArrayList<>(), tableDisplayName, 0L);
         tableInfo = tableInfoRepository.save(tableInfo);
         return tableInfo;
     }

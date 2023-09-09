@@ -1,5 +1,7 @@
 package io.github.reconsolidated.tempowaiter.table;
 
+import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUser;
+import io.github.reconsolidated.tempowaiter.authentication.currentUser.CurrentUser;
 import io.github.reconsolidated.tempowaiter.waiter.RequestState;
 import io.github.reconsolidated.tempowaiter.waiter.WaiterRequest;
 import io.github.reconsolidated.tempowaiter.waiter.WaiterService;
@@ -28,8 +30,20 @@ public class TableController {
     }
 
     @PostMapping("/table")
-    public ResponseEntity<TableInfo> createTable(@RequestParam Long companyId, @RequestParam Long tableId, @RequestParam String tableDisplayName) {
-        TableInfo tableInfo = tableService.createTable(companyId, tableId, tableDisplayName);
+    public ResponseEntity<TableInfo> createTable(@CurrentUser AppUser currentUser, @RequestParam String tableDisplayName) {
+        TableInfo tableInfo = tableService.createTable(currentUser.getCompanyId(), tableDisplayName);
+        return ResponseEntity.ok(tableInfo);
+    }
+
+    @PostMapping("/table/{tableId}/addCard")
+    public ResponseEntity<TableInfo> addCard(@CurrentUser AppUser currentUser, @RequestParam Long tableId, @RequestParam Long cardId) {
+        TableInfo tableInfo = tableService.addCardId(currentUser.getCompanyId(), tableId, cardId);
+        return ResponseEntity.ok(tableInfo);
+    }
+
+    @PostMapping("/table/{tableId}/removeCard")
+    public ResponseEntity<TableInfo> removeCard(@CurrentUser AppUser currentUser, @RequestParam Long tableId, @RequestParam Long cardId) {
+        TableInfo tableInfo = tableService.removeCardId(currentUser.getCompanyId(), tableId, cardId);
         return ResponseEntity.ok(tableInfo);
     }
 
