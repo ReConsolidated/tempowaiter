@@ -7,25 +7,22 @@ import io.github.reconsolidated.tempowaiter.waiter.WaiterRequest;
 import io.github.reconsolidated.tempowaiter.waiter.WaiterService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
-import java.time.LocalDateTime;
 
-@Controller
-@RequestMapping("/public")
+@RestController
 @AllArgsConstructor
 public class TableController {
     private final TableService tableService;
     private final WaiterService waiterService;
 
-    @GetMapping("/start_session")
-    public ResponseEntity<TableInfo> startSession(HttpSession session, @RequestParam Long uid, @RequestParam Long ctr) {
-        TableInfo tableInfo = tableService.startSession(session.getId(), uid, ctr);
+    @GetMapping("/public/start_session")
+    public ResponseEntity<TableInfo> startSession(HttpSession session, @RequestParam Long cardId, @RequestParam Long ctr) {
+        TableInfo tableInfo = tableService.startSession(session.getId(), cardId, ctr);
         return ResponseEntity.ok(tableInfo);
     }
 
@@ -47,16 +44,16 @@ public class TableController {
         return ResponseEntity.ok(tableInfo);
     }
 
-    @PostMapping("/call")
+    @PostMapping("/public/call")
     public ResponseEntity<CallState> callWaiter(HttpSession session,
-                                                 @RequestParam Long tableId,
+                                                 @RequestParam Long cardId,
                                                  @RequestParam String callType) {
-        TableInfo tableInfo = tableService.callWaiter(session.getId(), callType, tableId);
+        TableInfo tableInfo = tableService.callWaiter(session.getId(), callType, cardId);
         CallState result = new CallState(tableInfo.getTableId(), callType, RequestState.WAITING);
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/call_state")
+    @GetMapping("/public/call_state")
     public ResponseEntity<CallState> callState(HttpSession session, @RequestParam Long requestId) {
         WaiterRequest request = waiterService.getRequest(session.getId(), requestId).orElseThrow();
         CallState result = new CallState(request.getTableId(), request.getType(), request.getState());

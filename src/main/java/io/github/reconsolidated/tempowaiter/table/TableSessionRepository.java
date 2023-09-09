@@ -7,12 +7,7 @@ import java.util.Optional;
 
 public interface TableSessionRepository extends JpaRepository<TableSession, Long> {
 
-    Optional<TableSession> findBySessionIdEqualsAndTableIdEqualsAndExpirationDateIsGreaterThan(String sessionId, long tableId, LocalDateTime expirationDate);
+    Optional<TableSession> findBySessionIdAndCardIdAndExpirationDateGreaterThanAndIsOverwrittenFalse(String sessionId, Long cardId, LocalDateTime now);
 
-    Optional<TableSession> findBySessionIdAndTableIdAndExpirationDateGreaterThanAndIsOverwrittenFalse(String sessionId, long tableId, LocalDateTime expirationDate);
-
-    Optional<TableSession> findByTableIdAndIsOverwrittenFalseAndExpirationDateGreaterThan(long tableId, LocalDateTime expirationDate);
-
-
-
+    Optional<TableSession> findByCardIdAndIsOverwrittenFalseAndExpirationDateGreaterThan(Long cardId, LocalDateTime expirationDate);
 }

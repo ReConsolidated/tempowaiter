@@ -20,9 +20,9 @@ public class TableInfo {
     @Id
     @GeneratedValue(generator = "table_info_id_generator")
     private Long tableId;
+    @Setter
+    private Long cardId;
     private Long companyId;
-    @ElementCollection
-    private List<Long> cardIds = new ArrayList<>();
     private String tableDisplayName;
     @Setter
     private Long lastCtr;
