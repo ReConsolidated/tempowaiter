@@ -14,6 +14,10 @@ public class WaiterService {
     private final WaiterRequestRepository waiterRequestRepository;
 
     public WaiterRequest callToTable(String clientSessionId, String requestType, TableInfo tableInfo) {
+        Optional<WaiterRequest> existing = waiterRequestRepository.findByStateNotAndTableId(RequestState.DONE, tableInfo.getTableId());
+        if (existing.isPresent()) {
+            return existing.get();
+        }
         WaiterRequest request = new WaiterRequest();
         request.setClientSessionId(clientSessionId);
         request.setRequestedAt(System.currentTimeMillis());
@@ -48,10 +52,7 @@ public class WaiterService {
 
     public Optional<WaiterRequest> getRequest(String sessionId, Long requestId) {
         WaiterRequest request = waiterRequestRepository.findById(requestId).orElseThrow();
-        if (request.getClientSessionId().equals(sessionId)) {
-            return Optional.of(request);
-        }
-        return Optional.empty();
+        return Optional.of(request);
     }
 
     public WaiterRequest setRequestState(Long currentUserId, Long companyId, Long requestId, RequestState state) {

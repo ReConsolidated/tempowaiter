@@ -7,10 +7,7 @@ import io.github.reconsolidated.tempowaiter.waiter.WaiterRequest;
 import io.github.reconsolidated.tempowaiter.waiter.WaiterService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
@@ -32,31 +29,22 @@ public class TableController {
         return ResponseEntity.ok(tableInfo);
     }
 
-    @PostMapping("/table/{tableId}/addCard")
-    public ResponseEntity<TableInfo> addCard(@CurrentUser AppUser currentUser, @RequestParam Long tableId, @RequestParam Long cardId) {
-        TableInfo tableInfo = tableService.addCardId(currentUser.getCompanyId(), tableId, cardId);
-        return ResponseEntity.ok(tableInfo);
-    }
-
-    @PostMapping("/table/{tableId}/removeCard")
-    public ResponseEntity<TableInfo> removeCard(@CurrentUser AppUser currentUser, @RequestParam Long tableId, @RequestParam Long cardId) {
-        TableInfo tableInfo = tableService.removeCardId(currentUser.getCompanyId(), tableId, cardId);
+    @PostMapping("/table/{tableId}/cardId")
+    public ResponseEntity<TableInfo> addCard(@CurrentUser AppUser currentUser, @PathVariable Long tableId, @RequestParam Long cardId) {
+        TableInfo tableInfo = tableService.setCardId(currentUser.getCompanyId(), tableId, cardId);
         return ResponseEntity.ok(tableInfo);
     }
 
     @PostMapping("/public/call")
-    public ResponseEntity<CallState> callWaiter(HttpSession session,
+    public ResponseEntity<WaiterRequest> callWaiter(HttpSession session,
                                                  @RequestParam Long cardId,
                                                  @RequestParam String callType) {
-        TableInfo tableInfo = tableService.callWaiter(session.getId(), callType, cardId);
-        CallState result = new CallState(tableInfo.getTableId(), callType, RequestState.WAITING);
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(tableService.callWaiter(session.getId(), callType, cardId));
     }
 
     @GetMapping("/public/call_state")
-    public ResponseEntity<CallState> callState(HttpSession session, @RequestParam Long requestId) {
-        WaiterRequest request = waiterService.getRequest(session.getId(), requestId).orElseThrow();
-        CallState result = new CallState(request.getTableId(), request.getType(), request.getState());
-        return ResponseEntity.ok(result);
+    public ResponseEntity<WaiterRequest> callState(HttpSession session, @RequestParam Long cardId, @RequestParam Long requestId) {
+        WaiterRequest request = tableService.getRequest(session.getId(), cardId, requestId).orElseThrow();
+        return ResponseEntity.ok(request);
     }
 }

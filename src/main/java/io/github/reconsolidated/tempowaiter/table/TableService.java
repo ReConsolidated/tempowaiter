@@ -3,6 +3,7 @@ package io.github.reconsolidated.tempowaiter.table;
 import io.github.reconsolidated.tempowaiter.table.exceptions.OutdatedTableRequestException;
 import io.github.reconsolidated.tempowaiter.table.exceptions.SessionExpiredException;
 import io.github.reconsolidated.tempowaiter.table.exceptions.TableNotFoundException;
+import io.github.reconsolidated.tempowaiter.waiter.WaiterRequest;
 import io.github.reconsolidated.tempowaiter.waiter.WaiterService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,17 @@ public class TableService {
         return tableInfo;
     }
 
-    public TableInfo callWaiter(String sessionId, String requestType, Long cardId) {
+    public Optional<WaiterRequest> getRequest(String sessionId, Long cardId, Long requestId) {
+        TableSession tableSession = sessionRepository
+                .findBySessionIdAndCardIdAndExpirationDateGreaterThanAndIsOverwrittenFalse(
+                        sessionId,
+                        cardId,
+                        LocalDateTime.now())
+                .orElseThrow(SessionExpiredException::new);
+        return waiterService.getRequest(sessionId, requestId);
+    }
+
+    public WaiterRequest callWaiter(String sessionId, String requestType, Long cardId) {
         // tableSession has to be polled for security to check if session exists
         TableSession tableSession = sessionRepository
                 .findBySessionIdAndCardIdAndExpirationDateGreaterThanAndIsOverwrittenFalse(
@@ -53,11 +64,10 @@ public class TableService {
                         LocalDateTime.now())
                 .orElseThrow(SessionExpiredException::new);
         TableInfo tableInfo = tableInfoRepository.findByCardIdEquals(cardId).orElseThrow(() -> new TableNotFoundException(cardId));
-        waiterService.callToTable(sessionId, requestType, tableInfo);
-        return tableInfo;
+        return waiterService.callToTable(sessionId, requestType, tableInfo);
     }
 
-    public TableInfo addCardId(Long companyId, Long tableId, Long cardId) {
+    public TableInfo setCardId(Long companyId, Long tableId, Long cardId) {
         TableInfo tableInfo = tableInfoRepository.findById(tableId).orElseThrow(() -> new TableNotFoundException(tableId));
         if (!tableInfo.getCompanyId().equals(companyId)) {
             throw new TableNotFoundException(tableId);

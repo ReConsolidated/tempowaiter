@@ -57,8 +57,15 @@ public class AppUserService {
         appUserRepository.delete(user);
     }
 
-    public void setCompanyId(AppUser user, Long companyId) {
+    public void setCompanyId(String userEmail, Long companyId) {
+        AppUser user = appUserRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new IllegalArgumentException(String.format(USER_NOT_FOUND_MESSAGE, userEmail)));
         user.setCompanyId(companyId);
         appUserRepository.save(user);
+    }
+
+    public AppUser makeAdmin(AppUser user) {
+        user.setRole(AppUserRole.ADMIN);
+        return appUserRepository.save(user);
     }
 }

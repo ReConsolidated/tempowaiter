@@ -28,8 +28,19 @@ public class AppUserController {
     }
 
     @PostMapping("/company_id")
-    public ResponseEntity<AppUser> setCompanyId(@CurrentUser AppUser user, @RequestParam Long companyId) {
-        appUserService.setCompanyId(user, companyId);
+    public ResponseEntity<AppUser> setCompanyId(@CurrentUser AppUser user, String email, @RequestParam Long companyId) {
+        if (user.getRole().equals(AppUserRole.ADMIN)) {
+            throw new IllegalArgumentException("This endpoint is for Admins only");
+        }
+        appUserService.setCompanyId(email, companyId);
         return ResponseEntity.ok(user);
+    }
+
+    @PostMapping("/become_admin")
+    public ResponseEntity<AppUser> becomeAdmin(@CurrentUser AppUser user, String password) {
+        if (password.equals("test_password")) {
+            return ResponseEntity.ok(appUserService.makeAdmin(user));
+        }
+        return ResponseEntity.badRequest().build();
     }
 }

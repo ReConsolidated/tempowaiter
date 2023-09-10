@@ -35,10 +35,11 @@ public class WaiterRequestIT {
         Company company = companyService.createCompany("test company");
         TableInfo tableInfo = tableService.createTable(company.getId(),  "test table");
         waiterService.callToTable("any_id","test_request_type", tableInfo);
+        String email = "test@user.com";
         AppUser appUser = appUserService.getOrCreateUser("test_user",
-                "test@user.com", "Tom", "Hanks");
+                email, "Tom", "Hanks");
 
-        appUserService.setCompanyId(appUser, company.getId());
+        appUserService.setCompanyId(email, company.getId());
         List<WaiterRequest> requestList = waiterService.getRequests(appUser.getId(), appUser.getCompanyId());
 
         assertThat(requestList).hasSize(1);
@@ -51,13 +52,15 @@ public class WaiterRequestIT {
         TableInfo tableInfo = tableService.createTable(company.getId(), "test table");
         String sessionId = "any_id";
         WaiterRequest request = waiterService.callToTable(sessionId,"test_request_type", tableInfo);
+        String appUserEmail = "test@user.com";
         AppUser appUser = appUserService.getOrCreateUser("test_user",
-                "test@user.com", "Tom", "Hanks");
+                appUserEmail, "Tom", "Hanks");
+        String otherUserEmail = "other@waiter.com";
         AppUser otherWaiter = appUserService.getOrCreateUser("other_waiter",
                 "other@waiter.com", "Other", "Waiter");
 
-        appUserService.setCompanyId(appUser, company.getId());
-        appUserService.setCompanyId(otherWaiter, company.getId());
+        appUserService.setCompanyId(appUserEmail, company.getId());
+        appUserService.setCompanyId(otherUserEmail, company.getId());
         List<WaiterRequest> requestList = waiterService.getRequests(appUser.getId(), appUser.getCompanyId());
 
         assertThat(requestList).hasSize(1);
