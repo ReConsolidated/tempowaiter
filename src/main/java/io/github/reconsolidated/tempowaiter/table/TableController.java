@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -30,6 +31,12 @@ public class TableController {
         return ResponseEntity.of(tableSession);
     }
 
+    @GetMapping("/tables")
+    public ResponseEntity<List<TableInfo>> listTables(@CurrentUser AppUser currentUser) {
+        List<TableInfo> tableInfos = tableService.listTables(currentUser.getCompanyId());
+        return ResponseEntity.ok(tableInfos);
+    }
+
     @PostMapping("/table")
     public ResponseEntity<TableInfo> createTable(@CurrentUser AppUser currentUser, @RequestParam String tableDisplayName) {
         TableInfo tableInfo = tableService.createTable(currentUser.getCompanyId(), tableDisplayName);
@@ -47,6 +54,15 @@ public class TableController {
                                                  @RequestParam Long cardId,
                                                  @RequestParam String callType) {
         return ResponseEntity.ok(tableService.callWaiter(session.getId(), callType, cardId));
+    }
+
+    @PostMapping("/public/cancel_call")
+    public ResponseEntity<?> cancelCall(HttpSession session,
+                                                    @RequestParam Long cardId) {
+        if (tableService.cancelCall(session.getId(), cardId)) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/public/call_state")

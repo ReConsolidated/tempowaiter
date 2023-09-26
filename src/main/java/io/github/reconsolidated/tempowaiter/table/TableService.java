@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -95,5 +96,19 @@ public class TableService {
 
     public Optional<TableSession> getSession(String sessionId) {
         return sessionRepository.findBySessionIdAndExpirationDateGreaterThanAndIsOverwrittenFalse(sessionId, LocalDateTime.now());
+    }
+
+    public boolean cancelCall(String sessionId, Long cardId) {
+        TableSession tableSession = sessionRepository
+                .findBySessionIdAndCardIdAndExpirationDateGreaterThanAndIsOverwrittenFalse(
+                        sessionId,
+                        cardId,
+                        LocalDateTime.now())
+                .orElseThrow(SessionExpiredException::new);
+        return waiterService.deleteRequest(tableSession.getId());
+    }
+
+    public List<TableInfo> listTables(Long companyId) {
+        return tableInfoRepository.findAllByCompanyIdEquals(companyId);
     }
 }
