@@ -92,4 +92,8 @@ public class TableService {
         tableInfo = tableInfoRepository.save(tableInfo);
         return tableInfo;
     }
+
+    public Optional<TableSession> getSession(String sessionId) {
+        return sessionRepository.findBySessionIdAndExpirationDateGreaterThanAndIsOverwrittenFalse(sessionId, LocalDateTime.now());
+    }
 }

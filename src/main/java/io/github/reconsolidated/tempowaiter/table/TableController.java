@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -21,6 +22,12 @@ public class TableController {
     public ResponseEntity<TableInfo> startSession(HttpSession session, @RequestParam Long cardId, @RequestParam Long ctr) {
         TableInfo tableInfo = tableService.startSession(session.getId(), cardId, ctr);
         return ResponseEntity.ok(tableInfo);
+    }
+
+    @GetMapping("/public/session_info")
+    public ResponseEntity<TableSession> sessionInfo(HttpSession session) {
+        Optional<TableSession> tableSession = tableService.getSession(session.getId());
+        return ResponseEntity.of(tableSession);
     }
 
     @PostMapping("/table")
