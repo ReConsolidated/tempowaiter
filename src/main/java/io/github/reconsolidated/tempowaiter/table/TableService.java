@@ -8,6 +8,7 @@ import io.github.reconsolidated.tempowaiter.waiter.WaiterService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -88,7 +89,7 @@ public class TableService {
         return tableInfo;
     }
 
-    public TableInfo createTable(Long companyId, String tableDisplayName) {
+    public TableInfo createTable(@NotNull Long companyId, String tableDisplayName) {
         TableInfo tableInfo = new TableInfo(null, 0L, companyId, tableDisplayName, 0L);
         tableInfo = tableInfoRepository.save(tableInfo);
         return tableInfo;
