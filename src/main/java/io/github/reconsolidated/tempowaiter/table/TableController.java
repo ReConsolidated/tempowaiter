@@ -19,6 +19,11 @@ public class TableController {
     private final TableService tableService;
     private final WaiterService waiterService;
 
+    @GetMapping("/public/session")
+    public ResponseEntity<?> getSessionId(HttpSession session) {
+        return ResponseEntity.ok(session.getId());
+    }
+
     @PostMapping("/public/start_session")
     public ResponseEntity<TableInfo> startSession(HttpSession session, @RequestParam Long cardId, @RequestParam Long ctr) {
         TableInfo tableInfo = tableService.startSession(session.getId(), cardId, ctr);
