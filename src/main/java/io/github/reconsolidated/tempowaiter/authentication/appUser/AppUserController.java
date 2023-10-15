@@ -29,7 +29,7 @@ public class AppUserController {
 
     @PostMapping("/company_id")
     public ResponseEntity<AppUser> setCompanyId(@CurrentUser AppUser user, String email, @RequestParam Long companyId) {
-        if (user.getRole().equals(AppUserRole.ADMIN)) {
+        if (!user.getRole().equals(AppUserRole.ADMIN)) {
             throw new IllegalArgumentException("This endpoint is for Admins only");
         }
         appUserService.setCompanyId(email, companyId);

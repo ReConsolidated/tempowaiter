@@ -27,7 +27,7 @@ public class TableService {
             return tableInfoRepository.findByCardIdEquals(cardId).orElseThrow(() -> new TableNotFoundException(cardId));
         }
 
-        TableInfo tableInfo = tableInfoRepository.findById(cardId).orElseThrow(() -> new TableNotFoundException(cardId));
+        TableInfo tableInfo = tableInfoRepository.findByCardIdEquals(cardId).orElseThrow(() -> new TableNotFoundException(cardId));
         if (tableInfo.getLastCtr() >= ctr) {
             throw new OutdatedTableRequestException();
         }

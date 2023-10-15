@@ -30,7 +30,6 @@ public class AppUserService {
     }
 
     public AppUser getOrCreateUser(String keycloakId, String email, String firstName, String lastName) {
-        logger.info("getOrCreateUser: " + keycloakId + " " + email + " " + firstName + " " + lastName);
         return appUserRepository.findByKeycloakId(keycloakId).orElseGet(() -> {
             AppUser appUser = new AppUser();
             appUser.setKeycloakId(keycloakId);
