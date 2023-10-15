@@ -15,9 +15,11 @@ public class AppUser {
     @Id
     @GeneratedValue(generator = "app_users")
     private Long id;
+    @Column(unique = true)
     private String keycloakId;
     private String firstName = "";
     private String lastName = "";
+    @Column(unique = true)
     private String email = "";
     private String phoneNumber = "";
     private Long companyId = null;
