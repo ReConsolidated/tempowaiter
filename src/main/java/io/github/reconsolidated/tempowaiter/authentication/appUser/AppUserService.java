@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.Optional;
+import java.util.logging.Logger;
 
 
 @Service
@@ -14,6 +15,7 @@ public class AppUserService {
     private final static String USER_NOT_FOUND_MESSAGE =
             "user with email %s not found";
     private final AppUserRepository appUserRepository;
+    private final Logger logger = Logger.getLogger(AppUserService.class.getName());
 
     public AppUserService(AppUserRepository appUserRepository) {
         this.appUserRepository = appUserRepository;
@@ -28,6 +30,7 @@ public class AppUserService {
     }
 
     public AppUser getOrCreateUser(String keycloakId, String email, String firstName, String lastName) {
+        logger.info("getOrCreateUser: " + keycloakId + " " + email + " " + firstName + " " + lastName);
         return appUserRepository.findByKeycloakId(keycloakId).orElseGet(() -> {
             AppUser appUser = new AppUser();
             appUser.setKeycloakId(keycloakId);

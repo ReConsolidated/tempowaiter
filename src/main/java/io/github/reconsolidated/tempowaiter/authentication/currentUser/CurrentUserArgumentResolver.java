@@ -35,7 +35,7 @@ public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolve
         String email = principal.getKeycloakSecurityContext().getToken().getEmail();
         String firstName = principal.getKeycloakSecurityContext().getToken().getGivenName();
         String lastName = principal.getKeycloakSecurityContext().getToken().getFamilyName();
-        if (keycloakId == null) {
+        if (keycloakId == null || keycloakId.length() == 0) {
             throw new BadCredentialsException("Keycloak id not found");
         }
 
