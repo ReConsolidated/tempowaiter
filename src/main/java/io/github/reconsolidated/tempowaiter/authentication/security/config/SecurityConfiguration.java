@@ -50,7 +50,7 @@ public class SecurityConfiguration extends KeycloakWebSecurityConfigurerAdapter 
                 .authenticated()
                 .and()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS);
     }
 
 }
