@@ -1,5 +1,7 @@
 package io.github.reconsolidated.tempowaiter.table;
 
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUser;
 import io.github.reconsolidated.tempowaiter.authentication.currentUser.CurrentUser;
 import io.github.reconsolidated.tempowaiter.waiter.WaiterRequest;
@@ -24,10 +26,13 @@ public class TableController {
     }
 
     @PostMapping("/public/start_session")
-    public ResponseEntity<TableInfo> startSession(@RequestParam Long cardId, @RequestParam Long ctr) {
+    public ResponseEntity<?> startSession(@RequestParam Long cardId, @RequestParam Long ctr) {
         String sessionId = UUID.randomUUID().toString();
         TableInfo tableInfo = tableService.startSession(sessionId, cardId, ctr);
-        return ResponseEntity.ok().headers(headers -> headers.add("sessionId", sessionId)).body(tableInfo);
+        ObjectNode responseBody = JsonNodeFactory.instance.objectNode();
+        responseBody.set("tableInfo", JsonNodeFactory.instance.pojoNode(tableInfo));
+        responseBody.put("sessionId", sessionId);
+        return ResponseEntity.ok(responseBody);
     }
 
     @GetMapping("/public/session_info")
