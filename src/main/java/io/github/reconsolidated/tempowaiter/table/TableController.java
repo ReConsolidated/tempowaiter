@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @AllArgsConstructor
@@ -19,19 +20,20 @@ public class TableController {
     private final WaiterService waiterService;
 
     @GetMapping("/public/session")
-    public ResponseEntity<?> getSessionId(HttpSession session) {
-        return ResponseEntity.ok("Session id: " + session.getId());
+    public ResponseEntity<?> getSessionId(@RequestParam String sessionId) {
+        return ResponseEntity.ok("Session id: " + sessionId);
     }
 
     @PostMapping("/public/start_session")
-    public ResponseEntity<TableInfo> startSession(HttpSession session, @RequestParam Long cardId, @RequestParam Long ctr) {
-        TableInfo tableInfo = tableService.startSession(session.getId(), cardId, ctr);
-        return ResponseEntity.ok(tableInfo);
+    public ResponseEntity<TableInfo> startSession(@RequestParam Long cardId, @RequestParam Long ctr) {
+        String sessionId = UUID.randomUUID().toString();
+        TableInfo tableInfo = tableService.startSession(sessionId, cardId, ctr);
+        return ResponseEntity.ok().headers(headers -> headers.add("SessionId", sessionId + "; Path=/;")).body(tableInfo);
     }
 
     @GetMapping("/public/session_info")
-    public ResponseEntity<TableSession> sessionInfo(HttpSession session) {
-        Optional<TableSession> tableSession = tableService.getSession(session.getId());
+    public ResponseEntity<TableSession> sessionInfo(@RequestParam String sessionId) {
+        Optional<TableSession> tableSession = tableService.getSession(sessionId);
         return ResponseEntity.of(tableSession);
     }
 
