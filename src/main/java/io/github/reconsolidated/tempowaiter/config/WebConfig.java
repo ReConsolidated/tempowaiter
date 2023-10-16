@@ -42,11 +42,6 @@ public class WebConfig implements WebMvcConfigurer {
         config.setAllowedOriginPatterns(Collections.singletonList("*"));
         config.setAllowedMethods(Collections.singletonList("*"));
         config.setAllowedHeaders(Collections.singletonList("*"));
-
-        config.addAllowedOrigin("http://localhost:4200");
-        config.addAllowedOrigin("http://tempowaiter.pl");
-        config.addAllowedOrigin("https://tempowaiter.pl");
-        config.addAllowedOrigin("https://tempowaiter.com");
         source.registerCorsConfiguration("/**", config);
         FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(source));
         bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
