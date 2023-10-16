@@ -28,7 +28,7 @@ public class TableController {
     public ResponseEntity<TableInfo> startSession(@RequestParam Long cardId, @RequestParam Long ctr) {
         String sessionId = UUID.randomUUID().toString();
         TableInfo tableInfo = tableService.startSession(sessionId, cardId, ctr);
-        return ResponseEntity.ok().headers(headers -> headers.add("SessionId", sessionId + "; Path=/;")).body(tableInfo);
+        return ResponseEntity.ok().headers(headers -> headers.add("sessionId", sessionId)).body(tableInfo);
     }
 
     @GetMapping("/public/session_info")
