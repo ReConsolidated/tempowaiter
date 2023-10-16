@@ -2,7 +2,6 @@ package io.github.reconsolidated.tempowaiter.table;
 
 import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUser;
 import io.github.reconsolidated.tempowaiter.authentication.currentUser.CurrentUser;
-import io.github.reconsolidated.tempowaiter.waiter.RequestState;
 import io.github.reconsolidated.tempowaiter.waiter.WaiterRequest;
 import io.github.reconsolidated.tempowaiter.waiter.WaiterService;
 import lombok.AllArgsConstructor;
@@ -21,7 +20,7 @@ public class TableController {
 
     @GetMapping("/public/session")
     public ResponseEntity<?> getSessionId(HttpSession session) {
-        return ResponseEntity.ok(session.getId());
+        return ResponseEntity.ok("Session id: " + session.getId());
     }
 
     @PostMapping("/public/start_session")
