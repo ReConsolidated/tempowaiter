@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -56,24 +55,24 @@ public class TableController {
     }
 
     @PostMapping("/public/call")
-    public ResponseEntity<WaiterRequest> callWaiter(HttpSession session,
+    public ResponseEntity<WaiterRequest> callWaiter(@RequestParam String sessionId,
                                                  @RequestParam Long cardId,
                                                  @RequestParam String callType) {
-        return ResponseEntity.ok(tableService.callWaiter(session.getId(), callType, cardId));
+        return ResponseEntity.ok(tableService.callWaiter(sessionId, callType, cardId));
     }
 
     @PostMapping("/public/cancel_call")
-    public ResponseEntity<?> cancelCall(HttpSession session,
+    public ResponseEntity<?> cancelCall(@RequestParam String sessionId,
                                                     @RequestParam Long cardId) {
-        if (tableService.cancelCall(session.getId(), cardId)) {
+        if (tableService.cancelCall(sessionId, cardId)) {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/public/call_state")
-    public ResponseEntity<WaiterRequest> callState(HttpSession session, @RequestParam Long cardId, @RequestParam Long requestId) {
-        WaiterRequest request = tableService.getRequest(session.getId(), cardId, requestId).orElseThrow();
+    public ResponseEntity<WaiterRequest> callState(@RequestParam String sessionId, @RequestParam Long cardId, @RequestParam Long requestId) {
+        WaiterRequest request = tableService.getRequest(sessionId, cardId, requestId).orElseThrow();
         return ResponseEntity.ok(request);
     }
 }
