@@ -81,7 +81,7 @@ public class TableController {
         return ResponseEntity.ok(request);
     }
 
-    @GetMapping("/public/call_state")
+    @GetMapping("/public/call_states")
     public ResponseEntity<List<WaiterRequest>> callStates(@RequestParam String sessionId, @RequestParam Long cardId) {
         List<WaiterRequest> requests = tableService.getRequests(sessionId, cardId);
         return ResponseEntity.ok(requests);

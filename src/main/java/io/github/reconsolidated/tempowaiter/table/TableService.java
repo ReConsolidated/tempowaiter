@@ -66,7 +66,7 @@ public class TableService {
                         LocalDateTime.now())
                 .orElseThrow(SessionExpiredException::new);
         TableInfo tableInfo = tableInfoRepository.findByCardIdEquals(cardId).orElseThrow(() -> new TableNotFoundException(cardId));
-        return waiterService.callToTable(sessionId, requestType, tableInfo);
+        return waiterService.callToTable(sessionId, requestType, tableInfo, cardId);
     }
 
     public TableInfo setCardId(Long companyId, Long tableId, Long cardId) {

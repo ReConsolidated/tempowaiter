@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class WaiterService {
     private final WaiterRequestRepository waiterRequestRepository;
 
-    public WaiterRequest callToTable(String clientSessionId, String requestType, TableInfo tableInfo) {
+    public WaiterRequest callToTable(String clientSessionId, String requestType, TableInfo tableInfo, Long cardId) {
         Optional<WaiterRequest> existing = waiterRequestRepository.findByStateNotAndTableId(RequestState.DONE, tableInfo.getTableId());
         if (existing.isPresent()) {
             return existing.get();
@@ -22,6 +22,7 @@ public class WaiterService {
         request.setClientSessionId(clientSessionId);
         request.setRequestedAt(System.currentTimeMillis());
         request.setType(requestType);
+        request.setCardId(cardId);
         request.setCompanyId(tableInfo.getCompanyId());
         request.setTableId(tableInfo.getTableId());
         request.setState(RequestState.WAITING);
