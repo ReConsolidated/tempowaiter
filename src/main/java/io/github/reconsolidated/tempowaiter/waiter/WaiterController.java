@@ -23,7 +23,7 @@ public class WaiterController {
     }
 
     @PostMapping("/requests/{requestId}/set_state")
-    public ResponseEntity<WaiterRequest> setRequestState(@CurrentUser AppUser currentUser, @PathVariable Long requestId, RequestState state) {
+    public ResponseEntity<WaiterRequest> setRequestState(@CurrentUser AppUser currentUser, @PathVariable Long requestId, @RequestParam RequestState state) {
         WaiterRequest request = waiterService.setRequestState(currentUser.getId(), currentUser.getCompanyId(), requestId, state);
         return ResponseEntity.ok(request);
     }
