@@ -6,10 +6,7 @@ import io.github.reconsolidated.tempowaiter.company.CompanyService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,7 +23,7 @@ public class WaiterController {
     }
 
     @PostMapping("/requests/{requestId}/set_state")
-    public ResponseEntity<WaiterRequest> setRequestState(@CurrentUser AppUser currentUser, Long requestId, RequestState state) {
+    public ResponseEntity<WaiterRequest> setRequestState(@CurrentUser AppUser currentUser, @PathVariable Long requestId, RequestState state) {
         WaiterRequest request = waiterService.setRequestState(currentUser.getId(), currentUser.getCompanyId(), requestId, state);
         return ResponseEntity.ok(request);
     }
