@@ -18,6 +18,7 @@ public class TableSession {
     @Id
     @GeneratedValue(generator = "table_session_id_generator")
     private Long id;
+    private long tableId;
     private long cardId;
     private long ctr;
     private String sessionId;
@@ -28,6 +29,7 @@ public class TableSession {
     public TableSession(TableInfo tableInfo, String sessionId, LocalDateTime expirationDate, boolean isOverwritten) {
         this.cardId = tableInfo.getCardId();
         this.ctr = tableInfo.getLastCtr();
+        this.tableId = tableInfo.getTableId();
         this.sessionId = sessionId;
         this.expirationDate = expirationDate;
         this.isOverwritten = isOverwritten;

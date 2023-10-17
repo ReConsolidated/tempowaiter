@@ -106,7 +106,7 @@ public class TableService {
                         cardId,
                         LocalDateTime.now())
                 .orElseThrow(SessionExpiredException::new);
-        return waiterService.deleteRequest(tableSession.getId());
+        return waiterService.deleteRequest(tableSession.getSessionId());
     }
 
     public List<TableInfo> listTables(Long companyId) {

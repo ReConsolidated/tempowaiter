@@ -79,8 +79,8 @@ public class WaiterService {
         return waiterRequestRepository.save(request);
     }
 
-    public boolean deleteRequest(Long tableSessionId) {
-        Optional<WaiterRequest> request = waiterRequestRepository.findByStateNotAndTableId(RequestState.DONE, tableSessionId);
+    public boolean deleteRequest(String clientSessionId) {
+        Optional<WaiterRequest> request = waiterRequestRepository.findByStateNotAndClientSessionId(RequestState.DONE, clientSessionId);
         if (request.isPresent()) {
             waiterRequestRepository.delete(request.get());
             return true;

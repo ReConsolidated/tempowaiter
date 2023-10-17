@@ -47,6 +47,32 @@ public class WaiterRequestIT {
 
     @Test
     @Transactional
+    public void cancelCall() {
+        Long cardId = 1L;
+        Company company = companyService.createCompany("test company");
+        TableInfo tableInfo = tableService.createTable(company.getId(),  "test table");
+        tableInfo.setCardId(cardId);
+        String sessionId = "abc123";
+        tableService.startSession(sessionId, cardId, 15L);
+        WaiterRequest request = waiterService.callToTable(sessionId,"test_request_type", tableInfo, cardId);
+        String email = "test@user.com";
+        AppUser appUser = appUserService.getOrCreateUser("test_user",
+                email, "Tom", "Hanks");
+
+        appUserService.setCompanyId(email, company.getId());
+        List<WaiterRequest> requestList = waiterService.getRequests(appUser.getId(), appUser.getCompanyId());
+
+        assertThat(requestList).hasSize(1);
+
+        assertThat(tableService.cancelCall(request.getClientSessionId(), cardId)).isTrue();
+
+        requestList = waiterService.getRequests(appUser.getId(), appUser.getCompanyId());
+
+        assertThat(requestList).hasSize(0);
+    }
+
+    @Test
+    @Transactional
     public void processRequest() {
         Company company = companyService.createCompany("test company");
         TableInfo tableInfo = tableService.createTable(company.getId(), "test table");

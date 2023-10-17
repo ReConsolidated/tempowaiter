@@ -13,4 +13,6 @@ public interface WaiterRequestRepository extends JpaRepository<WaiterRequest, Lo
     Optional<WaiterRequest> findByStateNotAndTableId(RequestState done, Long tableId);
 
     List<WaiterRequest> findByClientSessionIdEquals(String sessionId);
+
+    Optional<WaiterRequest> findByStateNotAndClientSessionId(RequestState state, String clientSessionId);
 }
