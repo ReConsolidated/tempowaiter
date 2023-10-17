@@ -31,6 +31,9 @@ public class TableService {
         if (tableInfo.getLastCtr() >= ctr) {
             throw new OutdatedTableRequestException();
         }
+        if (ctr - tableInfo.getLastCtr() > 3) {
+            throw new IllegalArgumentException("CTR difference is too big");
+        }
 
         Optional<TableSession> overwrittenSession = sessionRepository
                 .findByCardIdAndIsOverwrittenFalseAndExpirationDateGreaterThan(cardId, LocalDateTime.now());
