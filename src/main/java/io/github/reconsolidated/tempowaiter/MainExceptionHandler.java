@@ -60,4 +60,19 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
                 new HttpHeaders(), HttpStatus.GONE, request);
     }
 
+    @ExceptionHandler(value
+            = { IllegalArgumentException.class })
+    protected ResponseEntity<Object> handleIllegalArgument(
+            IllegalArgumentException ex, WebRequest request) {
+        StringBuilder bodyOfResponse = new StringBuilder(ex.getMessage());
+        if (debug) {
+            for (StackTraceElement line : ex.getStackTrace()) {
+                bodyOfResponse.append("\n");
+                bodyOfResponse.append(line.toString());
+            }
+        }
+        return handleExceptionInternal(ex, bodyOfResponse,
+                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
 }
