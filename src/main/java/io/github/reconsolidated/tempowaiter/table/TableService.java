@@ -112,4 +112,14 @@ public class TableService {
     public List<TableInfo> listTables(Long companyId) {
         return tableInfoRepository.findAllByCompanyIdEquals(companyId);
     }
+
+    public List<WaiterRequest> getRequests(String sessionId, Long cardId) {
+        TableSession tableSession = sessionRepository
+                .findBySessionIdAndCardIdAndExpirationDateGreaterThanAndIsOverwrittenFalse(
+                        sessionId,
+                        cardId,
+                        LocalDateTime.now())
+                .orElseThrow(SessionExpiredException::new);
+        return waiterService.getRequests(sessionId);
+    }
 }

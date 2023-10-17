@@ -41,6 +41,10 @@ public class WaiterService {
         }).collect(Collectors.toList());
     }
 
+    public List<WaiterRequest> getRequests(String sessionId) {
+        return waiterRequestRepository.findByClientSessionIdEquals(sessionId);
+    }
+
     private int scoreRequest(WaiterRequest request) {
         int score = 0;
         if (request.getState().equals(RequestState.IN_PROGRESS)) {
