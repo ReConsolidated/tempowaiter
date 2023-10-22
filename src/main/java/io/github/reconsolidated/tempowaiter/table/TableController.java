@@ -20,9 +20,10 @@ public class TableController {
     private final TableService tableService;
     private final WaiterService waiterService;
 
-    @GetMapping("/public/session")
-    public ResponseEntity<?> getSessionId(@RequestParam String sessionId) {
-        return ResponseEntity.ok("Session id: " + sessionId);
+    @GetMapping("/public/test")
+    public ResponseEntity<?> test() {
+        waiterService.updateRequests(1L);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/public/start_session")
@@ -76,14 +77,8 @@ public class TableController {
     }
 
     @GetMapping("/public/call_state")
-    public ResponseEntity<WaiterRequest> callState(@RequestParam String sessionId, @RequestParam Long cardId, @RequestParam Long requestId) {
-        WaiterRequest request = tableService.getRequest(sessionId, cardId, requestId).orElseThrow();
+    public ResponseEntity<WaiterRequest> callState(@RequestParam String sessionId, @RequestParam Long cardId) {
+        WaiterRequest request = tableService.getRequest(sessionId, cardId).orElseThrow();
         return ResponseEntity.ok(request);
-    }
-
-    @GetMapping("/public/call_states")
-    public ResponseEntity<List<WaiterRequest>> callStates(@RequestParam String sessionId, @RequestParam Long cardId) {
-        List<WaiterRequest> requests = tableService.getRequests(sessionId, cardId);
-        return ResponseEntity.ok(requests);
     }
 }

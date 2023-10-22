@@ -12,6 +12,12 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class WaiterService {
     private final WaiterRequestRepository waiterRequestRepository;
+    private final WaiterRequestsBroker waiterRequestsBroker;
+
+    public void updateRequests(Long companyId) {
+        List<WaiterRequest> requests = waiterRequestRepository.findByStateNotAndCompanyIdEquals(RequestState.DONE, companyId);
+        waiterRequestsBroker.sendRequests(companyId, requests);
+    }
 
     public WaiterRequest callToTable(String clientSessionId, String requestType, TableInfo tableInfo, Long cardId) {
         Optional<WaiterRequest> existing = waiterRequestRepository.findByStateNotAndTableId(RequestState.DONE, tableInfo.getTableId());
@@ -26,7 +32,9 @@ public class WaiterService {
         request.setCompanyId(tableInfo.getCompanyId());
         request.setTableId(tableInfo.getTableId());
         request.setState(RequestState.WAITING);
-        return waiterRequestRepository.save(request);
+        WaiterRequest result = waiterRequestRepository.save(request);
+        updateRequests(tableInfo.getCompanyId());
+        return result;
     }
 
     public List<WaiterRequest> getRequests(Long appUserId, Long companyId) {
@@ -42,8 +50,8 @@ public class WaiterService {
         }).collect(Collectors.toList());
     }
 
-    public List<WaiterRequest> getRequests(String sessionId) {
-        return waiterRequestRepository.findByClientSessionIdEquals(sessionId);
+    public Optional<WaiterRequest> getRequest(Long tableId) {
+        return waiterRequestRepository.findByStateNotAndTableId(RequestState.DONE, tableId);
     }
 
     private int scoreRequest(WaiterRequest request) {

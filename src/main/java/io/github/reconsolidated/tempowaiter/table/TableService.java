@@ -31,9 +31,6 @@ public class TableService {
         if (tableInfo.getLastCtr() >= ctr) {
             throw new OutdatedTableRequestException();
         }
-        if (ctr - tableInfo.getLastCtr() > 3) {
-            throw new IllegalArgumentException("CTR difference is too big");
-        }
 
         Optional<TableSession> overwrittenSession = sessionRepository
                 .findByCardIdAndIsOverwrittenFalseAndExpirationDateGreaterThan(cardId, LocalDateTime.now());
@@ -48,16 +45,6 @@ public class TableService {
         TableSession newTableSession = new TableSession(tableInfo, sessionId, expirationDate, false);
         sessionRepository.save(newTableSession);
         return tableInfo;
-    }
-
-    public Optional<WaiterRequest> getRequest(String sessionId, Long cardId, Long requestId) {
-        TableSession tableSession = sessionRepository
-                .findBySessionIdAndCardIdAndExpirationDateGreaterThanAndIsOverwrittenFalse(
-                        sessionId,
-                        cardId,
-                        LocalDateTime.now())
-                .orElseThrow(SessionExpiredException::new);
-        return waiterService.getRequest(sessionId, requestId);
     }
 
     public WaiterRequest callWaiter(String sessionId, String requestType, Long cardId) {
@@ -116,13 +103,13 @@ public class TableService {
         return tableInfoRepository.findAllByCompanyIdEquals(companyId);
     }
 
-    public List<WaiterRequest> getRequests(String sessionId, Long cardId) {
+    public Optional<WaiterRequest> getRequest(String sessionId, Long cardId) {
         TableSession tableSession = sessionRepository
                 .findBySessionIdAndCardIdAndExpirationDateGreaterThanAndIsOverwrittenFalse(
                         sessionId,
                         cardId,
                         LocalDateTime.now())
                 .orElseThrow(SessionExpiredException::new);
-        return waiterService.getRequests(sessionId);
+        return waiterService.getRequest(tableSession.getTableId());
     }
 }
