@@ -64,6 +64,10 @@ public class TableService {
         if (!tableInfo.getCompanyId().equals(companyId)) {
             throw new TableNotFoundException(tableId);
         }
+        if (tableInfoRepository.findByCardIdEquals(cardId).isPresent()) {
+            throw new IllegalArgumentException("This card is already assigned to a table.");
+        }
+        // TODO validate if card belongs to company
         tableInfo.setCardId(cardId);
         tableInfoRepository.save(tableInfo);
         return tableInfo;
