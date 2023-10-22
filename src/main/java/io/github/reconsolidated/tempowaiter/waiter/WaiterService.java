@@ -19,13 +19,12 @@ public class WaiterService {
         waiterRequestsBroker.sendRequests(companyId, requests);
     }
 
-    public WaiterRequest callToTable(String clientSessionId, String requestType, TableInfo tableInfo, Long cardId) {
+    public WaiterRequest callToTable(String requestType, TableInfo tableInfo, Long cardId) {
         Optional<WaiterRequest> existing = waiterRequestRepository.findByStateNotAndTableId(RequestState.DONE, tableInfo.getTableId());
         if (existing.isPresent()) {
             return existing.get();
         }
         WaiterRequest request = new WaiterRequest();
-        request.setClientSessionId(clientSessionId);
         request.setRequestedAt(System.currentTimeMillis());
         request.setType(requestType);
         request.setCardId(cardId);
@@ -87,8 +86,8 @@ public class WaiterService {
         return waiterRequestRepository.save(request);
     }
 
-    public boolean deleteRequest(String clientSessionId) {
-        Optional<WaiterRequest> request = waiterRequestRepository.findByStateNotAndClientSessionId(RequestState.DONE, clientSessionId);
+    public boolean deleteRequest(Long tableId) {
+        Optional<WaiterRequest> request = waiterRequestRepository.findByStateNotAndTableId(RequestState.DONE, tableId);
         if (request.isPresent()) {
             waiterRequestRepository.delete(request.get());
             return true;

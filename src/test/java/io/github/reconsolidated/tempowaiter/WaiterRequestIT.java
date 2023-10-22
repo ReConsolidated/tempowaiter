@@ -34,7 +34,7 @@ public class WaiterRequestIT {
     public void requestSent() {
         Company company = companyService.createCompany("test company");
         TableInfo tableInfo = tableService.createTable(company.getId(),  "test table");
-        waiterService.callToTable("any_id","test_request_type", tableInfo, 1L);
+        waiterService.callToTable("test_request_type", tableInfo, 1L);
         String email = "test@user.com";
         AppUser appUser = appUserService.getOrCreateUser("test_user",
                 email, "Tom", "Hanks");
@@ -54,7 +54,7 @@ public class WaiterRequestIT {
         tableInfo.setCardId(cardId);
         String sessionId = "abc123";
         tableService.startSession(sessionId, cardId, 15L);
-        WaiterRequest request = waiterService.callToTable(sessionId,"test_request_type", tableInfo, cardId);
+        WaiterRequest request = waiterService.callToTable("test_request_type", tableInfo, cardId);
         String email = "test@user.com";
         AppUser appUser = appUserService.getOrCreateUser("test_user",
                 email, "Tom", "Hanks");
@@ -64,7 +64,7 @@ public class WaiterRequestIT {
 
         assertThat(requestList).hasSize(1);
 
-        assertThat(tableService.cancelCall(request.getClientSessionId(), cardId)).isTrue();
+        assertThat(tableService.cancelCall(sessionId, cardId)).isTrue();
 
         requestList = waiterService.getRequests(appUser.getId(), appUser.getCompanyId());
 
@@ -77,7 +77,7 @@ public class WaiterRequestIT {
         Company company = companyService.createCompany("test company");
         TableInfo tableInfo = tableService.createTable(company.getId(), "test table");
         String sessionId = "any_id";
-        WaiterRequest request = waiterService.callToTable(sessionId,"test_request_type", tableInfo, 1L);
+        WaiterRequest request = waiterService.callToTable("test_request_type", tableInfo, 1L);
         String appUserEmail = "test@user.com";
         AppUser appUser = appUserService.getOrCreateUser("test_user",
                 appUserEmail, "Tom", "Hanks");
