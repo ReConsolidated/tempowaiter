@@ -23,6 +23,8 @@ public class TableSession {
     private long ctr;
     private String sessionId;
     // whether there is a newer session that overwrote this one
+    private Long startedAt;
+    private Long lastRequestAt;
     private boolean isOverwritten = false;
     private LocalDateTime expirationDate;
 
@@ -30,6 +32,7 @@ public class TableSession {
         this.cardId = tableInfo.getCardId();
         this.ctr = tableInfo.getLastCtr();
         this.tableId = tableInfo.getTableId();
+        this.startedAt = System.currentTimeMillis();
         this.sessionId = sessionId;
         this.expirationDate = expirationDate;
         this.isOverwritten = isOverwritten;

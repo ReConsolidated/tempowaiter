@@ -55,6 +55,7 @@ public class TableService {
                         cardId,
                         LocalDateTime.now())
                 .orElseThrow(SessionExpiredException::new);
+        tableSession.setLastRequestAt(System.currentTimeMillis());
         TableInfo tableInfo = tableInfoRepository.findByCardIdEquals(cardId).orElseThrow(() -> new TableNotFoundException(cardId));
         return waiterService.callToTable(requestType, tableInfo, cardId);
     }
