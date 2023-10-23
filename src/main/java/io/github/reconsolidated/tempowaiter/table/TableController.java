@@ -20,12 +20,6 @@ public class TableController {
     private final TableService tableService;
     private final WaiterService waiterService;
 
-    @GetMapping("/public/test")
-    public ResponseEntity<?> test() {
-        waiterService.updateRequests(1L);
-        return ResponseEntity.ok().build();
-    }
-
     @PostMapping("/public/start_session")
     public ResponseEntity<?> startSession(@RequestParam Long cardId, @RequestParam Long ctr) {
         String sessionId = UUID.randomUUID().toString();
