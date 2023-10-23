@@ -16,7 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 public class WaiterController {
     private final WaiterService waiterService;
-    private final CompanyService companyService;
 
     @GetMapping("/requests")
     public ResponseEntity<List<WaiterRequest>> getRequests(@CurrentUser AppUser currentUser) {
