@@ -1,7 +1,10 @@
-package io.github.reconsolidated.tempowaiter.table;
+package io.github.reconsolidated.tempowaiter.api;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.github.reconsolidated.tempowaiter.table.TableInfo;
+import io.github.reconsolidated.tempowaiter.table.TableService;
+import io.github.reconsolidated.tempowaiter.table.TableSession;
 import io.github.reconsolidated.tempowaiter.waiter.WaiterRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;

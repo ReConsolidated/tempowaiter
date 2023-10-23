@@ -1,5 +1,6 @@
 package io.github.reconsolidated.tempowaiter.table;
 
+import io.github.reconsolidated.tempowaiter.card.CardService;
 import io.github.reconsolidated.tempowaiter.table.exceptions.OutdatedTableRequestException;
 import io.github.reconsolidated.tempowaiter.table.exceptions.SessionExpiredException;
 import io.github.reconsolidated.tempowaiter.table.exceptions.TableNotFoundException;
@@ -19,6 +20,7 @@ public class TableService {
     private final TableSessionRepository sessionRepository;
     private final TableInfoRepository tableInfoRepository;
     private final WaiterService waiterService;
+    private final CardService cardService;
 
     public TableInfo startSession(String sessionId, Long cardId, Long ctr) {
         Optional<TableSession> tableSession = sessionRepository
@@ -68,7 +70,10 @@ public class TableService {
         if (tableInfoRepository.findByCardIdEquals(cardId).isPresent()) {
             throw new IllegalArgumentException("This card is already assigned to a table.");
         }
-        // TODO validate if card belongs to company
+        if (cardService.getCardCompanyId(cardId) != companyId) {
+            throw new IllegalArgumentException("Card %d is not assigned to your company.".formatted(cardId));
+        }
+        cardService.setCardTableId(cardId, tableId);
         tableInfo.setCardId(cardId);
         tableInfoRepository.save(tableInfo);
         return tableInfo;
@@ -79,6 +84,7 @@ public class TableService {
         if (!tableInfo.getCompanyId().equals(companyId)) {
             throw new TableNotFoundException(tableId);
         }
+        cardService.removeCardTableId(cardId);
         tableInfo.setCardId(cardId);
         tableInfoRepository.save(tableInfo);
         return tableInfo;
