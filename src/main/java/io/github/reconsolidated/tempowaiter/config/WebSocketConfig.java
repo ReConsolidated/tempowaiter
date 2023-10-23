@@ -13,13 +13,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry
                                                registry) {
-        registry.addEndpoint("/public/greetings")
+        registry.addEndpoint("/public/websocket-entry")
                 .setAllowedOrigins("http://localhost", "http://tempowaiter.pl", "tempowaiter.com").withSockJS();
 
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config){
-        config.enableSimpleBroker("/waiter_requests/");
+        config.enableSimpleBroker("/public");
     }
 }
