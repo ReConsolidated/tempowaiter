@@ -2,6 +2,8 @@ package io.github.reconsolidated.tempowaiter.api;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.github.reconsolidated.tempowaiter.ntag_decryption.NtagDecryptionService;
+import io.github.reconsolidated.tempowaiter.ntag_decryption.NtagInfo;
 import io.github.reconsolidated.tempowaiter.table.TableInfo;
 import io.github.reconsolidated.tempowaiter.table.TableService;
 import io.github.reconsolidated.tempowaiter.table.TableSession;
@@ -20,11 +22,13 @@ import java.util.UUID;
 @AllArgsConstructor
 public class TableController {
     private final TableService tableService;
+    private final NtagDecryptionService ntagDecryptionService;
 
     @PostMapping("/public/start_session")
-    public ResponseEntity<?> startSession(@RequestParam Long cardId, @RequestParam Long ctr) {
+    public ResponseEntity<?> startSession(@RequestParam String e, @RequestParam String c) {
+        NtagInfo ntagInfo = ntagDecryptionService.decryptNtag(e);
         String sessionId = UUID.randomUUID().toString();
-        TableInfo tableInfo = tableService.startSession(sessionId, cardId, ctr);
+        TableInfo tableInfo = tableService.startSession(sessionId, ntagInfo.getCardId(), ntagInfo.getCtr());
         ObjectNode responseBody = JsonNodeFactory.instance.objectNode();
         responseBody.set("tableInfo", JsonNodeFactory.instance.pojoNode(tableInfo));
         responseBody.put("sessionId", sessionId);

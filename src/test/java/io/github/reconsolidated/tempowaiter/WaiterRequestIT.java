@@ -2,6 +2,8 @@ package io.github.reconsolidated.tempowaiter;
 
 import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUser;
 import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUserService;
+import io.github.reconsolidated.tempowaiter.card.Card;
+import io.github.reconsolidated.tempowaiter.card.CardService;
 import io.github.reconsolidated.tempowaiter.company.Company;
 import io.github.reconsolidated.tempowaiter.company.CompanyService;
 import io.github.reconsolidated.tempowaiter.table.TableInfo;
@@ -28,6 +30,8 @@ public class WaiterRequestIT {
     private CompanyService companyService;
     @Autowired
     private AppUserService appUserService;
+    @Autowired
+    private CardService cardService;
 
     @Test
     @Transactional
@@ -48,12 +52,14 @@ public class WaiterRequestIT {
     @Test
     @Transactional
     public void cancelCall() {
+        Card card = cardService.createCard("427B63B9836F5EC8A0BCF3DB7599328E");
+
         Long cardId = 1L;
         Company company = companyService.createCompany("test company");
         TableInfo tableInfo = tableService.createTable(company.getId(),  "test table");
         tableInfo.setCardId(cardId);
         String sessionId = "abc123";
-        tableService.startSession(sessionId, cardId, 15L);
+        tableService.startSession(sessionId, card.getCardUid(), 15L);
         WaiterRequest request = waiterService.callToTable("test_request_type", tableInfo, cardId);
         String email = "test@user.com";
         AppUser appUser = appUserService.getOrCreateUser("test_user",

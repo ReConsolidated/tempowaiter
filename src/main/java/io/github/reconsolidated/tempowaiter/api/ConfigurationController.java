@@ -52,6 +52,11 @@ public class ConfigurationController {
         return ResponseEntity.ok(cardService.setCardCompanyId(cardId, companyId));
     }
 
+    @PostMapping("/public/cards")
+    public ResponseEntity<Card> createCard(@RequestParam String e, @RequestParam String c) {
+        return ResponseEntity.ok(cardService.createCard(e));
+    }
+
     @GetMapping("/cards")
     public ResponseEntity<List<Card>> listCards(@CurrentUser AppUser currentUser, @RequestParam(required = false) Long companyId) {
         if (companyId == null && !currentUser.getRole().equals(AppUserRole.ADMIN)) {

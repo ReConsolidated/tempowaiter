@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Getter
@@ -13,12 +14,13 @@ import javax.persistence.Id;
 @Setter
 public class Card {
     @Id
+    @GeneratedValue(generator = "card_id_generator")
     private Long id;
+    private String cardUid;
     private Long tableId;
     private Long companyId;
 
-    public Card(Long id, Long companyId) {
-        this.id = id;
-        this.companyId = companyId;
+    public Card(String cardUid) {
+        this.cardUid = cardUid;
     }
 }

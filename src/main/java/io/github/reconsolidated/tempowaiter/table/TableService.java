@@ -22,7 +22,8 @@ public class TableService {
     private final WaiterService waiterService;
     private final CardService cardService;
 
-    public TableInfo startSession(String sessionId, Long cardId, Long ctr) {
+    public TableInfo startSession(String sessionId, String cardUid, Long ctr) {
+        Long cardId = cardService.getCardId(cardUid);
         Optional<TableSession> tableSession = sessionRepository
                 .findBySessionIdAndCardIdAndExpirationDateGreaterThanAndIsOverwrittenFalse(sessionId, cardId, LocalDateTime.now());
         if (tableSession.isPresent()) {
