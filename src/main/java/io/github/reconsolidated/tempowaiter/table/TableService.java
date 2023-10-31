@@ -42,9 +42,9 @@ public class TableService {
             sessionRepository.save(overwrittenSession.get());
         }
 
-        tableInfo.setLastCtr(ctr);
+        // tableInfo.setLastCtr(ctr);
         tableInfoRepository.save(tableInfo);
-        LocalDateTime expirationDate = LocalDateTime.now().plusMinutes(180);
+        LocalDateTime expirationDate = LocalDateTime.now().plusMinutes(60);
         TableSession newTableSession = new TableSession(tableInfo, sessionId, expirationDate, false);
         sessionRepository.save(newTableSession);
         return tableInfo;
