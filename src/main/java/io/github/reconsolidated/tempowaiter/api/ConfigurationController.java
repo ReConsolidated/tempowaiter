@@ -44,7 +44,7 @@ public class ConfigurationController {
         return ResponseEntity.ok(tableInfo);
     }
 
-    @PostMapping("/cards/{cardId}")
+    @PutMapping("/cards/{cardId}")
     public ResponseEntity<Card> addCardToCompany(@CurrentUser AppUser currentUser, @PathVariable Long cardId, @RequestParam Long companyId) {
         if (!currentUser.getRole().equals(AppUserRole.ADMIN)) {
             throw new IllegalArgumentException("This endpoint is for Admins only");
@@ -59,6 +59,18 @@ public class ConfigurationController {
 
     @GetMapping("/cards")
     public ResponseEntity<List<Card>> listCards(@CurrentUser AppUser currentUser, @RequestParam(required = false) Long companyId) {
+        if (companyId == null && !currentUser.getRole().equals(AppUserRole.ADMIN)) {
+            throw new IllegalArgumentException("List of all cards is for Admins only");
+        }
+        if (companyId != null) {
+            return ResponseEntity.ok(cardService.getCards(companyId));
+        } else {
+            return ResponseEntity.ok(cardService.getCards());
+        }
+    }
+
+    @GetMapping("/companies")
+    public ResponseEntity<List<Card>> listCompanies(@CurrentUser AppUser currentUser, @RequestParam(required = false) Long companyId) {
         if (companyId == null && !currentUser.getRole().equals(AppUserRole.ADMIN)) {
             throw new IllegalArgumentException("List of all cards is for Admins only");
         }
