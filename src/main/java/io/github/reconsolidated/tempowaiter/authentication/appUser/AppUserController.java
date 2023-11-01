@@ -37,7 +37,7 @@ public class AppUserController {
     }
 
     @PostMapping("/become_admin")
-    public ResponseEntity<AppUser> becomeAdmin(@CurrentUser AppUser user, String password) {
+    public ResponseEntity<AppUser> becomeAdmin(@CurrentUser AppUser user, @RequestParam String password) {
         if (password.equals("test_password")) {
             return ResponseEntity.ok(appUserService.makeAdmin(user));
         }
