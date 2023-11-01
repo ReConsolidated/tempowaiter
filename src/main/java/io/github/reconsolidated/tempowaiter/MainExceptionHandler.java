@@ -29,7 +29,7 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
             }
         }
         return handleExceptionInternal(ex, bodyOfResponse,
-                new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler(value
