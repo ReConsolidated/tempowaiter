@@ -124,4 +124,12 @@ public class TableService {
                 .orElseThrow(SessionExpiredException::new);
         return waiterService.getRequest(tableSession.getTableId());
     }
+
+    public void deleteTable(Long companyId, Long tableId) {
+        TableInfo tableInfo = tableInfoRepository.findById(tableId).orElseThrow(() -> new TableNotFoundException(tableId));
+        if (!tableInfo.getCompanyId().equals(companyId)) {
+            throw new TableNotFoundException(tableId);
+        }
+        tableInfoRepository.deleteById(tableId);
+    }
 }

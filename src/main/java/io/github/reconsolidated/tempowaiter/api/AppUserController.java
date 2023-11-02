@@ -1,5 +1,8 @@
-package io.github.reconsolidated.tempowaiter.authentication.appUser;
+package io.github.reconsolidated.tempowaiter.api;
 
+import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUser;
+import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUserRole;
+import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUserService;
 import io.github.reconsolidated.tempowaiter.authentication.currentUser.CurrentUser;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
@@ -36,11 +39,12 @@ public class AppUserController {
         return ResponseEntity.ok(user);
     }
 
-    @GetMapping("/become_admin")
-    public ResponseEntity<AppUser> becomeAdmin(@CurrentUser AppUser user, @RequestParam String password) {
-        if (password.equals("test_password")) {
-            return ResponseEntity.ok(appUserService.makeAdmin(user));
+    @PutMapping("/role/{role}")
+    public ResponseEntity<AppUser> becomeAdmin(@CurrentUser AppUser user, @RequestParam String email, @PathVariable String role) {
+        if (!user.getRole().equals(AppUserRole.ADMIN)) {
+            throw new IllegalArgumentException("This endpoint is for Admins only");
         }
-        return ResponseEntity.badRequest().build();
+        AppUserRole appUserRole = AppUserRole.valueOf(role.toUpperCase());
+        return ResponseEntity.ok(appUserService.setUserRole(email, appUserRole));
     }
 }

@@ -58,4 +58,11 @@ public class CardService {
         Card card = new Card(ntagInfo.getCardId());
         return cardRepository.save(card);
     }
+
+    public boolean deleteCard(Long cardId) {
+        var card = cardRepository.findById(cardId);
+        if (card.isEmpty()) return false;
+        cardRepository.deleteById(cardId);
+        return true;
+    }
 }

@@ -14,7 +14,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry
                                                registry) {
         registry.addEndpoint("/public/websocket-entry")
-                .setAllowedOrigins("http://localhost", "http://tempowaiter.pl", "tempowaiter.com").withSockJS();
+                .setAllowedOrigins("http://localhost", "http://localhost:4200", "http://tempowaiter.pl",
+                        "https://tempowaiter.pl").withSockJS();
 
     }
 

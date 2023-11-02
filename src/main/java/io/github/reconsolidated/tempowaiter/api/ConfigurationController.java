@@ -32,6 +32,12 @@ public class ConfigurationController {
         return ResponseEntity.ok(tableInfos);
     }
 
+    @DeleteMapping("/tables/{tableId}")
+    public ResponseEntity<?> deleteTable(@CurrentUser AppUser currentUser, @PathVariable Long tableId) {
+        tableService.deleteTable(currentUser.getCompanyId(), tableId);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/table/{tableId}/cardId")
     public ResponseEntity<TableInfo> addCardToTable(@CurrentUser AppUser currentUser, @PathVariable Long tableId, @RequestParam Long cardId) {
         TableInfo tableInfo = tableService.setCardId(currentUser.getCompanyId(), tableId, cardId);
@@ -50,6 +56,17 @@ public class ConfigurationController {
             throw new IllegalArgumentException("This endpoint is for Admins only");
         }
         return ResponseEntity.ok(cardService.setCardCompanyId(cardId, companyId));
+    }
+
+    @DeleteMapping("/cards/{cardId}")
+    public ResponseEntity<?> deleteCard(@CurrentUser AppUser currentUser, @PathVariable Long cardId) {
+        if (!currentUser.getRole().equals(AppUserRole.ADMIN)) {
+            throw new IllegalArgumentException("This endpoint is for Admins only");
+        }
+        if (cardService.deleteCard(cardId)) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping("/public/cards")

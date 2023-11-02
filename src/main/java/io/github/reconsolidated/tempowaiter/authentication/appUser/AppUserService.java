@@ -68,8 +68,10 @@ public class AppUserService {
         appUserRepository.save(user);
     }
 
-    public AppUser makeAdmin(AppUser user) {
-        user.setRole(AppUserRole.ADMIN);
+    public AppUser setUserRole(String email, AppUserRole appUserRole) {
+        AppUser user = appUserRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        user.setRole(appUserRole);
         return appUserRepository.save(user);
     }
 }
