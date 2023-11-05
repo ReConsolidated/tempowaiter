@@ -14,7 +14,7 @@ spring:
 
 keycloak:
   realm: staffect
-  auth-server-url: https://keycloak.weasked.pl:8443/
+  auth-server-url: https://keycloak-docker.fly.dev/
   resource: spring-app
   bearer-only: true
   ssl-required: NONE
