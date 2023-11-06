@@ -16,11 +16,10 @@ public class NtagDecryptionService {
     public NtagInfo decryptNtag(String e) {
         String IV = "00000000000000000000000000000000";
         String key = "00000000000000000000000000000001";
-        String Enc_PICC_Data = "EA8A15DB3367E95BFEFB639FA5535F9E";
 
         byte[] ivBytes = Hex.decode(IV);
         byte[] keyBytes = Hex.decode(key);
-        byte[] encryptedData = Hex.decode(Enc_PICC_Data);
+        byte[] encryptedData = Hex.decode(e);
 
         CipherParameters keyParam = new KeyParameter(keyBytes);
         CBCBlockCipher blockCipher = new CBCBlockCipher(new AESEngine());
