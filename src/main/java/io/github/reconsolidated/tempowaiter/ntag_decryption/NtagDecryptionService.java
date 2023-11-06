@@ -15,7 +15,7 @@ public class NtagDecryptionService {
 
     public NtagInfo decryptNtag(String e) {
         String IV = "00000000000000000000000000000000";
-        String key = "00000000000000000000000000000001";
+        String key = "12398098548076132587601325870623";
 
         byte[] ivBytes = Hex.decode(IV);
         byte[] keyBytes = Hex.decode(key);
