@@ -20,6 +20,7 @@ public class TableInfo {
     @Setter
     private Long cardId;
     private Long companyId;
+    @Setter
     private String tableDisplayName;
     @Setter
     private Long lastCtr;

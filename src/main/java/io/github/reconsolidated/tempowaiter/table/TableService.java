@@ -136,4 +136,14 @@ public class TableService {
         }
         tableInfoRepository.deleteById(tableId);
     }
+
+    public TableInfo updateTable(Long currentUserCompanyId, Long tableId, String tableDisplayName) {
+        TableInfo tableInfo = tableInfoRepository.findById(tableId).orElseThrow(() -> new TableNotFoundException(tableId));
+        if (!tableInfo.getCompanyId().equals(currentUserCompanyId)) {
+            throw new TableNotFoundException(tableId);
+        }
+        tableInfo.setTableDisplayName(tableDisplayName);
+        tableInfoRepository.save(tableInfo);
+        return tableInfo;
+    }
 }

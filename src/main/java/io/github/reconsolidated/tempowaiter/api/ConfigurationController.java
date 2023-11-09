@@ -32,6 +32,12 @@ public class ConfigurationController {
         return ResponseEntity.ok(tableInfos);
     }
 
+    @PutMapping("/tables/{tableId}")
+    public ResponseEntity<TableInfo> updateTable(@CurrentUser AppUser currentUser, @PathVariable Long tableId, @RequestParam String tableDisplayName) {
+        TableInfo tableInfo = tableService.updateTable(currentUser.getCompanyId(), tableId, tableDisplayName);
+        return ResponseEntity.ok(tableInfo);
+    }
+
     @DeleteMapping("/tables/{tableId}")
     public ResponseEntity<?> deleteTable(@CurrentUser AppUser currentUser, @PathVariable Long tableId) {
         tableService.deleteTable(currentUser.getCompanyId(), tableId);
