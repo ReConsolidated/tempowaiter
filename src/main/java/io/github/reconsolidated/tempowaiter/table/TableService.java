@@ -71,7 +71,11 @@ public class TableService {
         if (tableInfoRepository.findByCardIdEquals(cardId).isPresent()) {
             throw new IllegalArgumentException("This card is already assigned to a table.");
         }
-        if (cardService.getCardCompanyId(cardId) != companyId) {
+        Long cardCompanyId = cardService.getCardCompanyId(cardId);
+        if (cardCompanyId == null) {
+            throw new IllegalArgumentException("Card doesn't have company id set.");
+        }
+        if (!cardCompanyId.equals(companyId)) {
             throw new IllegalArgumentException("Card %d is not assigned to your company.".formatted(cardId));
         }
         cardService.setCardTableId(cardId, tableId);

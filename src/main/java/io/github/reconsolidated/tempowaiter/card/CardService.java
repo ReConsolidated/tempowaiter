@@ -13,7 +13,7 @@ public class CardService {
     private final CardRepository cardRepository;
     private final NtagDecryptionService ntagDecryptionService;
 
-    public long getCardCompanyId(Long cardId) {
+    public Long getCardCompanyId(Long cardId) {
         Card card = cardRepository.findById(cardId).orElseThrow();
         return card.getCompanyId();
     }
