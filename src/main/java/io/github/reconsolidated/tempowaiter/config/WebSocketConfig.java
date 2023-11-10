@@ -15,7 +15,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                                                registry) {
         registry.addEndpoint("/public/websocket-entry")
                 .setAllowedOrigins("http://localhost", "http://localhost:4200", "http://tempowaiter.pl",
-                        "https://tempowaiter.pl").withSockJS();
+                        "https://tempowaiter.pl", "https://tempo-front.fly.dev").withSockJS();
 
     }
 
