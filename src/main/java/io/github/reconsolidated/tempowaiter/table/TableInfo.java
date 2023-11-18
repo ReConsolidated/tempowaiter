@@ -17,12 +17,16 @@ public class TableInfo {
     @Id
     @GeneratedValue(generator = "table_info_id_generator")
     private Long tableId;
-    @Setter
     private Long cardId;
     private Long companyId;
     @Setter
     private String tableDisplayName;
     @Setter
     private Long lastCtr;
+
+    public void setCardId(Long cardId) {
+        this.cardId = cardId;
+        this.lastCtr = 0L;
+    }
 
 }

@@ -13,9 +13,16 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class NtagDecryptionService {
 
+    public static void main(String[] args) {
+        NtagDecryptionService ntagDecryptionService = new NtagDecryptionService();
+        ntagDecryptionService.decryptNtag("A5C610504B514177DC2448B7BFA321A4");
+    }
+
     public NtagInfo decryptNtag(String e) {
         String IV = "00000000000000000000000000000000";
+        //String key = "00000000000000000000000000000000";
         String key = "12398098548076132587601325870623";
+
 
         byte[] ivBytes = Hex.decode(IV);
         byte[] keyBytes = Hex.decode(key);
@@ -39,8 +46,12 @@ public class NtagDecryptionService {
         String piccData = Hex.toHexString(PICCData);
         String piccDataTag = Hex.toHexString(PICCDataTag);
         String uid = Hex.toHexString(UID);
-        String sdmReadCtr = Hex.toHexString(SDMReadCtr);
-        Long ctr = Long.parseLong(sdmReadCtr, 16);
+        byte[] reversedSDMReadCtr = new byte[3];
+        for (int i = 0; i < SDMReadCtr.length; i++) {
+            reversedSDMReadCtr[i] = SDMReadCtr[SDMReadCtr.length - i - 1];
+        }
+        String stringCtr = Hex.toHexString(reversedSDMReadCtr);
+        Long ctr = Long.parseLong(stringCtr, 16);
 
         return new NtagInfo(piccDataTag, uid, ctr);
     }
