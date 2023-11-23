@@ -7,6 +7,7 @@ import io.github.reconsolidated.tempowaiter.card.Card;
 import io.github.reconsolidated.tempowaiter.card.CardService;
 import io.github.reconsolidated.tempowaiter.company.Company;
 import io.github.reconsolidated.tempowaiter.company.CompanyService;
+import io.github.reconsolidated.tempowaiter.company.MenuLinkDto;
 import io.github.reconsolidated.tempowaiter.table.TableInfo;
 import io.github.reconsolidated.tempowaiter.table.TableService;
 import io.github.reconsolidated.tempowaiter.waiter.WaiterService;
@@ -117,10 +118,18 @@ public class ConfigurationController {
     }
 
     @PutMapping("/companies/{companyId}/menu_link")
-    public ResponseEntity<Company> setCompanyMenuLink(@CurrentUser AppUser currentUser, @PathVariable Long companyId, @RequestParam String menuLink) {
+    public ResponseEntity<Company> setCompanyMenuLink(@CurrentUser AppUser currentUser,
+                                                      @PathVariable Long companyId,
+                                                      @RequestBody MenuLinkDto menuLink) {
         if (currentUser.getRole().equals(AppUserRole.ADMIN)) {
-            return ResponseEntity.ok(companyService.setCompanyMenuLink(companyId, companyId, menuLink));
+            return ResponseEntity.ok(companyService.setCompanyMenuLink(companyId, companyId, menuLink.getMenuLink()));
         }
-        return ResponseEntity.ok(companyService.setCompanyMenuLink(currentUser.getCompanyId(), companyId, menuLink));
+        return ResponseEntity.ok(
+                companyService.setCompanyMenuLink(
+                        currentUser.getCompanyId(),
+                        companyId,
+                        menuLink.getMenuLink()
+                )
+        );
     }
 }
