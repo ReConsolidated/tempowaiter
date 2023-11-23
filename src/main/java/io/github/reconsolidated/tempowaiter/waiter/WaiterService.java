@@ -14,7 +14,6 @@ public class WaiterService {
     private final WaiterRequestRepository waiterRequestRepository;
     private final WebSocketNotifier webSocketNotifier;
 
-
     public WaiterRequest callToTable(String requestType, TableInfo tableInfo, Long cardId) {
         Optional<WaiterRequest> existing = waiterRequestRepository.findByStateNotAndTableId(RequestState.DONE, tableInfo.getTableId());
         if (existing.isPresent()) {
