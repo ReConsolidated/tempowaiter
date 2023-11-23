@@ -110,4 +110,9 @@ public class ConfigurationController {
         }
         return ResponseEntity.ok(companyService.createCompany(companyName));
     }
+
+    @PutMapping("/companies/{companyId}")
+    public ResponseEntity<Company> setCompanyName(@CurrentUser AppUser currentUser, @PathVariable Long companyId, @RequestParam String companyName) {
+        return ResponseEntity.ok(companyService.setCompanyName(companyId, companyName));
+    }
 }

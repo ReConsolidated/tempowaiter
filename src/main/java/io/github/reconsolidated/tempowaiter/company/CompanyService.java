@@ -22,4 +22,10 @@ public class CompanyService {
     public List<Company> listCompanies() {
         return companyRepository.findAll();
     }
+
+    public Company setCompanyName(Long companyId, String companyName) {
+        Company company = companyRepository.findById(companyId).orElseThrow();
+        company.setName(companyName);
+        return companyRepository.save(company);
+    }
 }
