@@ -29,17 +29,6 @@ public class TableController {
     private final TableService tableService;
     private final NtagDecryptionService ntagDecryptionService;
 
-    private final Bucket bucket;
-
-    public TableController(TableService tableService, NtagDecryptionService ntagDecryptionService) {
-        this.tableService = tableService;
-        this.ntagDecryptionService = ntagDecryptionService;
-        Bandwidth limit = Bandwidth.classic(50, Refill.greedy(50, Duration.ofMinutes(1)));
-        this.bucket = Bucket4j.builder()
-                .addLimit(limit)
-                .build();
-    }
-
     @PostMapping("/public/start_session")
     public ResponseEntity<?> startSession(@RequestParam String e, @RequestParam String c) {
         NtagInfo ntagInfo = ntagDecryptionService.decryptNtag(e);
