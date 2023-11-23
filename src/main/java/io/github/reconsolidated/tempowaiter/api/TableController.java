@@ -9,6 +9,7 @@ import io.github.bucket4j.Refill;
 import io.github.reconsolidated.tempowaiter.ntag_decryption.NtagDecryptionService;
 import io.github.reconsolidated.tempowaiter.ntag_decryption.NtagInfo;
 import io.github.reconsolidated.tempowaiter.table.TableInfo;
+import io.github.reconsolidated.tempowaiter.table.TableInfoDto;
 import io.github.reconsolidated.tempowaiter.table.TableService;
 import io.github.reconsolidated.tempowaiter.table.TableSession;
 import io.github.reconsolidated.tempowaiter.waiter.WaiterRequest;
@@ -33,7 +34,7 @@ public class TableController {
     public ResponseEntity<?> startSession(@RequestParam String e, @RequestParam String c) {
         NtagInfo ntagInfo = ntagDecryptionService.decryptNtag(e);
         String sessionId = UUID.randomUUID().toString();
-        TableInfo tableInfo = tableService.startSession(sessionId, ntagInfo.getCardId(), ntagInfo.getCtr());
+        TableInfoDto tableInfo = tableService.startSession(sessionId, ntagInfo.getCardId(), ntagInfo.getCtr());
         ObjectNode responseBody = JsonNodeFactory.instance.objectNode();
         responseBody.set("tableInfo", JsonNodeFactory.instance.pojoNode(tableInfo));
         responseBody.put("sessionId", sessionId);

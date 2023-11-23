@@ -43,4 +43,11 @@ public class CompanyService {
             throw new IllegalArgumentException("You are not the owner of this company");
         }
     }
+
+    public Company getById(Long companyId) {
+        return companyRepository.findById(companyId).orElseThrow(
+                () -> new IllegalArgumentException(
+                        "Company with id %d doesn't exist!".formatted(companyId))
+        );
+    }
 }

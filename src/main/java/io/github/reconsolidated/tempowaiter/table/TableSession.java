@@ -1,6 +1,7 @@
 package io.github.reconsolidated.tempowaiter.table;
 
 
+import io.github.reconsolidated.tempowaiter.company.Company;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,8 +28,10 @@ public class TableSession {
     private Long lastRequestAt;
     private boolean isOverwritten = false;
     private LocalDateTime expirationDate;
+    private String companyName;
+    private String menuLink;
 
-    public TableSession(TableInfo tableInfo, String sessionId, LocalDateTime expirationDate, boolean isOverwritten) {
+    public TableSession(TableInfo tableInfo, Company company, String sessionId, LocalDateTime expirationDate, boolean isOverwritten) {
         this.cardId = tableInfo.getCardId();
         this.ctr = tableInfo.getLastCtr();
         this.tableId = tableInfo.getTableId();
@@ -36,5 +39,7 @@ public class TableSession {
         this.sessionId = sessionId;
         this.expirationDate = expirationDate;
         this.isOverwritten = isOverwritten;
+        this.companyName = company.getName();
+        this.menuLink = company.getMenuLink();
     }
 }

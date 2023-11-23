@@ -1,6 +1,8 @@
 package io.github.reconsolidated.tempowaiter.table;
 
 import io.github.reconsolidated.tempowaiter.card.CardService;
+import io.github.reconsolidated.tempowaiter.company.Company;
+import io.github.reconsolidated.tempowaiter.company.CompanyService;
 import io.github.reconsolidated.tempowaiter.table.exceptions.OutdatedTableRequestException;
 import io.github.reconsolidated.tempowaiter.table.exceptions.SessionExpiredException;
 import io.github.reconsolidated.tempowaiter.table.exceptions.TableNotFoundException;
@@ -21,13 +23,17 @@ public class TableService {
     private final TableInfoRepository tableInfoRepository;
     private final WaiterService waiterService;
     private final CardService cardService;
+    private final TableInfoMapper tableInfoMapper;
+    private final CompanyService companyService;
 
-    public TableInfo startSession(String sessionId, String cardUid, Long ctr) {
+    public TableInfoDto startSession(String sessionId, String cardUid, Long ctr) {
         Long cardId = cardService.getCardId(cardUid);
         Optional<TableSession> tableSession = sessionRepository
                 .findBySessionIdAndCardIdAndExpirationDateGreaterThanAndIsOverwrittenFalse(sessionId, cardId, LocalDateTime.now());
         if (tableSession.isPresent()) {
-            return tableInfoRepository.findByCardIdEquals(cardId).orElseThrow(() -> new TableNotFoundException(cardId));
+            return tableInfoMapper.toDto(
+                    tableInfoRepository.findByCardIdEquals(cardId).orElseThrow(
+                            () -> new TableNotFoundException(cardId)));
         }
 
         TableInfo tableInfo = tableInfoRepository.findByCardIdEquals(cardId).orElseThrow(() -> new TableNotFoundException(cardId));
@@ -42,12 +48,14 @@ public class TableService {
             sessionRepository.save(overwrittenSession.get());
         }
 
+        Company company = companyService.getById(tableInfo.getCompanyId());
+
         tableInfo.setLastCtr(ctr);
         tableInfoRepository.save(tableInfo);
         LocalDateTime expirationDate = LocalDateTime.now().plusMinutes(60);
-        TableSession newTableSession = new TableSession(tableInfo, sessionId, expirationDate, false);
+        TableSession newTableSession = new TableSession(tableInfo, company, sessionId, expirationDate, false);
         sessionRepository.save(newTableSession);
-        return tableInfo;
+        return tableInfoMapper.toDto(tableInfo);
     }
 
     public WaiterRequest callWaiter(String sessionId, String requestType, Long cardId) {
