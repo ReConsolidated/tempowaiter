@@ -1,6 +1,9 @@
 package io.github.reconsolidated.tempowaiter.company;
 
+import io.github.reconsolidated.tempowaiter.card.Card;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class CompanyService {
@@ -16,4 +19,7 @@ public class CompanyService {
         return companyRepository.save(company);
     }
 
+    public List<Company> listCompanies() {
+        return companyRepository.findAll();
+    }
 }

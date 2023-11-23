@@ -97,6 +97,11 @@
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.github.vladimir-bukhtoyarov</groupId>
+			<artifactId>bucket4j-core</artifactId>
+			<version>4.10.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>

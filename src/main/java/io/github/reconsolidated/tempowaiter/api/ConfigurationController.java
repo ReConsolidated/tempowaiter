@@ -5,6 +5,8 @@ import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUserRole;
 import io.github.reconsolidated.tempowaiter.authentication.currentUser.CurrentUser;
 import io.github.reconsolidated.tempowaiter.card.Card;
 import io.github.reconsolidated.tempowaiter.card.CardService;
+import io.github.reconsolidated.tempowaiter.company.Company;
+import io.github.reconsolidated.tempowaiter.company.CompanyService;
 import io.github.reconsolidated.tempowaiter.table.TableInfo;
 import io.github.reconsolidated.tempowaiter.table.TableService;
 import io.github.reconsolidated.tempowaiter.waiter.WaiterService;
@@ -19,6 +21,7 @@ import java.util.List;
 public class ConfigurationController {
     private final TableService tableService;
     private final CardService cardService;
+    private final CompanyService companyService;
 
     @PostMapping("/table")
     public ResponseEntity<TableInfo> createTable(@CurrentUser AppUser currentUser, @RequestParam String tableDisplayName) {
@@ -93,14 +96,18 @@ public class ConfigurationController {
     }
 
     @GetMapping("/companies")
-    public ResponseEntity<List<Card>> listCompanies(@CurrentUser AppUser currentUser, @RequestParam(required = false) Long companyId) {
-        if (companyId == null && !currentUser.getRole().equals(AppUserRole.ADMIN)) {
-            throw new IllegalArgumentException("List of all cards is for Admins only");
+    public ResponseEntity<List<Company>> listCompanies(@CurrentUser AppUser currentUser) {
+        if (!currentUser.getRole().equals(AppUserRole.ADMIN)) {
+            throw new IllegalArgumentException("List of all companies is for Admins only");
         }
-        if (companyId != null) {
-            return ResponseEntity.ok(cardService.getCards(companyId));
-        } else {
-            return ResponseEntity.ok(cardService.getCards());
+        return ResponseEntity.ok(companyService.listCompanies());
+    }
+
+    @PostMapping("/companies")
+    public ResponseEntity<Company> createCompany(@CurrentUser AppUser currentUser, @RequestParam String companyName) {
+        if (!currentUser.getRole().equals(AppUserRole.ADMIN)) {
+            throw new IllegalArgumentException("Endpoint for Admins only");
         }
+        return ResponseEntity.ok(companyService.createCompany(companyName));
     }
 }

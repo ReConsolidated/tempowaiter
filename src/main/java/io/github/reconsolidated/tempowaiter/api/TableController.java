@@ -2,6 +2,10 @@ package io.github.reconsolidated.tempowaiter.api;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.github.bucket4j.Bandwidth;
+import io.github.bucket4j.Bucket;
+import io.github.bucket4j.Bucket4j;
+import io.github.bucket4j.Refill;
 import io.github.reconsolidated.tempowaiter.ntag_decryption.NtagDecryptionService;
 import io.github.reconsolidated.tempowaiter.ntag_decryption.NtagInfo;
 import io.github.reconsolidated.tempowaiter.table.TableInfo;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Duration;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,6 +28,17 @@ import java.util.UUID;
 public class TableController {
     private final TableService tableService;
     private final NtagDecryptionService ntagDecryptionService;
+
+    private final Bucket bucket;
+
+    public TableController(TableService tableService, NtagDecryptionService ntagDecryptionService) {
+        this.tableService = tableService;
+        this.ntagDecryptionService = ntagDecryptionService;
+        Bandwidth limit = Bandwidth.classic(50, Refill.greedy(50, Duration.ofMinutes(1)));
+        this.bucket = Bucket4j.builder()
+                .addLimit(limit)
+                .build();
+    }
 
     @PostMapping("/public/start_session")
     public ResponseEntity<?> startSession(@RequestParam String e, @RequestParam String c) {
