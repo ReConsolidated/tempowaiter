@@ -113,6 +113,14 @@ public class ConfigurationController {
 
     @PutMapping("/companies/{companyId}")
     public ResponseEntity<Company> setCompanyName(@CurrentUser AppUser currentUser, @PathVariable Long companyId, @RequestParam String companyName) {
-        return ResponseEntity.ok(companyService.setCompanyName(companyId, companyName));
+        return ResponseEntity.ok(companyService.setCompanyName(currentUser.getCompanyId(), companyId, companyName));
+    }
+
+    @PutMapping("/companies/{companyId}/menu_link")
+    public ResponseEntity<Company> setCompanyMenuLink(@CurrentUser AppUser currentUser, @PathVariable Long companyId, @RequestParam String menuLink) {
+        if (currentUser.getRole().equals(AppUserRole.ADMIN)) {
+            return ResponseEntity.ok(companyService.setCompanyMenuLink(companyId, companyId, menuLink));
+        }
+        return ResponseEntity.ok(companyService.setCompanyMenuLink(currentUser.getCompanyId(), companyId, menuLink));
     }
 }

@@ -1,5 +1,6 @@
 package io.github.reconsolidated.tempowaiter.company;
 
+import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUser;
 import io.github.reconsolidated.tempowaiter.card.Card;
 import org.springframework.stereotype.Service;
 
@@ -23,9 +24,23 @@ public class CompanyService {
         return companyRepository.findAll();
     }
 
-    public Company setCompanyName(Long companyId, String companyName) {
+    public Company setCompanyName(Long userId, Long companyId, String companyName) {
         Company company = companyRepository.findById(companyId).orElseThrow();
-        company.setName(companyName);
-        return companyRepository.save(company);
+        if (userId.equals(companyId)) {
+            company.setName(companyName);
+            return companyRepository.save(company);
+        } else {
+            throw new IllegalArgumentException("You are not the owner of this company");
+        }
+    }
+
+    public Company setCompanyMenuLink(Long userId, Long companyId, String menuLink) {
+        Company company = companyRepository.findById(companyId).orElseThrow();
+        if (userId.equals(companyId)) {
+            company.setMenuLink(menuLink);
+            return companyRepository.save(company);
+        } else {
+            throw new IllegalArgumentException("You are not the owner of this company");
+        }
     }
 }

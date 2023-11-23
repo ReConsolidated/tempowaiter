@@ -17,4 +17,5 @@ public class Company {
     @GeneratedValue(generator = "companies")
     private Long id;
     private String name;
+    private String menuLink;
 }
