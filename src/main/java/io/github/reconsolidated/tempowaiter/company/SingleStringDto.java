@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class MenuLinkDto {
-    private String menuLink;
+public class SingleStringDto {
+    private String content;
 }

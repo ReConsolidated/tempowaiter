@@ -35,7 +35,7 @@ public class CompanyService {
     }
 
     public Company setCompanyMenuLink(Long userId, Long companyId, String menuLink) {
-        Company company = companyRepository.findById(companyId).orElseThrow();
+        Company company = getById(companyId);
         if (userId.equals(companyId)) {
             company.setMenuLink(menuLink);
             return companyRepository.save(company);
@@ -49,5 +49,35 @@ public class CompanyService {
                 () -> new IllegalArgumentException(
                         "Company with id %d doesn't exist!".formatted(companyId))
         );
+    }
+
+    public Company setCompanyBackgroundImage(Long userId, Long companyId, String content) {
+        Company company = getById(companyId);
+        if (userId.equals(companyId)) {
+            company.setBackgroundImage(content);
+            return companyRepository.save(company);
+        } else {
+            throw new IllegalArgumentException("You are not the owner of this company");
+        }
+    }
+
+    public Company setCompanyFacebookLink(Long userId, Long companyId, String content) {
+        Company company = getById(companyId);
+        if (userId.equals(companyId)) {
+            company.setFacebookLink(content);
+            return companyRepository.save(company);
+        } else {
+            throw new IllegalArgumentException("You are not the owner of this company");
+        }
+    }
+
+    public Company setCompanyInstagramLink(Long userId, Long companyId, String content) {
+        Company company = getById(companyId);
+        if (userId.equals(companyId)) {
+            company.setInstagramLink(content);
+            return companyRepository.save(company);
+        } else {
+            throw new IllegalArgumentException("You are not the owner of this company");
+        }
     }
 }

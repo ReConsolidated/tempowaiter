@@ -18,4 +18,7 @@ public class Company {
     private Long id;
     private String name;
     private String menuLink;
+    private String backgroundImage;
+    private String facebookLink;
+    private String instagramLink;
 }

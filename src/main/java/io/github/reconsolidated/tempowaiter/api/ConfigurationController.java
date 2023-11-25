@@ -7,10 +7,9 @@ import io.github.reconsolidated.tempowaiter.card.Card;
 import io.github.reconsolidated.tempowaiter.card.CardService;
 import io.github.reconsolidated.tempowaiter.company.Company;
 import io.github.reconsolidated.tempowaiter.company.CompanyService;
-import io.github.reconsolidated.tempowaiter.company.MenuLinkDto;
+import io.github.reconsolidated.tempowaiter.company.SingleStringDto;
 import io.github.reconsolidated.tempowaiter.table.TableInfo;
 import io.github.reconsolidated.tempowaiter.table.TableService;
-import io.github.reconsolidated.tempowaiter.waiter.WaiterService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -120,15 +119,63 @@ public class ConfigurationController {
     @PutMapping("/companies/{companyId}/menu_link")
     public ResponseEntity<Company> setCompanyMenuLink(@CurrentUser AppUser currentUser,
                                                       @PathVariable Long companyId,
-                                                      @RequestBody MenuLinkDto menuLink) {
+                                                      @RequestBody SingleStringDto menuLink) {
         if (currentUser.getRole().equals(AppUserRole.ADMIN)) {
-            return ResponseEntity.ok(companyService.setCompanyMenuLink(companyId, companyId, menuLink.getMenuLink()));
+            return ResponseEntity.ok(companyService.setCompanyMenuLink(companyId, companyId, menuLink.getContent()));
         }
         return ResponseEntity.ok(
                 companyService.setCompanyMenuLink(
                         currentUser.getCompanyId(),
                         companyId,
-                        menuLink.getMenuLink()
+                        menuLink.getContent()
+                )
+        );
+    }
+
+    @PutMapping("/companies/{companyId}/background_image")
+    public ResponseEntity<Company> setCompanyBackgroundImage(@CurrentUser AppUser currentUser,
+                                                      @PathVariable Long companyId,
+                                                      @RequestBody SingleStringDto backgroundImage) {
+        if (currentUser.getRole().equals(AppUserRole.ADMIN)) {
+            return ResponseEntity.ok(companyService.setCompanyBackgroundImage(companyId, companyId, backgroundImage.getContent()));
+        }
+        return ResponseEntity.ok(
+                companyService.setCompanyBackgroundImage(
+                        currentUser.getCompanyId(),
+                        companyId,
+                        backgroundImage.getContent()
+                )
+        );
+    }
+
+    @PutMapping("/companies/{companyId}/facebook_link")
+    public ResponseEntity<Company> setCompanyFacebookLink(@CurrentUser AppUser currentUser,
+                                                             @PathVariable Long companyId,
+                                                             @RequestBody SingleStringDto facebookLink) {
+        if (currentUser.getRole().equals(AppUserRole.ADMIN)) {
+            return ResponseEntity.ok(companyService.setCompanyFacebookLink(companyId, companyId, facebookLink.getContent()));
+        }
+        return ResponseEntity.ok(
+                companyService.setCompanyFacebookLink(
+                        currentUser.getCompanyId(),
+                        companyId,
+                        facebookLink.getContent()
+                )
+        );
+    }
+
+    @PutMapping("/companies/{companyId}/instagram_link")
+    public ResponseEntity<Company> setCompanyInstagramLink(@CurrentUser AppUser currentUser,
+                                                          @PathVariable Long companyId,
+                                                          @RequestBody SingleStringDto instagramLink) {
+        if (currentUser.getRole().equals(AppUserRole.ADMIN)) {
+            return ResponseEntity.ok(companyService.setCompanyInstagramLink(companyId, companyId, instagramLink.getContent()));
+        }
+        return ResponseEntity.ok(
+                companyService.setCompanyInstagramLink(
+                        currentUser.getCompanyId(),
+                        companyId,
+                        instagramLink.getContent()
                 )
         );
     }
