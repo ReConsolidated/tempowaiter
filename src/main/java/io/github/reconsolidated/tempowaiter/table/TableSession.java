@@ -30,6 +30,9 @@ public class TableSession {
     private LocalDateTime expirationDate;
     private String companyName;
     private String menuLink;
+    private String backgroundImage;
+    private String facebookLink;
+    private String instagramLink;
 
     public TableSession(TableInfo tableInfo, Company company, String sessionId, LocalDateTime expirationDate, boolean isOverwritten) {
         this.cardId = tableInfo.getCardId();
@@ -41,5 +44,8 @@ public class TableSession {
         this.isOverwritten = isOverwritten;
         this.companyName = company.getName();
         this.menuLink = company.getMenuLink();
+        this.backgroundImage = company.getBackgroundImage();
+        this.facebookLink = company.getFacebookLink();
+        this.instagramLink = company.getInstagramLink();
     }
 }
