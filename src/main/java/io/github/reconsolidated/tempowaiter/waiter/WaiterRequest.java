@@ -18,6 +18,7 @@ public class WaiterRequest {
     private Long resolvedAt;
     private Long companyId;
     private Long tableId;
+    private String tableName;
     private Long cardId;
     private String type;
     @Enumerated(EnumType.STRING)

@@ -26,6 +26,7 @@ public class WaiterService {
         request.setCompanyId(tableInfo.getCompanyId());
         request.setTableId(tableInfo.getTableId());
         request.setState(RequestState.WAITING);
+        request.setTableName(tableInfo.getTableDisplayName());
         WaiterRequest result = waiterRequestRepository.save(request);
         webSocketNotifier.sendRequestsNotification(tableInfo.getCompanyId());
         return result;
