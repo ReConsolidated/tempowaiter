@@ -10,6 +10,7 @@ import io.github.reconsolidated.tempowaiter.table.exceptions.TableNotFoundExcept
 import io.github.reconsolidated.tempowaiter.waiter.WaiterRequest;
 import io.github.reconsolidated.tempowaiter.waiter.WaiterService;
 import lombok.AllArgsConstructor;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
@@ -72,24 +73,31 @@ public class TableService {
         return waiterService.callToTable(requestType, tableInfo, cardId);
     }
 
-    public TableInfo setCardId(Long companyId, Long tableId, Long cardId) {
+    public TableInfo setCardId(Long companyId, Long tableId, @Nullable Long cardId) {
         TableInfo tableInfo = tableInfoRepository.findById(tableId).orElseThrow(() -> new TableNotFoundException(tableId));
+        Long oldCardId = tableInfo.getCardId();
         if (!tableInfo.getCompanyId().equals(companyId)) {
             throw new TableNotFoundException(tableId);
         }
-        if (tableInfoRepository.findByCardIdEquals(cardId).isPresent()) {
-            throw new IllegalArgumentException("This card is already assigned to a table.");
+        if (cardId == null) {
+            cardService.removeCardTableId(oldCardId);
+            tableInfo.setCardId(null);
+        } else {
+            if (tableInfoRepository.findByCardIdEquals(cardId).isPresent()) {
+                throw new IllegalArgumentException("This card is already assigned to a table.");
+            }
+            Long cardCompanyId = cardService.getCardCompanyId(cardId);
+            if (cardCompanyId == null) {
+                throw new IllegalArgumentException("Card doesn't have company id set.");
+            }
+            if (!cardCompanyId.equals(companyId)) {
+                throw new IllegalArgumentException("Card %d is not assigned to your company.".formatted(cardId));
+            }
+            cardService.removeCardTableId(oldCardId);
+            cardService.setCardTableId(cardId, tableId);
+            tableInfo.setCardId(cardId);
+            tableInfoRepository.save(tableInfo);
         }
-        Long cardCompanyId = cardService.getCardCompanyId(cardId);
-        if (cardCompanyId == null) {
-            throw new IllegalArgumentException("Card doesn't have company id set.");
-        }
-        if (!cardCompanyId.equals(companyId)) {
-            throw new IllegalArgumentException("Card %d is not assigned to your company.".formatted(cardId));
-        }
-        cardService.setCardTableId(cardId, tableId);
-        tableInfo.setCardId(cardId);
-        tableInfoRepository.save(tableInfo);
         return tableInfo;
     }
 
