@@ -1,7 +1,5 @@
 package io.github.reconsolidated.tempowaiter.company;
 
-import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUser;
-import io.github.reconsolidated.tempowaiter.card.Card;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
