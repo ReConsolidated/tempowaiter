@@ -48,7 +48,9 @@ public class ConfigurationController {
     }
 
     @PostMapping("/table/{tableId}/cardId")
-    public ResponseEntity<TableInfo> addCardToTable(@CurrentUser AppUser currentUser, @PathVariable Long tableId, @RequestParam Long cardId) {
+    public ResponseEntity<TableInfo> setTableCard(@CurrentUser AppUser currentUser,
+                                                  @PathVariable Long tableId,
+                                                  @RequestParam(required = false) Long cardId) {
         TableInfo tableInfo = tableService.setCardId(currentUser.getCompanyId(), tableId, cardId);
         return ResponseEntity.ok(tableInfo);
     }
