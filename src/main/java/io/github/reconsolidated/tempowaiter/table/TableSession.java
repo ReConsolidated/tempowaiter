@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -29,9 +30,13 @@ public class TableSession {
     private boolean isOverwritten = false;
     private LocalDateTime expirationDate;
     private String companyName;
+    @Column(length = 1000)
     private String menuLink;
+    @Column(length = 1000)
     private String backgroundImage;
+    @Column(length = 1000)
     private String facebookLink;
+    @Column(length = 1000)
     private String instagramLink;
 
     public TableSession(TableInfo tableInfo, Company company, String sessionId, LocalDateTime expirationDate, boolean isOverwritten) {
