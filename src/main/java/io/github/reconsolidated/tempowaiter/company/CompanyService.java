@@ -80,4 +80,12 @@ public class CompanyService {
             throw new IllegalArgumentException("You are not the owner of this company");
         }
     }
+
+    public Company getCompany(Long currentUserCompanyId, Long companyId) {
+        if (currentUserCompanyId.equals(companyId)) {
+            return getById(companyId);
+        } else {
+            throw new IllegalArgumentException("You are not the owner of this company");
+        }
+    }
 }

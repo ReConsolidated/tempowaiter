@@ -103,6 +103,14 @@ public class ConfigurationController {
         return ResponseEntity.ok(companyService.listCompanies());
     }
 
+    @GetMapping("/companies/{companyId}")
+    public ResponseEntity<Company> getCompany(@CurrentUser AppUser currentUser, @PathVariable Long companyId) {
+        if (currentUser.getRole().equals(AppUserRole.ADMIN)) {
+            return ResponseEntity.ok(companyService.getCompany(companyId, companyId));
+        }
+        return ResponseEntity.ok(companyService.getCompany(currentUser.getCompanyId(), companyId));
+    }
+
     @PostMapping("/companies")
     public ResponseEntity<Company> createCompany(@CurrentUser AppUser currentUser, @RequestParam String companyName) {
         if (!currentUser.getRole().equals(AppUserRole.ADMIN)) {
