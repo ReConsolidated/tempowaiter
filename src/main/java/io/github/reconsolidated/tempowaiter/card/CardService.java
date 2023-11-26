@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -64,5 +65,9 @@ public class CardService {
         if (card.isEmpty()) return false;
         cardRepository.deleteById(cardId);
         return true;
+    }
+
+    public Optional<Card> getCardByTable(Long tableId) {
+        return cardRepository.findByTableId(tableId);
     }
 }

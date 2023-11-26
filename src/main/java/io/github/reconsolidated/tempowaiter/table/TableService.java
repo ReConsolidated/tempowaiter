@@ -1,5 +1,6 @@
 package io.github.reconsolidated.tempowaiter.table;
 
+import io.github.reconsolidated.tempowaiter.card.Card;
 import io.github.reconsolidated.tempowaiter.card.CardService;
 import io.github.reconsolidated.tempowaiter.company.Company;
 import io.github.reconsolidated.tempowaiter.company.CompanyService;
@@ -142,6 +143,8 @@ public class TableService {
         if (!tableInfo.getCompanyId().equals(companyId)) {
             throw new TableNotFoundException(tableId);
         }
+        Optional<Card> card = cardService.getCardByTable(tableId);
+        card.ifPresent(value -> cardService.removeCardTableId(value.getId()));
         tableInfoRepository.deleteById(tableId);
     }
 

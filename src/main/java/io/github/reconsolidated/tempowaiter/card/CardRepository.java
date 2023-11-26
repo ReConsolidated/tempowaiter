@@ -9,4 +9,6 @@ public interface CardRepository extends JpaRepository<Card, Long> {
     List<Card> findAllByCompanyId(Long companyId);
 
     Optional<Card> findByCardUid(String cardUid);
+
+    Optional<Card> findByTableId(Long tableId);
 }
