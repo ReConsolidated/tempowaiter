@@ -80,8 +80,11 @@ public class TableService {
             throw new TableNotFoundException(tableId);
         }
         if (cardId == null) {
-            cardService.removeCardTableId(oldCardId);
+            if (oldCardId != null && oldCardId != 0) {
+                cardService.removeCardTableId(oldCardId);
+            }
             tableInfo.setCardId(null);
+            tableInfoRepository.save(tableInfo);
         } else {
             if (tableInfoRepository.findByCardIdEquals(cardId).isPresent()) {
                 throw new IllegalArgumentException("This card is already assigned to a table.");
@@ -93,7 +96,9 @@ public class TableService {
             if (!cardCompanyId.equals(companyId)) {
                 throw new IllegalArgumentException("Card %d is not assigned to your company.".formatted(cardId));
             }
-            cardService.removeCardTableId(oldCardId);
+            if (oldCardId != null && oldCardId != 0) {
+                cardService.removeCardTableId(oldCardId);
+            }
             cardService.setCardTableId(cardId, tableId);
             tableInfo.setCardId(cardId);
             tableInfoRepository.save(tableInfo);
@@ -113,7 +118,7 @@ public class TableService {
     }
 
     public TableInfo createTable(@NotNull Long companyId, String tableDisplayName) {
-        TableInfo tableInfo = new TableInfo(null, 0L, companyId, tableDisplayName, 0L);
+        TableInfo tableInfo = new TableInfo(null, null, companyId, tableDisplayName, 0L);
         tableInfo = tableInfoRepository.save(tableInfo);
         return tableInfo;
     }
@@ -164,5 +169,12 @@ public class TableService {
         tableInfo.setTableDisplayName(tableDisplayName);
         tableInfoRepository.save(tableInfo);
         return tableInfo;
+    }
+
+    public void clearCardData(Long cardId) {
+        tableInfoRepository.findByCardIdEquals(cardId).ifPresent((tableInfo) -> {
+            tableInfo.setCardId(null);
+            tableInfoRepository.save(tableInfo);
+        });
     }
 }

@@ -22,6 +22,7 @@ public class CardService {
     public Card setCardCompanyId(Long cardId, Long companyId) {
         Card card = cardRepository.findById(cardId).orElseThrow();
         card.setCompanyId(companyId);
+        card.setTableId(null);
         cardRepository.save(card);
         return card;
     }

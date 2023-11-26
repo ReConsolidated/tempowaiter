@@ -62,10 +62,11 @@ public class ConfigurationController {
     }
 
     @PutMapping("/cards/{cardId}")
-    public ResponseEntity<Card> addCardToCompany(@CurrentUser AppUser currentUser, @PathVariable Long cardId, @RequestParam Long companyId) {
+    public ResponseEntity<Card> setCardCompany(@CurrentUser AppUser currentUser, @PathVariable Long cardId, @RequestParam Long companyId) {
         if (!currentUser.getRole().equals(AppUserRole.ADMIN)) {
             throw new IllegalArgumentException("This endpoint is for Admins only");
         }
+        tableService.clearCardData(cardId);
         return ResponseEntity.ok(cardService.setCardCompanyId(cardId, companyId));
     }
 
@@ -75,6 +76,7 @@ public class ConfigurationController {
             throw new IllegalArgumentException("This endpoint is for Admins only");
         }
         if (cardService.deleteCard(cardId)) {
+            tableService.clearCardData(cardId);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
