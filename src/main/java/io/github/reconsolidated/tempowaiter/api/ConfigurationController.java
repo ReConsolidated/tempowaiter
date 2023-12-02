@@ -191,4 +191,20 @@ public class ConfigurationController {
                 )
         );
     }
+
+    @PutMapping("/companies/{companyId}/tiktok_link")
+    public ResponseEntity<Company> setCompanyTiktokLink(@CurrentUser AppUser currentUser,
+                                                           @PathVariable Long companyId,
+                                                           @RequestBody SingleStringDto tiktokLink) {
+        if (currentUser.getRole().equals(AppUserRole.ADMIN)) {
+            return ResponseEntity.ok(companyService.setCompanyTiktokLink(companyId, companyId, tiktokLink.getContent()));
+        }
+        return ResponseEntity.ok(
+                companyService.setCompanyTiktokLink(
+                        currentUser.getCompanyId(),
+                        companyId,
+                        tiktokLink.getContent()
+                )
+        );
+    }
 }

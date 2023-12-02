@@ -79,6 +79,16 @@ public class CompanyService {
         }
     }
 
+    public Company setCompanyTiktokLink(Long userId, Long companyId, String content) {
+        Company company = getById(companyId);
+        if (userId.equals(companyId)) {
+            company.setTiktokLink(content);
+            return companyRepository.save(company);
+        } else {
+            throw new IllegalArgumentException("You are not the owner of this company");
+        }
+    }
+
     public Company getCompany(Long currentUserCompanyId, Long companyId) {
         if (currentUserCompanyId.equals(companyId)) {
             return getById(companyId);
@@ -86,4 +96,6 @@ public class CompanyService {
             throw new IllegalArgumentException("You are not the owner of this company");
         }
     }
+
+
 }

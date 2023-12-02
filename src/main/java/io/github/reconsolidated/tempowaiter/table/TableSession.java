@@ -38,6 +38,8 @@ public class TableSession {
     private String facebookLink;
     @Column(length = 1000)
     private String instagramLink;
+    @Column(length = 1000)
+    private String tiktokLink;
 
     public TableSession(TableInfo tableInfo, Company company, String sessionId, LocalDateTime expirationDate, boolean isOverwritten) {
         this.cardId = tableInfo.getCardId();
@@ -52,5 +54,6 @@ public class TableSession {
         this.backgroundImage = company.getBackgroundImage();
         this.facebookLink = company.getFacebookLink();
         this.instagramLink = company.getInstagramLink();
+        this.tiktokLink = company.getTiktokLink();
     }
 }

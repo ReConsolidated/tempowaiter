@@ -26,4 +26,6 @@ public class Company {
     private String facebookLink;
     @Column(length = 1000)
     private String instagramLink;
+    @Column(length = 1000)
+    private String tiktokLink;
 }
