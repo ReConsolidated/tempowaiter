@@ -1,0 +1,22 @@
+app = "tempowaiter-staging"
+primary_region = "waw"
+
+[build]
+
+[env]
+SPRING_DATASOURCE_PASSWORD = "compose-postgres"
+SPRING_DATASOURCE_URL = "jdbc:postgresql://146.59.93.121:5432/compose-postgres?sslmode=disable"
+SPRING_DATASOURCE_USERNAME = "compose-postgres"
+swap_size_mb = "512"
+
+[http_service]
+internal_port = 8080
+auto_stop_machines = true
+auto_start_machines = true
+min_machines_running = 0
+processes = ["app"]
+
+[[vm]]
+cpu_kind = "shared"
+cpus = 1
+memory_mb = 512
