@@ -8,10 +8,7 @@ import io.github.bucket4j.Bucket4j;
 import io.github.bucket4j.Refill;
 import io.github.reconsolidated.tempowaiter.ntag_decryption.NtagDecryptionService;
 import io.github.reconsolidated.tempowaiter.ntag_decryption.NtagInfo;
-import io.github.reconsolidated.tempowaiter.table.TableInfo;
-import io.github.reconsolidated.tempowaiter.table.TableInfoDto;
-import io.github.reconsolidated.tempowaiter.table.TableService;
-import io.github.reconsolidated.tempowaiter.table.TableSession;
+import io.github.reconsolidated.tempowaiter.table.*;
 import io.github.reconsolidated.tempowaiter.waiter.WaiterRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -42,9 +39,12 @@ public class TableController {
     }
 
     @GetMapping("/public/session_info")
-    public ResponseEntity<TableSession> sessionInfo(@RequestParam String sessionId) {
+    public ResponseEntity<TableSessionDto> sessionInfo(@RequestParam String sessionId) {
         Optional<TableSession> tableSession = tableService.getSession(sessionId);
-        return ResponseEntity.of(tableSession);
+        if (tableSession.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(new TableSessionDto(tableSession.get()));
     }
 
     @PostMapping("/public/call")

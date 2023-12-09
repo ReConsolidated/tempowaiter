@@ -1,0 +1,55 @@
+package io.github.reconsolidated.tempowaiter.company;
+
+import io.github.reconsolidated.tempowaiter.table.TableInfo;
+import io.github.reconsolidated.tempowaiter.table.TableInfoDto;
+import io.github.reconsolidated.tempowaiter.table.TableService;
+import lombok.Getter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
+public class CompanyListDto {
+    private final List<CompanyDto> companies;
+
+    public CompanyListDto(List<Company> companies, TableService tableService) {
+        this.companies = companies.stream().map((company ->
+                new CompanyDto(company, tableService.listTables(company.getId())))).toList();
+    }
+
+    @Getter
+    static class CompanyDto {
+        private final Long id;
+        private final String name;
+        private final String menuLink;
+        private final List<String> backgroundImages;
+        private final String facebookLink;
+        private final String instagramLink;
+        private final String tiktokLink;
+        private final List<CompanyListTableInfoDto> tableList;
+
+        public CompanyDto(Company company, List<TableInfo> tableInfoList) {
+            this.id = company.getId();
+            this.name = company.getName();
+            this.menuLink = company.getMenuLink();
+            this.backgroundImages = company.getBackgroundImages();
+            this.facebookLink = company.getFacebookLink();
+            this.instagramLink = company.getInstagramLink();
+            this.tiktokLink = company.getTiktokLink();
+            this.tableList = tableInfoList.stream().map((CompanyListTableInfoDto::new)).toList();
+        }
+    }
+
+    @Getter
+    static class CompanyListTableInfoDto {
+        private final Long id;
+        private final Long cardId;
+        private final String tableDisplayName;
+
+        public CompanyListTableInfoDto(TableInfo tableInfo) {
+            this.id = tableInfo.getTableId();
+            this.cardId = tableInfo.getCardId();
+            this.tableDisplayName = tableInfo.getTableDisplayName();
+        }
+    }
+}

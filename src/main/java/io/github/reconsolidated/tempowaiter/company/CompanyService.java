@@ -1,5 +1,8 @@
 package io.github.reconsolidated.tempowaiter.company;
 
+import io.github.reconsolidated.tempowaiter.table.TableService;
+import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -7,9 +10,11 @@ import java.util.List;
 @Service
 public class CompanyService {
     private final CompanyRepository companyRepository;
+    private final TableService tableService;
 
-    public CompanyService(CompanyRepository companyRepository) {
+    public CompanyService(CompanyRepository companyRepository, @Lazy TableService tableService) {
         this.companyRepository = companyRepository;
+        this.tableService = tableService;
     }
 
     public Company createCompany(String name) {
@@ -18,8 +23,9 @@ public class CompanyService {
         return companyRepository.save(company);
     }
 
-    public List<Company> listCompanies() {
-        return companyRepository.findAll();
+    public CompanyListDto listCompanies() {
+        List<Company> companies = companyRepository.findAll();
+        return new CompanyListDto(companies, tableService);
     }
 
     public Company setCompanyName(Long userId, Long companyId, String companyName) {
@@ -49,10 +55,20 @@ public class CompanyService {
         );
     }
 
-    public Company setCompanyBackgroundImage(Long userId, Long companyId, String content) {
+    public Company addCompanyBackgroundImage(Long userId, Long companyId, String content) {
         Company company = getById(companyId);
         if (userId.equals(companyId)) {
-            company.setBackgroundImage(content);
+            company.getBackgroundImages().add(content);
+            return companyRepository.save(company);
+        } else {
+            throw new IllegalArgumentException("You are not the owner of this company");
+        }
+    }
+
+    public Company removeCompanyBackgroundImage(Long userId, Long companyId, String content) {
+        Company company = getById(companyId);
+        if (userId.equals(companyId)) {
+            company.getBackgroundImages().remove(content);
             return companyRepository.save(company);
         } else {
             throw new IllegalArgumentException("You are not the owner of this company");

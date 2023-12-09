@@ -4,10 +4,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -20,8 +19,9 @@ public class Company {
     private String name;
     @Column(length = 1000)
     private String menuLink;
+    @ElementCollection(fetch = FetchType.EAGER)
     @Column(length = 1000)
-    private String backgroundImage;
+    private List<String> backgroundImages = new ArrayList<>();
     @Column(length = 1000)
     private String facebookLink;
     @Column(length = 1000)

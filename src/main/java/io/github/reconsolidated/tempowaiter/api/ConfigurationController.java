@@ -6,6 +6,7 @@ import io.github.reconsolidated.tempowaiter.authentication.currentUser.CurrentUs
 import io.github.reconsolidated.tempowaiter.card.Card;
 import io.github.reconsolidated.tempowaiter.card.CardService;
 import io.github.reconsolidated.tempowaiter.company.Company;
+import io.github.reconsolidated.tempowaiter.company.CompanyListDto;
 import io.github.reconsolidated.tempowaiter.company.CompanyService;
 import io.github.reconsolidated.tempowaiter.company.SingleStringDto;
 import io.github.reconsolidated.tempowaiter.table.TableInfo;
@@ -100,7 +101,7 @@ public class ConfigurationController {
     }
 
     @GetMapping("/companies")
-    public ResponseEntity<List<Company>> listCompanies(@CurrentUser AppUser currentUser) {
+    public ResponseEntity<CompanyListDto> listCompanies(@CurrentUser AppUser currentUser) {
         if (!currentUser.getRole().equals(AppUserRole.ADMIN)) {
             throw new IllegalArgumentException("List of all companies is for Admins only");
         }
@@ -145,14 +146,30 @@ public class ConfigurationController {
     }
 
     @PutMapping("/companies/{companyId}/background_image")
-    public ResponseEntity<Company> setCompanyBackgroundImage(@CurrentUser AppUser currentUser,
+    public ResponseEntity<Company> addCompanyBackgroundImage(@CurrentUser AppUser currentUser,
                                                       @PathVariable Long companyId,
                                                       @RequestBody SingleStringDto backgroundImage) {
         if (currentUser.getRole().equals(AppUserRole.ADMIN)) {
-            return ResponseEntity.ok(companyService.setCompanyBackgroundImage(companyId, companyId, backgroundImage.getContent()));
+            return ResponseEntity.ok(companyService.addCompanyBackgroundImage(companyId, companyId, backgroundImage.getContent()));
         }
         return ResponseEntity.ok(
-                companyService.setCompanyBackgroundImage(
+                companyService.addCompanyBackgroundImage(
+                        currentUser.getCompanyId(),
+                        companyId,
+                        backgroundImage.getContent()
+                )
+        );
+    }
+
+    @DeleteMapping("/companies/{companyId}/background_image")
+    public ResponseEntity<Company> removeCompanyBackgroundImage(@CurrentUser AppUser currentUser,
+                                                             @PathVariable Long companyId,
+                                                             @RequestBody SingleStringDto backgroundImage) {
+        if (currentUser.getRole().equals(AppUserRole.ADMIN)) {
+            return ResponseEntity.ok(companyService.removeCompanyBackgroundImage(companyId, companyId, backgroundImage.getContent()));
+        }
+        return ResponseEntity.ok(
+                companyService.removeCompanyBackgroundImage(
                         currentUser.getCompanyId(),
                         companyId,
                         backgroundImage.getContent()
