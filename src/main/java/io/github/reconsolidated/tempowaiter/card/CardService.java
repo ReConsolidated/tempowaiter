@@ -19,6 +19,13 @@ public class CardService {
         return card.getCompanyId();
     }
 
+    public Card setCardDisplayName(Long cardId, String displayName) {
+        Card card = cardRepository.findById(cardId).orElseThrow();
+        card.setDisplayName(displayName);
+        cardRepository.save(card);
+        return card;
+    }
+
     public Card setCardCompanyId(Long cardId, Long companyId) {
         Card card = cardRepository.findById(cardId).orElseThrow();
         card.setCompanyId(companyId);

@@ -19,6 +19,7 @@ public class Card {
     private String cardUid;
     private Long tableId;
     private Long companyId;
+    private String displayName;
 
     public Card(String cardUid) {
         this.cardUid = cardUid;

@@ -71,6 +71,14 @@ public class ConfigurationController {
         return ResponseEntity.ok(cardService.setCardCompanyId(cardId, companyId));
     }
 
+    @PutMapping("/cards/{cardId}/display_name")
+    public ResponseEntity<Card> setCardDisplayName(@CurrentUser AppUser currentUser, @PathVariable Long cardId, @RequestParam String displayName) {
+        if (!currentUser.getRole().equals(AppUserRole.ADMIN)) {
+            throw new IllegalArgumentException("This endpoint is for Admins only");
+        }
+        return ResponseEntity.ok(cardService.setCardDisplayName(cardId, displayName));
+    }
+
     @DeleteMapping("/cards/{cardId}")
     public ResponseEntity<?> deleteCard(@CurrentUser AppUser currentUser, @PathVariable Long cardId) {
         if (!currentUser.getRole().equals(AppUserRole.ADMIN)) {
