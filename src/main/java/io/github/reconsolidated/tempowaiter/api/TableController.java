@@ -40,7 +40,7 @@ public class TableController {
         return ResponseEntity.ok(responseBody);
     }
 
-    @PostMapping("/public/start_session_admin")
+    @PostMapping("/start_session_admin")
     public ResponseEntity<?> startSessionAdmin(@CurrentUser AppUser currentUser, Long tableId) {
         String sessionId = UUID.randomUUID().toString();
         TableInfoDto tableInfo = tableService.startSessionAdmin(currentUser, sessionId, tableId);
