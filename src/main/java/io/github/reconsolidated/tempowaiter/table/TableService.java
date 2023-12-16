@@ -1,5 +1,6 @@
 package io.github.reconsolidated.tempowaiter.table;
 
+import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUser;
 import io.github.reconsolidated.tempowaiter.card.Card;
 import io.github.reconsolidated.tempowaiter.card.CardService;
 import io.github.reconsolidated.tempowaiter.company.Company;
@@ -21,6 +22,8 @@ import java.util.Optional;
 @AllArgsConstructor
 @Service
 public class TableService {
+    public static final long SESSION_EXPIRATION_TIME_MINUTES = 15;
+
     private final TableSessionRepository sessionRepository;
     private final TableInfoRepository tableInfoRepository;
     private final WaiterService waiterService;
@@ -54,7 +57,39 @@ public class TableService {
 
         tableInfo.setLastCtr(ctr);
         tableInfoRepository.save(tableInfo);
-        LocalDateTime expirationDate = LocalDateTime.now().plusMinutes(60);
+        LocalDateTime expirationDate = LocalDateTime.now().plusMinutes(SESSION_EXPIRATION_TIME_MINUTES);
+        TableSession newTableSession = new TableSession(tableInfo, company, sessionId, expirationDate, false);
+        sessionRepository.save(newTableSession);
+        return tableInfoMapper.toDto(tableInfo);
+    }
+
+    public TableInfoDto startSessionAdmin(AppUser currentUser, String sessionId, Long tableId) {
+        TableInfo tableInfo = tableInfoRepository.findById(tableId).orElseThrow(() -> new TableNotFoundException(tableId));
+        if (!currentUser.getCompanyId().equals(tableInfo.getCompanyId())) {
+            throw new TableNotFoundException(tableId);
+        }
+        Long cardId = tableInfo.getCardId();
+        if (cardId == null) {
+            throw new IllegalArgumentException("Table doesn't have a card assigned.");
+        }
+        Optional<TableSession> tableSession = sessionRepository
+                .findBySessionIdAndCardIdAndExpirationDateGreaterThanAndIsOverwrittenFalse(sessionId, cardId, LocalDateTime.now());
+
+        if (tableSession.isPresent()) {
+            return tableInfoMapper.toDto(tableInfo);
+        }
+
+        Optional<TableSession> overwrittenSession = sessionRepository
+                .findByCardIdAndIsOverwrittenFalseAndExpirationDateGreaterThan(cardId, LocalDateTime.now());
+        if (overwrittenSession.isPresent()) {
+            overwrittenSession.get().setOverwritten(true);
+            sessionRepository.save(overwrittenSession.get());
+        }
+
+        Company company = companyService.getById(tableInfo.getCompanyId());
+
+        tableInfoRepository.save(tableInfo);
+        LocalDateTime expirationDate = LocalDateTime.now().plusMinutes(SESSION_EXPIRATION_TIME_MINUTES);
         TableSession newTableSession = new TableSession(tableInfo, company, sessionId, expirationDate, false);
         sessionRepository.save(newTableSession);
         return tableInfoMapper.toDto(tableInfo);

@@ -6,6 +6,8 @@ import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Bucket4j;
 import io.github.bucket4j.Refill;
+import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUser;
+import io.github.reconsolidated.tempowaiter.authentication.currentUser.CurrentUser;
 import io.github.reconsolidated.tempowaiter.ntag_decryption.NtagDecryptionService;
 import io.github.reconsolidated.tempowaiter.ntag_decryption.NtagInfo;
 import io.github.reconsolidated.tempowaiter.table.*;
@@ -32,6 +34,16 @@ public class TableController {
         NtagInfo ntagInfo = ntagDecryptionService.decryptNtag(e);
         String sessionId = UUID.randomUUID().toString();
         TableInfoDto tableInfo = tableService.startSession(sessionId, ntagInfo.getCardId(), ntagInfo.getCtr());
+        ObjectNode responseBody = JsonNodeFactory.instance.objectNode();
+        responseBody.set("tableInfo", JsonNodeFactory.instance.pojoNode(tableInfo));
+        responseBody.put("sessionId", sessionId);
+        return ResponseEntity.ok(responseBody);
+    }
+
+    @PostMapping("/public/start_session_admin")
+    public ResponseEntity<?> startSessionAdmin(@CurrentUser AppUser currentUser, Long tableId) {
+        String sessionId = UUID.randomUUID().toString();
+        TableInfoDto tableInfo = tableService.startSessionAdmin(currentUser, sessionId, tableId);
         ObjectNode responseBody = JsonNodeFactory.instance.objectNode();
         responseBody.set("tableInfo", JsonNodeFactory.instance.pojoNode(tableInfo));
         responseBody.put("sessionId", sessionId);
