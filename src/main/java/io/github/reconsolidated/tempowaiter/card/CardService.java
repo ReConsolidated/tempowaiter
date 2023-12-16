@@ -30,8 +30,24 @@ public class CardService {
         Card card = cardRepository.findById(cardId).orElseThrow();
         card.setCompanyId(companyId);
         card.setTableId(null);
+
+        card.setDisplayName(getLowestAvailableDisplayName(companyId));
+
+
         cardRepository.save(card);
         return card;
+    }
+
+    private String getLowestAvailableDisplayName(Long companyId) {
+        List<Card> cards = cardRepository.findAllByCompanyId(companyId);
+        int highestCardId = cards.stream().mapToInt(card -> {
+            try {
+                return Integer.parseInt(card.getDisplayName());
+            } catch (NumberFormatException e) {
+                return 0;
+            }
+        }).max().orElse(0);
+        return String.valueOf(highestCardId + 1);
     }
 
     public void setCardTableId(Long cardId, Long tableId) {
@@ -65,6 +81,7 @@ public class CardService {
             throw new IllegalArgumentException("Card already exists. Id is %d".formatted(potentialCard.get().getId()));
         }
         Card card = new Card(ntagInfo.getCardId());
+
         return cardRepository.save(card);
     }
 
