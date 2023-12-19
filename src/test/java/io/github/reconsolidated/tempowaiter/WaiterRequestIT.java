@@ -53,14 +53,12 @@ public class WaiterRequestIT {
     @Transactional
     public void cancelCall() {
         Card card = cardService.createCard("427B63B9836F5EC8A0BCF3DB7599328E");
-
-        Long cardId = 1L;
         Company company = companyService.createCompany("test company");
         TableInfo tableInfo = tableService.createTable(company.getId(),  "test table");
-        tableInfo.setCardId(cardId);
+        tableInfo.setCardId(card.getId());
         String sessionId = "abc123";
         tableService.startSession(sessionId, card.getCardUid(), 15L);
-        WaiterRequest request = waiterService.callToTable("test_request_type", tableInfo, cardId);
+        WaiterRequest request = waiterService.callToTable("test_request_type", tableInfo, card.getId());
         String email = "test@user.com";
         AppUser appUser = appUserService.getOrCreateUser("test_user",
                 email, "Tom", "Hanks");
@@ -70,7 +68,7 @@ public class WaiterRequestIT {
 
         assertThat(requestList).hasSize(1);
 
-        assertThat(tableService.cancelCall(sessionId, cardId)).isTrue();
+        assertThat(tableService.cancelCall(sessionId, card.getId())).isTrue();
 
         requestList = waiterService.getRequests(appUser.getId(), appUser.getCompanyId());
 
