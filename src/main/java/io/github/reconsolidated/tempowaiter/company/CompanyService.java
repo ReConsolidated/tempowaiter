@@ -55,9 +55,9 @@ public class CompanyService {
         );
     }
 
-    public Company addCompanyBackgroundImage(Long userId, Long companyId, String content) {
+    public Company addCompanyBackgroundImage(Long userCompanyId, Long companyId, String content) {
         Company company = getById(companyId);
-        if (userId.equals(companyId)) {
+        if (userCompanyId.equals(companyId)) {
             company.getBackgroundImages().add(content);
             return companyRepository.save(company);
         } else {
@@ -65,9 +65,9 @@ public class CompanyService {
         }
     }
 
-    public Company removeCompanyBackgroundImage(Long userId, Long companyId, String content) {
+    public Company removeCompanyBackgroundImage(Long userCompanyId, Long companyId, String content) {
         Company company = getById(companyId);
-        if (userId.equals(companyId)) {
+        if (userCompanyId.equals(companyId)) {
             company.getBackgroundImages().remove(content);
             return companyRepository.save(company);
         } else {
@@ -75,9 +75,9 @@ public class CompanyService {
         }
     }
 
-    public Company setCompanyFacebookLink(Long userId, Long companyId, String content) {
+    public Company setCompanyFacebookLink(Long userCompanyId, Long companyId, String content) {
         Company company = getById(companyId);
-        if (userId.equals(companyId)) {
+        if (userCompanyId.equals(companyId)) {
             company.setFacebookLink(content);
             return companyRepository.save(company);
         } else {
@@ -85,9 +85,9 @@ public class CompanyService {
         }
     }
 
-    public Company setCompanyInstagramLink(Long userId, Long companyId, String content) {
+    public Company setCompanyInstagramLink(Long userCompanyId, Long companyId, String content) {
         Company company = getById(companyId);
-        if (userId.equals(companyId)) {
+        if (userCompanyId.equals(companyId)) {
             company.setInstagramLink(content);
             return companyRepository.save(company);
         } else {
@@ -95,9 +95,9 @@ public class CompanyService {
         }
     }
 
-    public Company setCompanyTiktokLink(Long userId, Long companyId, String content) {
+    public Company setCompanyTiktokLink(Long userCompanyId, Long companyId, String content) {
         Company company = getById(companyId);
-        if (userId.equals(companyId)) {
+        if (userCompanyId.equals(companyId)) {
             company.setTiktokLink(content);
             return companyRepository.save(company);
         } else {

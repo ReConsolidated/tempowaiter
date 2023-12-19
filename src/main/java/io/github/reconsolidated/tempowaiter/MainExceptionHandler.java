@@ -3,6 +3,7 @@ package io.github.reconsolidated.tempowaiter;
 import io.github.reconsolidated.tempowaiter.table.exceptions.OutdatedTableRequestException;
 import io.github.reconsolidated.tempowaiter.table.exceptions.SessionExpiredException;
 import io.github.reconsolidated.tempowaiter.table.exceptions.TableNotFoundException;
+import io.github.reconsolidated.tempowaiter.utils.DummyDto;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @ControllerAdvice
@@ -73,7 +75,8 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
                 bodyOfResponse.append(line.toString());
             }
         }
-        return handleExceptionInternal(ex, bodyOfResponse,
+        return handleExceptionInternal(ex, new DummyDto(Map.of("error", bodyOfResponse.toString(),
+                "cardInfo", ex.getCard())),
                 new HttpHeaders(), HttpStatus.GONE, request);
     }
 

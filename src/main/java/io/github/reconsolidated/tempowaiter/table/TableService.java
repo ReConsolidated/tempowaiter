@@ -43,7 +43,8 @@ public class TableService {
 
         TableInfo tableInfo = tableInfoRepository.findByCardIdEquals(cardId).orElseThrow(() -> new TableNotFoundException(cardId));
         if (tableInfo.getLastCtr() >= ctr) {
-            throw new OutdatedTableRequestException();
+            Card card = cardService.getCardByTable(tableInfo.getTableId()).orElseThrow();
+            throw new OutdatedTableRequestException(card);
         }
 
         Optional<TableSession> overwrittenSession = sessionRepository
