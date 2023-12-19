@@ -30,7 +30,8 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
                 bodyOfResponse.append(line.toString());
             }
         }
-        return handleExceptionInternal(ex, bodyOfResponse,
+        return handleExceptionInternal(ex, new DummyDto(Map.of("error", bodyOfResponse.toString(),
+                "cardId", ex.getCardId())),
                 new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
@@ -76,7 +77,7 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
             }
         }
         return handleExceptionInternal(ex, new DummyDto(Map.of("error", bodyOfResponse.toString(),
-                "cardInfo", ex.getCard())),
+                "cardId", ex.getCardId())),
                 new HttpHeaders(), HttpStatus.GONE, request);
     }
 

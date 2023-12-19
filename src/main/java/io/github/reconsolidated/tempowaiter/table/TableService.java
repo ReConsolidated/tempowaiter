@@ -35,6 +35,7 @@ public class TableService {
         Long cardId = cardService.getCardId(cardUid);
         Optional<TableSession> tableSession = sessionRepository
                 .findBySessionIdAndCardIdAndExpirationDateGreaterThanAndIsOverwrittenFalse(sessionId, cardId, LocalDateTime.now());
+
         if (tableSession.isPresent()) {
             return tableInfoMapper.toDto(
                     tableInfoRepository.findByCardIdEquals(cardId).orElseThrow(
@@ -43,8 +44,7 @@ public class TableService {
 
         TableInfo tableInfo = tableInfoRepository.findByCardIdEquals(cardId).orElseThrow(() -> new TableNotFoundException(cardId));
         if (tableInfo.getLastCtr() >= ctr) {
-            Card card = cardService.getCardByTable(tableInfo.getTableId()).orElseThrow();
-            throw new OutdatedTableRequestException(card);
+            throw new OutdatedTableRequestException(cardId);
         }
 
         Optional<TableSession> overwrittenSession = sessionRepository
