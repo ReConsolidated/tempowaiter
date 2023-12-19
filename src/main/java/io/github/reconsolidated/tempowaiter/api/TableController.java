@@ -22,12 +22,15 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.Duration;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 @RestController
 @AllArgsConstructor
 public class TableController {
+
     private final TableService tableService;
     private final NtagDecryptionService ntagDecryptionService;
+
 
     @PostMapping("/public/start_session")
     public ResponseEntity<?> startSession(@RequestParam String e, @RequestParam String c) {

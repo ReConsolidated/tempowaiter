@@ -18,10 +18,12 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @AllArgsConstructor
 @Service
 public class TableService {
+    private static final Logger log = Logger.getLogger(TableService.class.getName());
     public static final long SESSION_EXPIRATION_TIME_MINUTES = 15;
 
     private final TableSessionRepository sessionRepository;
@@ -33,6 +35,7 @@ public class TableService {
 
     public TableInfoDto startSession(String sessionId, String cardUid, Long ctr) {
         Long cardId = cardService.getCardId(cardUid);
+        log.info("Card ID %d scanned".formatted(cardId));
         Optional<TableSession> tableSession = sessionRepository
                 .findBySessionIdAndCardIdAndExpirationDateGreaterThanAndIsOverwrittenFalse(sessionId, cardId, LocalDateTime.now());
 
