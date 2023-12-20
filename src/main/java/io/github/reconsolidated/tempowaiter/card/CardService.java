@@ -31,9 +31,9 @@ public class CardService {
         card.setCompanyId(companyId);
         card.setTableId(null);
 
-        card.setDisplayName(getLowestAvailableDisplayName(companyId));
-
-
+        if (card.getDisplayName() == null) {
+            card.setDisplayName(getLowestAvailableDisplayName(companyId));
+        }
         cardRepository.save(card);
         return card;
     }
