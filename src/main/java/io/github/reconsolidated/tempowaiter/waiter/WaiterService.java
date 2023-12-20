@@ -42,7 +42,7 @@ public class WaiterService {
         return waiterRequests.stream().sorted((request1, request2) -> {
             int score1 = scoreRequest(request1);
             int score2 = scoreRequest(request2);
-            return score1 - score2;
+            return score2 - score1;
         }).collect(Collectors.toList());
     }
 
@@ -53,9 +53,9 @@ public class WaiterService {
     private int scoreRequest(WaiterRequest request) {
         int score = 0;
         if (request.getState().equals(RequestState.IN_PROGRESS)) {
-            score += 600; // 10 minutes extra if it's in progress
+            score += 3600; // 1 hour extra scoring if it's in progress
         }
-        score += (request.getRequestedAt() - System.currentTimeMillis()) / 1000; // each second is 1 point
+        score += (System.currentTimeMillis() - request.getRequestedAt()) / 1000; // each second is 1 point
         return score;
     }
 
