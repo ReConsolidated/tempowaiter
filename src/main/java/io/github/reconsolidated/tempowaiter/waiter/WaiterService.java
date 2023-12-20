@@ -28,7 +28,7 @@ public class WaiterService {
         request.setState(RequestState.WAITING);
         request.setTableName(tableInfo.getTableDisplayName());
         WaiterRequest result = waiterRequestRepository.save(request);
-        webSocketNotifier.sendRequestsNotification(tableInfo.getCompanyId());
+        webSocketNotifier.sendRequestsNotification(tableInfo.getCompanyId(), request.getState().name());
         return result;
     }
 
@@ -79,8 +79,8 @@ public class WaiterService {
         } else if (state.equals(RequestState.DONE)) {
             request.setResolvedAt(System.currentTimeMillis());
         }
-        webSocketNotifier.sendRequestsNotification(companyId);
-        webSocketNotifier.sendTableNotification(request.getTableId());
+        webSocketNotifier.sendRequestsNotification(companyId, state.name());
+        webSocketNotifier.sendTableNotification(request.getTableId(), state.name());
         return waiterRequestRepository.save(request);
     }
 
@@ -88,8 +88,8 @@ public class WaiterService {
         Optional<WaiterRequest> request = waiterRequestRepository.findByStateNotAndTableId(RequestState.DONE, tableId);
         if (request.isPresent()) {
             waiterRequestRepository.delete(request.get());
-            webSocketNotifier.sendRequestsNotification(request.get().getCompanyId());
-            webSocketNotifier.sendTableNotification(request.get().getTableId());
+            webSocketNotifier.sendRequestsNotification(request.get().getCompanyId(), "CANCELLED");
+            webSocketNotifier.sendTableNotification(request.get().getTableId(), "CANCELLED");
             return true;
         }
         return false;

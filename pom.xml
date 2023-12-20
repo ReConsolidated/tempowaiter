@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>io.github.reconsolidated</groupId>
 	<artifactId>tempowaiter</artifactId>
-	<version>0.0.6</version>
+	<version>0.0.7</version>
 	<name>tempowaiter</name>
 	<description>TempoWaiter</description>
 	<properties>
