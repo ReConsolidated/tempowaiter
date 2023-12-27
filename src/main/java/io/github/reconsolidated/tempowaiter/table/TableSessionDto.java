@@ -3,10 +3,8 @@ package io.github.reconsolidated.tempowaiter.table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import javax.persistence.Column;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Getter
 @AllArgsConstructor
@@ -26,6 +24,7 @@ public class TableSessionDto {
     private String facebookLink;
     private String instagramLink;
     private String tiktokLink;
+    private String googleReviewLink;
 
     public TableSessionDto(TableSession tableSession) {
         this.id = tableSession.getId();
@@ -43,5 +42,6 @@ public class TableSessionDto {
         this.facebookLink = tableSession.getCompany().getFacebookLink();
         this.instagramLink = tableSession.getCompany().getInstagramLink();
         this.tiktokLink = tableSession.getCompany().getTiktokLink();
+        this.googleReviewLink = tableSession.getCompany().getGoogleReviewLink();
     }
 }
