@@ -14,10 +14,7 @@ import io.github.reconsolidated.tempowaiter.table.*;
 import io.github.reconsolidated.tempowaiter.waiter.WaiterRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
 import java.util.Optional;
@@ -65,8 +62,17 @@ public class TableController {
     @PostMapping("/public/call")
     public ResponseEntity<WaiterRequest> callWaiter(@RequestParam String sessionId,
                                                  @RequestParam Long cardId,
-                                                 @RequestParam String callType) {
-        return ResponseEntity.ok(tableService.callWaiter(sessionId, callType, cardId));
+                                                 @RequestParam String callType,
+                                                 @RequestParam(required = false) String additionalData) {
+        return ResponseEntity.ok(tableService.callWaiter(sessionId, callType, cardId, additionalData));
+    }
+
+    @PatchMapping("/public/call")
+    public ResponseEntity<WaiterRequest> updateWaiterCall(@RequestParam String sessionId,
+                                                    @RequestParam Long cardId,
+                                                    @RequestParam String callType,
+                                                    @RequestParam(required = false) String additionalData) {
+        return ResponseEntity.ok(tableService.updateWaiterCall(sessionId, callType, cardId, additionalData));
     }
 
     @PostMapping("/public/cancel_call")

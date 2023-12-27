@@ -38,7 +38,7 @@ public class WaiterRequestIT {
     public void requestSent() {
         Company company = companyService.createCompany("test company");
         TableInfo tableInfo = tableService.createTable(company.getId(),  "test table");
-        waiterService.callToTable("test_request_type", tableInfo, 1L);
+        waiterService.callToTable("test_request_type", tableInfo, 1L, "");
         String email = "test@user.com";
         AppUser appUser = appUserService.getOrCreateUser("test_user",
                 email, "Tom", "Hanks");
@@ -58,7 +58,7 @@ public class WaiterRequestIT {
         tableInfo.setCardId(card.getId());
         String sessionId = "abc123";
         tableService.startSession(sessionId, card.getCardUid(), 15L);
-        WaiterRequest request = waiterService.callToTable("test_request_type", tableInfo, card.getId());
+        WaiterRequest request = waiterService.callToTable("test_request_type", tableInfo, card.getId(), "");
         String email = "test@user.com";
         AppUser appUser = appUserService.getOrCreateUser("test_user",
                 email, "Tom", "Hanks");
@@ -81,7 +81,7 @@ public class WaiterRequestIT {
         Company company = companyService.createCompany("test company");
         TableInfo tableInfo = tableService.createTable(company.getId(), "test table");
         String sessionId = "any_id";
-        WaiterRequest request = waiterService.callToTable("test_request_type", tableInfo, 1L);
+        WaiterRequest request = waiterService.callToTable("test_request_type", tableInfo, 1L, "");
         String appUserEmail = "test@user.com";
         AppUser appUser = appUserService.getOrCreateUser("test_user",
                 appUserEmail, "Tom", "Hanks");

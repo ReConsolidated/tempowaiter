@@ -14,7 +14,7 @@ public class WaiterService {
     private final WaiterRequestRepository waiterRequestRepository;
     private final WebSocketNotifier webSocketNotifier;
 
-    public WaiterRequest callToTable(String requestType, TableInfo tableInfo, Long cardId) {
+    public WaiterRequest callToTable(String requestType, TableInfo tableInfo, Long cardId, String additionalData) {
         Optional<WaiterRequest> existing = waiterRequestRepository.findByStateNotAndTableId(RequestState.DONE, tableInfo.getTableId());
         if (existing.isPresent()) {
             return existing.get();
@@ -27,9 +27,23 @@ public class WaiterService {
         request.setTableId(tableInfo.getTableId());
         request.setState(RequestState.WAITING);
         request.setTableName(tableInfo.getTableDisplayName());
+        request.setAdditionalData(additionalData);
         WaiterRequest result = waiterRequestRepository.save(request);
         webSocketNotifier.sendRequestsNotification(tableInfo.getCompanyId(), request.getState().name());
         return result;
+    }
+
+    public WaiterRequest updateCallToTable(String requestType, TableInfo tableInfo, Long cardId, String additionalData) {
+        Optional<WaiterRequest> existing = waiterRequestRepository.findByStateNotAndTableId(RequestState.DONE, tableInfo.getTableId());
+        if (existing.isEmpty()) {
+            throw new IllegalArgumentException("You do not have any active request, so you can't update one");
+        }
+        WaiterRequest request = existing.get();
+        request.setType(requestType);
+        request.setAdditionalData(additionalData);
+        request = waiterRequestRepository.save(request);
+        webSocketNotifier.sendRequestsNotification(tableInfo.getCompanyId(), request.getState().name());
+        return request;
     }
 
     public List<WaiterRequest> getRequests(Long appUserId, Long companyId) {

@@ -21,6 +21,8 @@ public class WaiterRequest {
     private String tableName;
     private Long cardId;
     private String type;
+    @Column(length = 1000)
+    private String additionalData;
     @Enumerated(EnumType.STRING)
     private RequestState state;
 }

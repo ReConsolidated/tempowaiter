@@ -99,7 +99,7 @@ public class TableService {
         return tableInfoMapper.toDto(tableInfo);
     }
 
-    public WaiterRequest callWaiter(String sessionId, String requestType, Long cardId) {
+    public WaiterRequest callWaiter(String sessionId, String requestType, Long cardId, @Nullable String additionalData) {
         // tableSession has to be polled for security to check if session exists
         TableSession tableSession = sessionRepository
                 .findBySessionIdAndCardIdAndExpirationDateGreaterThanAndIsOverwrittenFalse(
@@ -109,7 +109,20 @@ public class TableService {
                 .orElseThrow(SessionExpiredException::new);
         tableSession.setLastRequestAt(System.currentTimeMillis());
         TableInfo tableInfo = tableInfoRepository.findByCardIdEquals(cardId).orElseThrow(() -> new TableNotFoundException(cardId));
-        return waiterService.callToTable(requestType, tableInfo, cardId);
+        return waiterService.callToTable(requestType, tableInfo, cardId, additionalData);
+    }
+
+    public WaiterRequest updateWaiterCall(String sessionId, String requestType, Long cardId, String additionalData) {
+        // tableSession has to be polled for security to check if session exists
+        TableSession tableSession = sessionRepository
+                .findBySessionIdAndCardIdAndExpirationDateGreaterThanAndIsOverwrittenFalse(
+                        sessionId,
+                        cardId,
+                        LocalDateTime.now())
+                .orElseThrow(SessionExpiredException::new);
+        tableSession.setLastRequestAt(System.currentTimeMillis());
+        TableInfo tableInfo = tableInfoRepository.findByCardIdEquals(cardId).orElseThrow(() -> new TableNotFoundException(cardId));
+        return waiterService.updateCallToTable(requestType, tableInfo, cardId, additionalData);
     }
 
     public TableInfo setCardId(Long companyId, Long tableId, @Nullable Long cardId) {
