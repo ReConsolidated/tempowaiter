@@ -6,6 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class TablePerformanceData {
+    private Long companyId;
     private String tableName;
     private Double averageTimeSeconds;
     private Integer count;
