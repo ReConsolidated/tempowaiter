@@ -153,6 +153,22 @@ public class ConfigurationController {
         );
     }
 
+    @PutMapping("/companies/{companyId}/google_review_link")
+    public ResponseEntity<Company> setCompanyGoogleReviewLink(@CurrentUser AppUser currentUser,
+                                                      @PathVariable Long companyId,
+                                                      @RequestBody SingleStringDto googleReviewLink) {
+        if (currentUser.getRole().equals(AppUserRole.ADMIN)) {
+            return ResponseEntity.ok(companyService.setCompanyMenuLink(companyId, companyId, googleReviewLink.getContent()));
+        }
+        return ResponseEntity.ok(
+                companyService.setCompanyMenuLink(
+                        currentUser.getCompanyId(),
+                        companyId,
+                        googleReviewLink.getContent()
+                )
+        );
+    }
+
     @PutMapping("/companies/{companyId}/background_image")
     public ResponseEntity<Company> addCompanyBackgroundImage(@CurrentUser AppUser currentUser,
                                                       @PathVariable Long companyId,

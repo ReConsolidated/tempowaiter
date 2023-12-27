@@ -28,4 +28,6 @@ public class Company {
     private String instagramLink;
     @Column(length = 1000)
     private String tiktokLink;
+    @Column(length = 1000)
+    private String googleReviewLink;
 }
