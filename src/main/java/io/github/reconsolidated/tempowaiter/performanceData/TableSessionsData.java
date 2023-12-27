@@ -7,6 +7,6 @@ import lombok.Getter;
 @Getter
 public class TableSessionsData {
     private Long companyId;
-    private Long tableId;
+    private String tableDisplayName;
     private Integer count;
 }
