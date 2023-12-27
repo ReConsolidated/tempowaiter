@@ -25,7 +25,7 @@ public interface WaiterRequestRepository extends JpaRepository<WaiterRequest, Lo
             "GROUP BY company_id, table_name", nativeQuery = true)
     Collection<TablePerformanceData> getTablePerformanceData(@Param("startDate") LocalDateTime startDate);
 
-    @Query(value = "SELECT table_session.company_id, table_display_name, COUNT(*) " +
+    @Query(value = "SELECT table_session.company_id AS company_id, table_display_name, COUNT(*) " +
             "FROM table_session " +
             "LEFT JOIN table_info " +
             "ON table_session.table_id=table_info.table_id " +
