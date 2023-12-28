@@ -16,8 +16,9 @@ import java.util.stream.Collectors;
 public class PerformanceDataService {
     private final WaiterRequestRepository waiterRequestRepository;
 
-    public CompaniesPerformanceDataDto getTablePerformanceData(@Nullable Long companyId) {
-        Collection<TablePerformanceData> data = waiterRequestRepository.getTablePerformanceData(LocalDateTime.now().minusHours(24))
+    public CompaniesPerformanceDataDto getTablePerformanceData(@Nullable Long companyId,
+                                                               TimeRange timeRange) {
+        Collection<TablePerformanceData> data = waiterRequestRepository.getTablePerformanceData(timeRange.getFrom(), timeRange.getTo())
                 .stream().map(TablePerformanceData::new).collect(Collectors.toList());
         if (companyId != null) {
             data = data.stream()
@@ -29,8 +30,9 @@ public class PerformanceDataService {
         return new CompaniesPerformanceDataDto(result);
     }
 
-    public CompaniesSessionsDataDto getTableSessionData(Long companyId) {
-        Collection<TableSessionsData> data = waiterRequestRepository.getTableSessionsData(LocalDateTime.now().minusHours(24))
+    public CompaniesSessionsDataDto getTableSessionData(Long companyId,
+                                                        TimeRange timeRange) {
+        Collection<TableSessionsData> data = waiterRequestRepository.getTableSessionsData(timeRange.getFrom(), timeRange.getTo())
                 .stream().map(TableSessionsData::new).collect(Collectors.toList());
         if (companyId != null) {
             data = data.stream()
