@@ -17,7 +17,8 @@ public class PerformanceDataService {
     private final WaiterRequestRepository waiterRequestRepository;
 
     public CompaniesPerformanceDataDto getTablePerformanceData(@Nullable Long companyId) {
-        Collection<TablePerformanceData> data = waiterRequestRepository.getTablePerformanceData(LocalDateTime.now().minusHours(24));
+        Collection<TablePerformanceData> data = waiterRequestRepository.getTablePerformanceData(LocalDateTime.now().minusHours(24))
+                .stream().map(TablePerformanceData::new).collect(Collectors.toList());
         if (companyId != null) {
             data = data.stream()
                     .filter(tablePerformanceData -> tablePerformanceData.getCompanyId().equals(companyId))
@@ -29,7 +30,8 @@ public class PerformanceDataService {
     }
 
     public CompaniesSessionsDataDto getTableSessionData(Long companyId) {
-        Collection<TableSessionsData> data = waiterRequestRepository.getTableSessionsData(LocalDateTime.now().minusHours(24));
+        Collection<TableSessionsData> data = waiterRequestRepository.getTableSessionsData(LocalDateTime.now().minusHours(24))
+                .stream().map(TableSessionsData::new).collect(Collectors.toList());
         if (companyId != null) {
             data = data.stream()
                     .filter(tableSessionsData -> tableSessionsData.getCompanyId().equals(companyId))

@@ -158,10 +158,10 @@ public class ConfigurationController {
                                                       @PathVariable Long companyId,
                                                       @RequestBody SingleStringDto googleReviewLink) {
         if (currentUser.getRole().equals(AppUserRole.ADMIN)) {
-            return ResponseEntity.ok(companyService.setCompanyMenuLink(companyId, companyId, googleReviewLink.getContent()));
+            return ResponseEntity.ok(companyService.setCompanyGoogleReviewLink(companyId, companyId, googleReviewLink.getContent()));
         }
         return ResponseEntity.ok(
-                companyService.setCompanyMenuLink(
+                companyService.setCompanyGoogleReviewLink(
                         currentUser.getCompanyId(),
                         companyId,
                         googleReviewLink.getContent()

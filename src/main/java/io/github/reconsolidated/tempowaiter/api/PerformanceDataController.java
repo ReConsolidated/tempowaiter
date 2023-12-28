@@ -33,4 +33,9 @@ public class PerformanceDataController {
             return ResponseEntity.ok(performanceDataService.getTableSessionData(currentUser.getCompanyId()));
         }
     }
+
+    @GetMapping("/public/sessions")
+    public ResponseEntity<CompaniesSessionsDataDto> sessionsPerTable2() {
+        return ResponseEntity.ok(performanceDataService.getTableSessionData(null));
+    }
 }
