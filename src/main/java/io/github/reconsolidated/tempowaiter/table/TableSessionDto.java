@@ -9,7 +9,6 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class TableSessionDto {
-    private Long id;
     private long tableId;
     private long cardId;
     private long ctr;
@@ -18,6 +17,7 @@ public class TableSessionDto {
     private Long lastRequestAt;
     private boolean isOverwritten = false;
     private LocalDateTime expirationDate;
+    private Long companyId;
     private String companyName;
     private String menuLink;
     private List<String> backgroundImages;
@@ -27,7 +27,6 @@ public class TableSessionDto {
     private String googleReviewLink;
 
     public TableSessionDto(TableSession tableSession) {
-        this.id = tableSession.getId();
         this.tableId = tableSession.getTableId();
         this.cardId = tableSession.getCardId();
         this.ctr = tableSession.getCtr();
@@ -36,6 +35,7 @@ public class TableSessionDto {
         this.lastRequestAt = tableSession.getLastRequestAt();
         this.isOverwritten = tableSession.isOverwritten();
         this.expirationDate = tableSession.getExpirationDate();
+        this.companyId = tableSession.getCompany().getId();
         this.companyName = tableSession.getCompany().getName();
         this.menuLink = tableSession.getCompany().getMenuLink();
         this.backgroundImages = tableSession.getCompany().getBackgroundImages();
