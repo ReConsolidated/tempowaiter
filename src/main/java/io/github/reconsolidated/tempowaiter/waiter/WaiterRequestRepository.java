@@ -1,7 +1,5 @@
 package io.github.reconsolidated.tempowaiter.waiter;
 
-import io.github.reconsolidated.tempowaiter.performanceData.TablePerformanceData;
-import io.github.reconsolidated.tempowaiter.performanceData.TableSessionsData;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,7 +15,7 @@ import java.util.Optional;
 public interface WaiterRequestRepository extends JpaRepository<WaiterRequest, Long> {
     List<WaiterRequest> findByStateNotAndCompanyIdEquals(RequestState state, Long companyId);
 
-    Optional<WaiterRequest> findByStateNotAndTableId(RequestState done, Long tableId);
+    List<WaiterRequest> findByStateNotAndTableId(RequestState done, Long tableId);
 
     @Query(value = "SELECT company_id, table_name, AVG((resolved_at - requested_at)/1000) AS \"average time seconds\", COUNT(*) " +
             "FROM waiter_request " +

@@ -14,8 +14,27 @@ public class WaiterService {
     private final WaiterRequestRepository waiterRequestRepository;
     private final WebSocketNotifier webSocketNotifier;
 
+    private Optional<WaiterRequest> findByStateNotAndTableId(RequestState requestState, Long tableId) {
+        List<WaiterRequest> list = waiterRequestRepository.findByStateNotAndTableId(requestState, tableId);
+        if (list.isEmpty()) {
+            return Optional.empty();
+        }
+
+        // There was a bug that somehow created multiple requests for the same table
+        // We need to mark as REMOVED all but the newest one
+        list.sort((r1, r2) -> Long.compare(r2.getRequestedAt(), r1.getRequestedAt()));
+        WaiterRequest newestRequest = list.get(0);
+        list.subList(1, list.size()).forEach(element -> {
+            element.setState(RequestState.REMOVED);
+            waiterRequestRepository.save(element);
+        });
+
+        return Optional.of(newestRequest);
+    }
+
+
     public WaiterRequest callToTable(String requestType, TableInfo tableInfo, Long cardId, String additionalData) {
-        Optional<WaiterRequest> existing = waiterRequestRepository.findByStateNotAndTableId(RequestState.DONE, tableInfo.getTableId());
+        Optional<WaiterRequest> existing = findByStateNotAndTableId(RequestState.DONE, tableInfo.getTableId());
         if (existing.isPresent()) {
             return existing.get();
         }
@@ -34,7 +53,7 @@ public class WaiterService {
     }
 
     public WaiterRequest updateCallToTable(String requestType, TableInfo tableInfo, Long cardId, String additionalData) {
-        Optional<WaiterRequest> existing = waiterRequestRepository.findByStateNotAndTableId(RequestState.DONE, tableInfo.getTableId());
+        Optional<WaiterRequest> existing = findByStateNotAndTableId(RequestState.DONE, tableInfo.getTableId());
         if (existing.isEmpty()) {
             throw new IllegalArgumentException("You do not have any active request, so you can't update one");
         }
@@ -61,7 +80,7 @@ public class WaiterService {
     }
 
     public Optional<WaiterRequest> getRequest(Long tableId) {
-        return waiterRequestRepository.findByStateNotAndTableId(RequestState.DONE, tableId);
+        return findByStateNotAndTableId(RequestState.DONE, tableId);
     }
 
     private int scoreRequest(WaiterRequest request) {
@@ -99,7 +118,7 @@ public class WaiterService {
     }
 
     public boolean deleteRequest(Long tableId) {
-        Optional<WaiterRequest> request = waiterRequestRepository.findByStateNotAndTableId(RequestState.DONE, tableId);
+        Optional<WaiterRequest> request = findByStateNotAndTableId(RequestState.DONE, tableId);
         if (request.isPresent()) {
             waiterRequestRepository.delete(request.get());
             webSocketNotifier.sendRequestsNotification(request.get().getCompanyId(), "CANCELLED");
