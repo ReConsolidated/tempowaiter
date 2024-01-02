@@ -185,18 +185,36 @@ public class ConfigurationController {
         );
     }
 
+    @PatchMapping("/companies/{companyId}/background_image")
+    public ResponseEntity<Company> updateCompanyBackgroundImage(@CurrentUser AppUser currentUser,
+                                                             @PathVariable Long companyId,
+                                                             @RequestParam Integer imageId,
+                                                             @RequestBody SingleStringDto backgroundImage) {
+        if (currentUser.getRole().equals(AppUserRole.ADMIN)) {
+            return ResponseEntity.ok(companyService.updateCompanyBackgroundImage(companyId, companyId, imageId, backgroundImage.getContent()));
+        }
+        return ResponseEntity.ok(
+                companyService.updateCompanyBackgroundImage(
+                        currentUser.getCompanyId(),
+                        companyId,
+                        imageId,
+                        backgroundImage.getContent()
+                )
+        );
+    }
+
     @DeleteMapping("/companies/{companyId}/background_image")
     public ResponseEntity<Company> removeCompanyBackgroundImage(@CurrentUser AppUser currentUser,
                                                              @PathVariable Long companyId,
-                                                             @RequestBody SingleStringDto backgroundImage) {
+                                                             @RequestParam Integer imageId) {
         if (currentUser.getRole().equals(AppUserRole.ADMIN)) {
-            return ResponseEntity.ok(companyService.removeCompanyBackgroundImage(companyId, companyId, backgroundImage.getContent()));
+            return ResponseEntity.ok(companyService.removeCompanyBackgroundImage(companyId, companyId, imageId));
         }
         return ResponseEntity.ok(
                 companyService.removeCompanyBackgroundImage(
                         currentUser.getCompanyId(),
                         companyId,
-                        backgroundImage.getContent()
+                        imageId
                 )
         );
     }

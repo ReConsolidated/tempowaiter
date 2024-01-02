@@ -75,10 +75,15 @@ public class CompanyService {
         }
     }
 
-    public Company removeCompanyBackgroundImage(Long userCompanyId, Long companyId, String content) {
+    public Company removeCompanyBackgroundImage(Long userCompanyId, Long companyId, int imageId) {
         Company company = getById(companyId);
         if (userCompanyId.equals(companyId)) {
-            company.getBackgroundImages().remove(content);
+            try {
+                company.getBackgroundImages().remove(imageId);
+            } catch (IndexOutOfBoundsException e) {
+                throw new IllegalArgumentException("Image with id %d doesn't exist!".formatted(imageId));
+            }
+
             return companyRepository.save(company);
         } else {
             throw new IllegalArgumentException("You are not the owner of this company");
@@ -124,4 +129,17 @@ public class CompanyService {
     }
 
 
+    public Company updateCompanyBackgroundImage(Long userCompanyId, Long companyId, Integer imageId, String content) {
+        Company company = getById(companyId);
+        if (userCompanyId.equals(companyId)) {
+            try {
+                company.getBackgroundImages().set(imageId, content);
+            } catch (IndexOutOfBoundsException e) {
+                throw new IllegalArgumentException("Image with id %d doesn't exist!".formatted(imageId));
+            }
+            return companyRepository.save(company);
+        } else {
+            throw new IllegalArgumentException("You are not the owner of this company");
+        }
+    }
 }
