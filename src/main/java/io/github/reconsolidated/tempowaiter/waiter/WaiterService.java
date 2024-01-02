@@ -21,13 +21,12 @@ public class WaiterService {
         }
 
         // There was a bug that somehow created multiple requests for the same table
-        // We need to mark as REMOVED all but the newest one
+        // We need to delete all but the newest one
         list.sort((r1, r2) -> Long.compare(r2.getRequestedAt(), r1.getRequestedAt()));
         WaiterRequest newestRequest = list.get(0);
-        list.subList(1, list.size()).forEach(element -> {
-            element.setState(RequestState.REMOVED);
-            waiterRequestRepository.save(element);
-        });
+        if (list.size() > 1) {
+            list.subList(1, list.size()).forEach(waiterRequestRepository::delete);
+        }
 
         return Optional.of(newestRequest);
     }
