@@ -5,9 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.persistence.*;
 
 @Entity
 @NoArgsConstructor
@@ -16,6 +14,7 @@ import java.util.List;
 public class TableInfo {
     @Id
     @GeneratedValue(generator = "table_info_id_generator")
+    @SequenceGenerator(name = "table_info_id_generator", allocationSize = 1)
     private Long tableId;
     private Long cardId;
     private Long companyId;

@@ -1,6 +1,5 @@
 package io.github.reconsolidated.tempowaiter.table;
 
-import com.sun.xml.bind.v2.schemagen.episode.SchemaBindings;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;

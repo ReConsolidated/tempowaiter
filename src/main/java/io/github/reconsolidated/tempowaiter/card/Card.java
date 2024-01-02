@@ -1,12 +1,13 @@
 package io.github.reconsolidated.tempowaiter.card;
 
+import jakarta.persistence.SequenceGenerator;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 
 @Getter
 @NoArgsConstructor
@@ -15,6 +16,7 @@ import javax.persistence.Id;
 public class Card {
     @Id
     @GeneratedValue(generator = "card_id_generator")
+    @SequenceGenerator(name = "card_id_generator", allocationSize = 1)
     private Long id;
     private String cardUid;
     private Long tableId;

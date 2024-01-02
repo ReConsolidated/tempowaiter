@@ -10,11 +10,11 @@ import io.github.reconsolidated.tempowaiter.table.exceptions.SessionExpiredExcep
 import io.github.reconsolidated.tempowaiter.table.exceptions.TableNotFoundException;
 import io.github.reconsolidated.tempowaiter.waiter.WaiterRequest;
 import io.github.reconsolidated.tempowaiter.waiter.WaiterService;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;

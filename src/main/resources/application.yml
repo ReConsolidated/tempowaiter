@@ -12,9 +12,4 @@ spring:
         format_sql: true
     show-sql: false
 
-keycloak:
-  realm: staffect
-  auth-server-url: https://keycloak-docker.fly.dev/
-  resource: spring-app
-  bearer-only: true
-  ssl-required: NONE
+JWT_SECRET_KEY: "secret"

@@ -17,19 +17,6 @@ import org.springframework.web.bind.annotation.*;
 public class AppUserController {
     private final AppUserService appUserService;
 
-    @PostMapping("/first_name")
-    public ResponseEntity<?> setFirstName(@CurrentUser AppUser user,
-                                          @RequestParam String name) {
-        appUserService.setFirstName(user, name);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/last_name")
-    public ResponseEntity<AppUser> setLastName(@CurrentUser AppUser user, @RequestParam String name) {
-        appUserService.setLastName(user, name);
-        return ResponseEntity.ok(user);
-    }
-
     @PostMapping("/company_id")
     public ResponseEntity<AppUser> setCompanyId(@CurrentUser AppUser user, String email, @RequestParam Long companyId) {
         if (!user.getRole().equals(AppUserRole.ADMIN)) {

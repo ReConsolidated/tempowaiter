@@ -3,7 +3,7 @@ package io.github.reconsolidated.tempowaiter.waiter;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Getter
@@ -11,6 +11,7 @@ import javax.persistence.*;
 public class WaiterRequest {
     @Id
     @GeneratedValue(generator = "waiter_request_id_generator")
+    @SequenceGenerator(name = "waiter_request_id_generator", allocationSize = 1)
     private Long id;
     private Long requestedAt;
     private Long putInProgressAt;

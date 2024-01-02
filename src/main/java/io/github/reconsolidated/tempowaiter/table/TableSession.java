@@ -6,9 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Setter
@@ -17,6 +16,7 @@ import java.util.List;
 public class TableSession {
     @Id
     @GeneratedValue(generator = "table_session_id_generator")
+    @SequenceGenerator(name = "table_session_id_generator", allocationSize = 1)
     private Long id;
     private long tableId;
     private long cardId;
