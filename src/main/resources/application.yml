@@ -1,4 +1,9 @@
 spring:
+  security:
+    user:
+      name: "user"
+      password: "3fc5786d-7ca8-4c3e-a9f8-f61c22bd5c0b"
+      roles: "USER"
   datasource:
     password: docker
     url: jdbc:postgresql://localhost:5432/postgres
