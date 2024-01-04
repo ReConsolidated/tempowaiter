@@ -12,8 +12,6 @@ import java.util.Map;
 @Repository
 public interface TempoEventRepository extends JpaRepository<TempoEvent, Long> {
 
-    List<TempoEvent> findAllByCompanyIdEquals(Long companyId);
-
     @Query(value = "SELECT company_id, event_name, additional_data, COUNT(*) " +
             "FROM tempo_event " +
             "WHERE time > :startDate " +
