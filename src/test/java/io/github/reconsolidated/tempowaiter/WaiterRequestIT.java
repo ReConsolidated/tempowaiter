@@ -41,7 +41,7 @@ public class WaiterRequestIT {
         TableInfo tableInfo = tableService.createTable(company.getId(),  "test table");
         waiterService.callToTable("test_request_type", tableInfo, 1L, "");
         String email = "test@user.com";
-        appUserService.register("test_user", email);
+        appUserService.register(email, email);
         AppUser appUser = appUserService.getUser(email).orElseThrow();
 
         appUserService.setCompanyId(email, company.getId());
@@ -61,7 +61,7 @@ public class WaiterRequestIT {
         tableService.startSession(sessionId, card.getCardUid(), 15L);
         WaiterRequest request = waiterService.callToTable("test_request_type", tableInfo, card.getId(), "");
         String email = "test@user.com";
-        appUserService.register("test_user", email);
+        appUserService.register(email, email);
         AppUser appUser = appUserService.getUser(email).orElseThrow();
 
         appUserService.setCompanyId(email, company.getId());
@@ -84,10 +84,10 @@ public class WaiterRequestIT {
         String sessionId = "any_id";
         WaiterRequest request = waiterService.callToTable("test_request_type", tableInfo, 1L, "");
         String appUserEmail = "test@user.com";
-        appUserService.register("test_user", appUserEmail);
+        appUserService.register(appUserEmail, appUserEmail);
         AppUser appUser = appUserService.getUser(appUserEmail).orElseThrow();
         String otherUserEmail = "other@waiter.com";
-        appUserService.register("test_user", otherUserEmail);
+        appUserService.register(otherUserEmail, otherUserEmail);
         AppUser otherWaiter = appUserService.getUser(otherUserEmail).orElseThrow();
 
         appUserService.setCompanyId(appUserEmail, company.getId());

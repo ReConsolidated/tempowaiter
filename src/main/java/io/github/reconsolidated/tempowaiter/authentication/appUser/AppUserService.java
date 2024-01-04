@@ -1,5 +1,6 @@
 package io.github.reconsolidated.tempowaiter.authentication.appUser;
 
+import io.github.reconsolidated.tempowaiter.company.CompanyService;
 import io.github.reconsolidated.tempowaiter.infrastracture.security.PasswordService;
 import lombok.AllArgsConstructor;
 import io.github.reconsolidated.tempowaiter.waitingCompanyAssignment.WaitingCompanyAssignment;
@@ -23,6 +24,7 @@ public class AppUserService {
     private final WaitingCompanyAssignmentRepository waitingCompanyAssignmentRepository;
     private final Logger logger = Logger.getLogger(AppUserService.class.getName());
     private final PasswordService passwordService;
+    private final CompanyService companyService;
 
     public AppUserDto register(String email, String password) {
         AppUser appUser = AppUser
@@ -32,6 +34,13 @@ public class AppUserService {
                 .build();
         if (appUserRepository.findByEmail(email).isPresent()) {
             throw new IllegalArgumentException("User with email %s already exists".formatted(email));
+        }
+
+        var waitingAssignment = waitingCompanyAssignmentRepository.findByEmail(email);
+        if (waitingAssignment.isPresent()) {
+            WaitingCompanyAssignment waitingCompanyAssignment = waitingAssignment.get();
+            waitingCompanyAssignmentRepository.deleteByEmail(email);
+            appUser.setCompanyId(waitingCompanyAssignment.getCompanyId());
         }
         appUser = appUserRepository.save(appUser);
         return AppUserDto
