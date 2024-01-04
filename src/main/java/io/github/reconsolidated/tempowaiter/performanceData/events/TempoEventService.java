@@ -1,6 +1,7 @@
 package io.github.reconsolidated.tempowaiter.performanceData.events;
 
 import io.github.reconsolidated.tempowaiter.company.CompanyService;
+import io.github.reconsolidated.tempowaiter.performanceData.TablePerformanceData;
 import io.github.reconsolidated.tempowaiter.performanceData.TableSessionsData;
 import io.github.reconsolidated.tempowaiter.performanceData.TimeRange;
 import io.github.reconsolidated.tempowaiter.performanceData.dto.CompaniesEventsDataDto;
@@ -26,7 +27,8 @@ public class TempoEventService {
     }
 
     public CompaniesEventsDataDto getEventsData(@Nullable Long companyId, TimeRange timeRange) {
-        List<TempoEventsData> data = tempoEventRepository.getEventsData(timeRange.getFrom(), timeRange.getTo());
+        List<TempoEventsData> data = tempoEventRepository.getEventsData(timeRange.getFrom(), timeRange.getTo())
+                .stream().map(TempoEventsData::new).collect(Collectors.toList());;
         if (companyId != null) {
             data = data.stream()
                     .filter(event -> event.getCompanyId().equals(companyId))

@@ -7,15 +7,18 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface TempoEventRepository extends JpaRepository<TempoEvent, Long> {
 
+    List<TempoEvent> findAllByCompanyIdEquals(Long companyId);
+
     @Query(value = "SELECT company_id, event_name, additional_data, COUNT(*) " +
             "FROM tempo_event " +
-            "WHERE time > :start_date " +
-            "AND time < :end_date " +
-            "GROUP BY company_id, event_name, additional_data")
-    List<TempoEventsData> getEventsData(@Param("start_date") LocalDateTime startDate,
-                                        @Param("end_date") LocalDateTime endDate);
+            "WHERE time > :startDate " +
+            "AND time < :endDate " +
+            "GROUP BY company_id, event_name, additional_data", nativeQuery = true)
+    List<Map<String, Object>> getEventsData(@Param("startDate") LocalDateTime startDate,
+                                                  @Param("endDate") LocalDateTime endDate);
 }
