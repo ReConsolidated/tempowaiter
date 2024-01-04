@@ -1,14 +1,6 @@
 server:
   address: 0.0.0.0
 
-
-keycloak:
-  realm: staffect
-  auth-server-url: https://keycloak.weasked.pl:8443/
-  resource: spring-app
-  bearer-only: true
-  ssl-required: NONE
-
 spring:
   datasource:
     password: sa
@@ -23,3 +15,5 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
         format_sql: false
     show-sql: false
+
+JWT_SECRET_KEY: "secret"
