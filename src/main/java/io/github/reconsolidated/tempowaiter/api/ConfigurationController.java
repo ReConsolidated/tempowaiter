@@ -190,6 +190,10 @@ public class ConfigurationController {
                                                              @PathVariable Long companyId,
                                                              @RequestParam Integer imageId,
                                                              @RequestBody SingleStringDto backgroundImage) {
+        if (backgroundImage.getContent() == null) {
+            throw new IllegalArgumentException("Background image content cannot be null");
+        }
+
         if (currentUser.getRole().equals(AppUserRole.ADMIN)) {
             return ResponseEntity.ok(companyService.updateCompanyBackgroundImage(companyId, companyId, imageId, backgroundImage.getContent()));
         }

@@ -2,6 +2,8 @@ package io.github.reconsolidated.tempowaiter.authentication.appUser;
 
 import io.github.reconsolidated.tempowaiter.infrastracture.security.PasswordService;
 import lombok.AllArgsConstructor;
+import io.github.reconsolidated.tempowaiter.waitingCompanyAssignment.WaitingCompanyAssignment;
+import io.github.reconsolidated.tempowaiter.waitingCompanyAssignment.WaitingCompanyAssignmentRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -18,6 +20,8 @@ public class AppUserService {
     private final static String USER_NOT_FOUND_MESSAGE =
             "user with email %s not found";
     private final AppUserRepository appUserRepository;
+    private final WaitingCompanyAssignmentRepository waitingCompanyAssignmentRepository;
+    private final Logger logger = Logger.getLogger(AppUserService.class.getName());
     private final PasswordService passwordService;
 
     public AppUserDto register(String email, String password) {
@@ -49,10 +53,14 @@ public class AppUserService {
     }
 
     public void setCompanyId(String userEmail, Long companyId) {
-        AppUser user = appUserRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new IllegalArgumentException(String.format(USER_NOT_FOUND_MESSAGE, userEmail)));
-        user.setCompanyId(companyId);
-        appUserRepository.save(user);
+        Optional<AppUser> user = appUserRepository.findByEmail(userEmail);
+        if (user.isPresent()) {
+            user.get().setCompanyId(companyId);
+            appUserRepository.save(user.get());
+        } else {
+            waitingCompanyAssignmentRepository.deleteByEmail(userEmail);
+            waitingCompanyAssignmentRepository.save(new WaitingCompanyAssignment(null, companyId, userEmail));
+        }
     }
 
     public AppUser setUserRole(String email, AppUserRole appUserRole) {
