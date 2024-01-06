@@ -49,6 +49,12 @@ public class AuthenticationController {
         }
     }
 
+    @PostMapping("/verify")
+    public ResponseEntity<AppUserDto> verify(@RequestParam String token) {
+        AppUserDto appUserDto = appUserService.verify(token);
+        return ResponseEntity.ok(appUserDto);
+    }
+
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@CurrentUser AppUser currentUser) {
         if (currentUser == null) {

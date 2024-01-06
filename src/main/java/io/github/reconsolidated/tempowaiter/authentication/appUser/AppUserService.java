@@ -1,6 +1,8 @@
 package io.github.reconsolidated.tempowaiter.authentication.appUser;
 
+import io.github.reconsolidated.tempowaiter.authentication.verification.VerificationService;
 import io.github.reconsolidated.tempowaiter.company.CompanyService;
+import io.github.reconsolidated.tempowaiter.infrastracture.email.EmailService;
 import io.github.reconsolidated.tempowaiter.infrastracture.security.PasswordService;
 import lombok.AllArgsConstructor;
 import io.github.reconsolidated.tempowaiter.waitingCompanyAssignment.WaitingCompanyAssignment;
@@ -17,23 +19,20 @@ import java.util.logging.Logger;
 @Validated
 @AllArgsConstructor
 public class AppUserService {
-
-    private final static String USER_NOT_FOUND_MESSAGE =
-            "user with email %s not found";
     private final AppUserRepository appUserRepository;
     private final WaitingCompanyAssignmentRepository waitingCompanyAssignmentRepository;
-    private final Logger logger = Logger.getLogger(AppUserService.class.getName());
     private final PasswordService passwordService;
-    private final CompanyService companyService;
+    private final VerificationService verificationService;
 
     public AppUserDto register(String email, String password) {
         AppUser appUser = AppUser
                 .builder()
                 .email(email)
                 .password(passwordService.hashPassword(password))
+                .enabled(false)
                 .build();
         if (appUserRepository.findByEmail(email).isPresent()) {
-            throw new IllegalArgumentException("User with email %s already exists".formatted(email));
+            throw new UserAlreadyExistsException();
         }
 
         var waitingAssignment = waitingCompanyAssignmentRepository.findByEmail(email);
@@ -43,18 +42,38 @@ public class AppUserService {
             appUser.setCompanyId(waitingCompanyAssignment.getCompanyId());
         }
         appUser = appUserRepository.save(appUser);
+
+        verificationService.sendVerificationToken(email);
+
         return AppUserDto
                 .builder()
                 .email(appUser.getEmail())
+                .companyId(appUser.getCompanyId())
+                .build();
+    }
+
+    public AppUserDto verify(String token) {
+        String email = verificationService.verify(token);
+        AppUser appUser = appUserRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        appUser.setEnabled(true);
+        appUserRepository.save(appUser);
+        return AppUserDto
+                .builder()
+                .email(appUser.getEmail())
+                .companyId(appUser.getCompanyId())
                 .build();
     }
 
     public boolean validate(String email, String password) {
         Optional<AppUser> appUser = appUserRepository.findByEmail(email);
         if (appUser.isEmpty()) {
-            return false;
+            throw new UserNotFoundException();
         }
-        return passwordService.checkPassword(password, appUser.get().getPassword());
+        if (!passwordService.checkPassword(password, appUser.get().getPassword())) {
+            throw new IllegalArgumentException("Incorrect password.");
+        }
+        return true;
     }
 
     public Optional<AppUser> getUser(String email) {

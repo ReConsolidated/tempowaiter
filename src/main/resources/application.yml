@@ -16,5 +16,18 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     show-sql: false
+  mail:
+    host: "pro3.mail.ovh.net"
+    port: 587
+    username: "kontakt@tempowaiter.pl"
+    password: "kWy681@t"
+    test-connection: true
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
 
 JWT_SECRET_KEY: "secret"

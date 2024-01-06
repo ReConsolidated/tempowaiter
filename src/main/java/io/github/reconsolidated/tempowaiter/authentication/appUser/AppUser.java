@@ -24,6 +24,8 @@ public class AppUser {
     private String email = "";
     private String phoneNumber = "";
     private Long companyId = null;
+    @Column(columnDefinition = "boolean default false")
+    private boolean enabled = true;
     @Enumerated(EnumType.STRING)
     private AppUserRole role = AppUserRole.USER;
 
