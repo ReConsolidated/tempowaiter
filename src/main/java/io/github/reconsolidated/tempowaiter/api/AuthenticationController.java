@@ -46,7 +46,7 @@ public class AuthenticationController {
                     )
             );
         } else {
-            return ResponseEntity.status(HttpStatusCode.valueOf(401)).build();
+            return ResponseEntity.status(HttpStatusCode.valueOf(401)).body("Credentials don't match user");
         }
     }
 
