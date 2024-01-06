@@ -36,7 +36,6 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserCredentials credentials) {
         if (appUserService.validate(credentials.getEmail(), credentials.getPassword())) {
-
             return ResponseEntity.ok(
                     new DummyDto(
                             Map.of(
@@ -48,6 +47,15 @@ public class AuthenticationController {
         } else {
             return ResponseEntity.status(HttpStatusCode.valueOf(401)).body("Credentials don't match user");
         }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@CurrentUser AppUser currentUser) {
+        if (currentUser == null) {
+            return ResponseEntity.status(HttpStatusCode.valueOf(401)).body("User not logged in");
+        }
+        jwtService.logout(currentUser);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/register")

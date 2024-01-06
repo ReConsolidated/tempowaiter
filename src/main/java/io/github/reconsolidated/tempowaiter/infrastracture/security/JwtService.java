@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
+import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUser;
 import io.github.reconsolidated.tempowaiter.infrastracture.RefreshTokenExpiredException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -72,5 +73,9 @@ public class JwtService {
                 .build();
         jwtRefreshTokenRepository.save(token);
         return token.getToken();
+    }
+
+    public void logout(AppUser currentUser) {
+        jwtRefreshTokenRepository.deleteByEmail(currentUser.getEmail());
     }
 }
