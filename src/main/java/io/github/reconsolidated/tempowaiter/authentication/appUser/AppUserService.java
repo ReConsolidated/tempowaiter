@@ -97,4 +97,12 @@ public class AppUserService {
         user.setRole(appUserRole);
         return appUserRepository.save(user);
     }
+
+    public AppUserDto sendVerificationToken(String email) {
+        verificationService.sendVerificationToken(email);
+        return AppUserDto
+                .builder()
+                .email(email)
+                .build();
+    }
 }

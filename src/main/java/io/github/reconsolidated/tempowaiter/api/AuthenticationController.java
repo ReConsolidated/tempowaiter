@@ -55,6 +55,12 @@ public class AuthenticationController {
         return ResponseEntity.ok(appUserDto);
     }
 
+    @PostMapping("/resend-verification-token")
+    public ResponseEntity<AppUserDto> resendVerificationToken(@RequestParam String email) {
+        AppUserDto appUserDto = appUserService.sendVerificationToken(email);
+        return ResponseEntity.ok(appUserDto);
+    }
+
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@CurrentUser AppUser currentUser) {
         if (currentUser == null) {
