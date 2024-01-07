@@ -25,7 +25,10 @@ public class AuthenticationController {
 
     @GetMapping("/user-info")
     public ResponseEntity<?> userInfo(@CurrentUser AppUser currentUser) {
-        return ResponseEntity.ok(AppUserDto.builder().email(currentUser.getEmail()).build());
+        return ResponseEntity.ok(AppUserDto.builder()
+                        .email(currentUser.getEmail())
+                        .isVerified(currentUser.isEnabled())
+                        .build());
     }
 
     @PostMapping("/refresh-token/{refreshToken}/access-token")
@@ -49,16 +52,15 @@ public class AuthenticationController {
         }
     }
 
-    @PostMapping("/verify")
-    public ResponseEntity<AppUserDto> verify(@RequestParam String token) {
-        AppUserDto appUserDto = appUserService.verify(token);
-        return ResponseEntity.ok(appUserDto);
-    }
-
-    @PostMapping("/resend-verification-token")
-    public ResponseEntity<AppUserDto> resendVerificationToken(@RequestParam String email) {
-        AppUserDto appUserDto = appUserService.sendVerificationToken(email);
-        return ResponseEntity.ok(appUserDto);
+    @PostMapping("/register")
+    public ResponseEntity<RegisterResponse> register(@RequestBody UserCredentials credentials) {
+        return ResponseEntity.ok(
+                RegisterResponse.builder()
+                        .email(appUserService.register(credentials.getEmail(), credentials.getPassword()).getEmail())
+                        .token(jwtService.generateToken(credentials.getEmail()))
+                        .refreshToken(jwtService.generateRefreshToken(credentials.getEmail()))
+                        .build()
+        );
     }
 
     @PostMapping("/logout")
@@ -70,15 +72,16 @@ public class AuthenticationController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> register(@RequestBody UserCredentials credentials) {
-        return ResponseEntity.ok(
-                RegisterResponse.builder()
-                .email(appUserService.register(credentials.getEmail(), credentials.getPassword()).getEmail())
-                .token(jwtService.generateToken(credentials.getEmail()))
-                .refreshToken(jwtService.generateRefreshToken(credentials.getEmail()))
-                .build()
-        );
+    @PostMapping("/verify")
+    public ResponseEntity<AppUserDto> verify(@RequestParam String token) {
+        AppUserDto appUserDto = appUserService.verify(token);
+        return ResponseEntity.ok(appUserDto);
+    }
+
+    @PostMapping("/resend-verification-token")
+    public ResponseEntity<AppUserDto> resendVerificationToken(@RequestParam String email) {
+        AppUserDto appUserDto = appUserService.sendVerificationToken(email);
+        return ResponseEntity.ok(appUserDto);
     }
 
     @Builder

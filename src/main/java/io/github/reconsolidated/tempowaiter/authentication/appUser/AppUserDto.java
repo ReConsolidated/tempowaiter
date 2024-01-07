@@ -8,4 +8,5 @@ import lombok.Getter;
 public class AppUserDto {
     private String email;
     private Long companyId;
+    private Boolean isVerified;
 }
