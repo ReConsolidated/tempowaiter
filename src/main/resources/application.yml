@@ -20,7 +20,7 @@ spring:
     host: "pro3.mail.ovh.net"
     port: 587
     username: "kontakt@tempowaiter.pl"
-    password: "kWy681@t"
+    password: "a_password"
     test-connection: true
     properties:
       mail:
