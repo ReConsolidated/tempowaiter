@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/auth")
 @AllArgsConstructor
 public class AuthenticationController {
 
@@ -75,6 +76,18 @@ public class AuthenticationController {
     @PostMapping("/verify")
     public ResponseEntity<AppUserDto> verify(@RequestParam String token) {
         AppUserDto appUserDto = appUserService.verify(token);
+        return ResponseEntity.ok(appUserDto);
+    }
+
+    @PostMapping("/set-password")
+    public ResponseEntity<AppUserDto> setPassword(@RequestParam String token, @RequestParam String newPassword) {
+        AppUserDto appUserDto = appUserService.setPassword(token, newPassword);
+        return ResponseEntity.ok(appUserDto);
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<AppUserDto> sendResetPasswordLink(@RequestParam String email) {
+        AppUserDto appUserDto = appUserService.sendResetPasswordLink(email);
         return ResponseEntity.ok(appUserDto);
     }
 

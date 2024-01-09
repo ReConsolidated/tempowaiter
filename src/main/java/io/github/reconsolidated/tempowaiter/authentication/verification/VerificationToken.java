@@ -18,6 +18,7 @@ public class VerificationToken {
     @Id
     @GeneratedValue
     private Long id;
+    private String type;
     private String token;
     @Column(unique = true)
     private String email;

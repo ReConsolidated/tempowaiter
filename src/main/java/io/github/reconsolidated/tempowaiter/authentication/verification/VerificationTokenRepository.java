@@ -7,7 +7,7 @@ import java.util.Optional;
 
 @Repository
 public interface VerificationTokenRepository extends JpaRepository<VerificationToken, Long> {
-    Optional<VerificationToken> findByEmail(String email);
+    Optional<VerificationToken> findByEmailAndType(String email, String type);
 
     Optional<VerificationToken> findByToken(String token);
 }
