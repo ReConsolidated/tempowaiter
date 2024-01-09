@@ -26,6 +26,7 @@ public class VerificationService {
             token = Optional.of(VerificationToken.builder()
                     .email(email)
                     .token(UUID.randomUUID().toString())
+                    .type("reset-password")
                     .lastResent(LocalDateTime.now())
                     .build());
             verificationTokenRepository.save(token.get());
