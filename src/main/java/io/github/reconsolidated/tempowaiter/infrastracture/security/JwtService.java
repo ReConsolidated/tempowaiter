@@ -9,6 +9,7 @@ import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUser;
 import io.github.reconsolidated.tempowaiter.infrastracture.RefreshTokenExpiredException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -75,6 +76,7 @@ public class JwtService {
         return token.getToken();
     }
 
+    @Transactional
     public void logout(AppUser currentUser) {
         jwtRefreshTokenRepository.deleteByEmail(currentUser.getEmail());
     }
