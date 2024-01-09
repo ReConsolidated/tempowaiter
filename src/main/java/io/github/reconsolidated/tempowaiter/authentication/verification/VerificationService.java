@@ -47,6 +47,7 @@ public class VerificationService {
             token = Optional.of(VerificationToken.builder()
                     .email(email)
                     .token(UUID.randomUUID().toString())
+                    .type("verification")
                     .lastResent(LocalDateTime.now())
                     .build());
             verificationTokenRepository.save(token.get());
