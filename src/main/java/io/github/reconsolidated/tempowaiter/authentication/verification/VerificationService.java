@@ -171,7 +171,5 @@ public class VerificationService {
                 </div>
             </body>
             </html>
-                        
-                        
             """;
 }
