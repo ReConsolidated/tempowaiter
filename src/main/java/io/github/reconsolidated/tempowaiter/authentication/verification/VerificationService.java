@@ -3,6 +3,7 @@ package io.github.reconsolidated.tempowaiter.authentication.verification;
 import io.github.reconsolidated.tempowaiter.infrastracture.email.EmailService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -56,6 +57,7 @@ public class VerificationService {
                 verifyHtmlMessage.replace("<token>", token.get().getToken()));
     }
 
+    @Transactional
     public VerificationToken verify(String token) {
         Optional<VerificationToken> verificationToken = verificationTokenRepository.findByToken(token);
         if (verificationToken.isEmpty()) {
@@ -161,7 +163,7 @@ public class VerificationService {
                     <h2>TempoWaiter!</h2>
                     <p>Cześć!</p>
                     <p>Kliknij poniższy przycisk, aby zresetować swoje hasło:</p>
-                    <a href="https://tempowaiter.pl/nowe-haslo?token=<token>" class="button">Nowe hasło</a>
+                    <a href="https://tempowaiter.pl/auth/nowe-haslo?token=<token>" class="button">Nowe hasło</a>
                         
                     <p>Jeśli masz jakiekolwiek pytania, skontaktuj się z nami pod adresem <a href="mailto:kontakt@tempowaiter.pl">kontakt@tempowaiter.pl</a>.</p>
                         

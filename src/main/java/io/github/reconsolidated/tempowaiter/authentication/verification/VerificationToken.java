@@ -1,9 +1,6 @@
 package io.github.reconsolidated.tempowaiter.authentication.verification;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -14,13 +11,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @Setter
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"type", "email"}))
 public class VerificationToken {
     @Id
     @GeneratedValue
     private Long id;
     private String type;
     private String token;
-    @Column(unique = true)
     private String email;
     private LocalDateTime lastResent;
 }
