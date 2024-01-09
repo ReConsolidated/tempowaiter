@@ -85,7 +85,7 @@ public class VerificationService {
                         display: inline-block;
                         padding: 10px 20px;
                         margin-top: 20px;
-                        background: #0056b3;
+                        background: #d2d6db;
                         color: white;
                         text-decoration: none;
                         border-radius: 5px;
