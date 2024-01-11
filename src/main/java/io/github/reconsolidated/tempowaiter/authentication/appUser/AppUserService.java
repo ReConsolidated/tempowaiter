@@ -7,6 +7,7 @@ import io.github.reconsolidated.tempowaiter.waitingCompanyAssignment.WaitingComp
 import io.github.reconsolidated.tempowaiter.waitingCompanyAssignment.WaitingCompanyAssignmentRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.Optional;
@@ -21,6 +22,7 @@ public class AppUserService {
     private final PasswordService passwordService;
     private final VerificationService verificationService;
 
+    @Transactional
     public AppUserDto register(String email, String password) {
         AppUser appUser = AppUser
                 .builder()
