@@ -31,4 +31,6 @@ public class Company {
     private String tiktokLink;
     @Column(length = 1000)
     private String googleReviewLink;
+    @Column(length = 1000)
+    private String tripadvisorLink;
 }

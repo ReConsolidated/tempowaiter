@@ -169,6 +169,22 @@ public class ConfigurationController {
         );
     }
 
+    @PutMapping("/companies/{companyId}/tripadvisor_link")
+    public ResponseEntity<Company> setCompanyTripadvisorLink(@CurrentUser AppUser currentUser,
+                                                              @PathVariable Long companyId,
+                                                              @RequestBody SingleStringDto tripAdvisorLink) {
+        if (currentUser.getRole().equals(AppUserRole.ADMIN)) {
+            return ResponseEntity.ok(companyService.setCompanyTripadvisorLink(companyId, companyId, tripAdvisorLink.getContent()));
+        }
+        return ResponseEntity.ok(
+                companyService.setCompanyTripadvisorLink(
+                        currentUser.getCompanyId(),
+                        companyId,
+                        tripAdvisorLink.getContent()
+                )
+        );
+    }
+
     @PutMapping("/companies/{companyId}/background_image")
     public ResponseEntity<Company> addCompanyBackgroundImage(@CurrentUser AppUser currentUser,
                                                       @PathVariable Long companyId,

@@ -27,6 +27,7 @@ public class CompanyListDto {
         private final String instagramLink;
         private final String tiktokLink;
         private final String googleReviewLink;
+        private final String tripadvisorLink;
         private final List<CompanyListTableInfoDto> tableList;
 
         public CompanyDto(Company company, List<TableInfo> tableInfoList) {
@@ -38,6 +39,7 @@ public class CompanyListDto {
             this.instagramLink = company.getInstagramLink();
             this.tiktokLink = company.getTiktokLink();
             this.googleReviewLink = company.getGoogleReviewLink();
+            this.tripadvisorLink = company.getTripadvisorLink();
             this.tableList = tableInfoList.stream().map((CompanyListTableInfoDto::new)).toList();
         }
     }

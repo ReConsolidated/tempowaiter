@@ -48,6 +48,16 @@ public class CompanyService {
         }
     }
 
+    public Company setCompanyTripadvisorLink(Long userId, Long companyId, String tripadvisorLink) {
+        Company company = getById(companyId);
+        if (userId.equals(companyId)) {
+            company.setTripadvisorLink(tripadvisorLink);
+            return companyRepository.save(company);
+        } else {
+            throw new IllegalArgumentException("You are not the owner of this company");
+        }
+    }
+
     public Company setCompanyMenuLink(Long userId, Long companyId, String menuLink) {
         Company company = getById(companyId);
         if (userId.equals(companyId)) {

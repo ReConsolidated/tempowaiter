@@ -70,7 +70,7 @@ public class JwtService {
         JwtRefreshToken token = JwtRefreshToken.builder()
                 .email(email)
                 .token(UUID.randomUUID().toString())
-                .expiresAt(LocalDateTime.now().plusMinutes(15))
+                .expiresAt(LocalDateTime.now().plusYears(3))
                 .build();
         jwtRefreshTokenRepository.save(token);
         return token.getToken();
