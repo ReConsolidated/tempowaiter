@@ -50,11 +50,14 @@ public class TableService {
             throw new OutdatedTableRequestException(cardId);
         }
 
-        Optional<TableSession> overwrittenSession = sessionRepository
-                .findByCardIdAndIsOverwrittenFalseAndExpirationDateGreaterThan(cardId, LocalDateTime.now());
-        if (overwrittenSession.isPresent()) {
-            overwrittenSession.get().setOverwritten(true);
-            sessionRepository.save(overwrittenSession.get());
+        List<TableSession> availableSessions = sessionRepository
+                .findAllByCardIdAndIsOverwrittenFalseAndExpirationDateGreaterThan(cardId, LocalDateTime.now()); ;
+        if (availableSessions.size() > 1) {
+            for (int i = 0; i< availableSessions.size() - 1; i++) {
+                TableSession availableSession = availableSessions.get(i);
+                availableSession.setOverwritten(true);
+                sessionRepository.save(availableSession);
+            }
         }
 
         Company company = companyService.getById(tableInfo.getCompanyId());
@@ -83,11 +86,14 @@ public class TableService {
             return tableInfoMapper.toDto(tableInfo);
         }
 
-        Optional<TableSession> overwrittenSession = sessionRepository
-                .findByCardIdAndIsOverwrittenFalseAndExpirationDateGreaterThan(cardId, LocalDateTime.now());
-        if (overwrittenSession.isPresent()) {
-            overwrittenSession.get().setOverwritten(true);
-            sessionRepository.save(overwrittenSession.get());
+        List<TableSession> availableSessions = sessionRepository
+                .findAllByCardIdAndIsOverwrittenFalseAndExpirationDateGreaterThan(cardId, LocalDateTime.now()); ;
+        if (availableSessions.size() > 1) {
+            for (int i = 0; i< availableSessions.size() - 1; i++) {
+                TableSession availableSession = availableSessions.get(i);
+                availableSession.setOverwritten(true);
+                sessionRepository.save(availableSession);
+            }
         }
 
         Company company = companyService.getById(tableInfo.getCompanyId());
