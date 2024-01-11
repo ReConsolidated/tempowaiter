@@ -2,18 +2,14 @@ package io.github.reconsolidated.tempowaiter.authentication.appUser;
 
 import io.github.reconsolidated.tempowaiter.authentication.verification.VerificationService;
 import io.github.reconsolidated.tempowaiter.authentication.verification.VerificationToken;
-import io.github.reconsolidated.tempowaiter.company.CompanyService;
-import io.github.reconsolidated.tempowaiter.infrastracture.email.EmailService;
 import io.github.reconsolidated.tempowaiter.infrastracture.security.PasswordService;
-import lombok.AllArgsConstructor;
 import io.github.reconsolidated.tempowaiter.waitingCompanyAssignment.WaitingCompanyAssignment;
 import io.github.reconsolidated.tempowaiter.waitingCompanyAssignment.WaitingCompanyAssignmentRepository;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.Optional;
-import java.util.logging.Logger;
 
 
 @Service
@@ -30,7 +26,8 @@ public class AppUserService {
                 .builder()
                 .email(email)
                 .password(passwordService.hashPassword(password))
-                .enabled(false)
+                .role(AppUserRole.USER)
+                .enabled(true)
                 .build();
         if (appUserRepository.findByEmail(email).isPresent()) {
             throw new UserAlreadyExistsException();
@@ -43,8 +40,6 @@ public class AppUserService {
             appUser.setCompanyId(waitingCompanyAssignment.getCompanyId());
         }
         appUser = appUserRepository.save(appUser);
-
-        verificationService.sendVerificationToken(email);
 
         return AppUserDto
                 .builder()

@@ -17,8 +17,6 @@ public class AppUser {
     @GeneratedValue(generator = "app_users")
     @SequenceGenerator(name = "app_users", allocationSize = 1)
     private Long id;
-    @Column(unique = true)
-    private String keycloakId;
     private String password;
     @Column(unique = true)
     private String email = "";
