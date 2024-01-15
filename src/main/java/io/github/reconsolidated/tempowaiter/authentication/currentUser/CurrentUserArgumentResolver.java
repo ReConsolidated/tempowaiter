@@ -26,10 +26,10 @@ public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolve
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal() == null) {
-            throw new BadCredentialsException("Authentication required");
+            throw new UnauthenticatedException();
         }
         if (!(authentication instanceof JwtAuthenticationToken principal)) {
-            throw new BadCredentialsException("Only JWT authentication is supported");
+            throw new UnauthenticatedException();
         }
         String email = principal.getName();
 
