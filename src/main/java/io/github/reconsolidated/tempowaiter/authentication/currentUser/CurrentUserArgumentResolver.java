@@ -33,7 +33,7 @@ public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolve
         }
         String email = principal.getName();
 
-        return appUserService.getUser(email).orElseThrow();
+        return appUserService.getUser(email).orElseThrow(UnauthenticatedException::new);
     }
 
 }
