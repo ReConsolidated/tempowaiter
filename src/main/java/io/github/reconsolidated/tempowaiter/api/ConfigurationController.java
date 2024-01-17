@@ -134,7 +134,7 @@ public class ConfigurationController {
 
     @PutMapping("/companies/{companyId}")
     public ResponseEntity<Company> setCompanyName(@CurrentUser AppUser currentUser, @PathVariable Long companyId, @RequestParam String companyName) {
-        return ResponseEntity.ok(companyService.setCompanyName(currentUser.getCompanyId(), companyId, companyName));
+        return ResponseEntity.ok(companyService.setCompanyName(currentUser, companyId, companyName));
     }
 
     @PutMapping("/companies/{companyId}/menu_link")

@@ -6,6 +6,8 @@
 app = "tempowaiter"
 primary_region = "waw"
 
+[build]
+
 [env]
   SPRING_DATASOURCE_URL = "jdbc:postgresql://146.59.93.121:5432/tempowaiter?sslmode=disable"
   SPRING_DATASOURCE_USERNAME = "compose-postgres"
@@ -18,3 +20,12 @@ primary_region = "waw"
   auto_start_machines = true
   min_machines_running = 1
   processes = ["app"]
+  [concurrency]
+    type = "connections"
+    hard_limit = 1000
+    soft_limit = 1000
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 512
