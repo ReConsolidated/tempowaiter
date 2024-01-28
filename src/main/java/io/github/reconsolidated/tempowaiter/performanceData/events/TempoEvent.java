@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Setter
 public class TempoEvent {
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator = "tempo_events_generator")
     private Long id;
     private LocalDateTime time;
     private Long companyId;
