@@ -1,5 +1,6 @@
 package io.github.reconsolidated.tempowaiter.authentication.appUser;
 
+import io.github.reconsolidated.tempowaiter.authentication.currentUser.UnauthenticatedException;
 import io.github.reconsolidated.tempowaiter.authentication.verification.VerificationService;
 import io.github.reconsolidated.tempowaiter.authentication.verification.VerificationToken;
 import io.github.reconsolidated.tempowaiter.infrastracture.security.PasswordService;
@@ -94,7 +95,7 @@ public class AppUserService {
             throw new UserNotFoundException();
         }
         if (!passwordService.checkPassword(password, appUser.get().getPassword())) {
-            throw new IllegalArgumentException("Incorrect password.");
+            throw new UnauthenticatedException("Incorrect password.");
         }
         return true;
     }
