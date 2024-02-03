@@ -109,8 +109,13 @@ public class AppUserService {
             user.get().setCompanyId(companyId);
             appUserRepository.save(user.get());
         } else {
-            waitingCompanyAssignmentRepository.deleteByEmail(userEmail);
-            waitingCompanyAssignmentRepository.save(new WaitingCompanyAssignment(null, companyId, userEmail));
+            var currentAssignment = waitingCompanyAssignmentRepository.findByEmail(userEmail);
+            if (currentAssignment.isPresent()) {
+                currentAssignment.get().setCompanyId(companyId);
+                waitingCompanyAssignmentRepository.save(currentAssignment.get());
+            } else {
+                waitingCompanyAssignmentRepository.save(new WaitingCompanyAssignment(null, companyId, userEmail));
+            }
         }
     }
 

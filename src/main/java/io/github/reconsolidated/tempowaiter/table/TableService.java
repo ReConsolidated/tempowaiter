@@ -52,12 +52,10 @@ public class TableService {
 
         List<TableSession> availableSessions = sessionRepository
                 .findAllByCardIdAndIsOverwrittenFalseAndExpirationDateGreaterThan(cardId, LocalDateTime.now()); ;
-        if (availableSessions.size() > 1) {
-            for (int i = 0; i< availableSessions.size() - 1; i++) {
-                TableSession availableSession = availableSessions.get(i);
-                availableSession.setOverwritten(true);
-                sessionRepository.save(availableSession);
-            }
+        for (int i = 0; i<availableSessions.size(); i++) {
+            TableSession availableSession = availableSessions.get(i);
+            availableSession.setOverwritten(true);
+            sessionRepository.save(availableSession);
         }
 
         Company company = companyService.getById(tableInfo.getCompanyId());

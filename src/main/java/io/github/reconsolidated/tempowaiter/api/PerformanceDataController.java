@@ -11,6 +11,7 @@ import io.github.reconsolidated.tempowaiter.performanceData.events.TempoEvent;
 import io.github.reconsolidated.tempowaiter.performanceData.events.TempoEventDto;
 import io.github.reconsolidated.tempowaiter.performanceData.events.TempoEventService;
 import io.github.reconsolidated.tempowaiter.table.TableService;
+import io.github.reconsolidated.tempowaiter.table.exceptions.SessionExpiredException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -65,7 +66,7 @@ public class PerformanceDataController {
     @PostMapping("/performance-data/events")
     public ResponseEntity<?> reportEvent(@RequestParam @NotNull String sessionId,
                                          @RequestBody TempoEventDto event) {
-        tableService.getSession(sessionId).orElseThrow(() -> new IllegalArgumentException("No such session"));
+        tableService.getSession(sessionId).orElseThrow(SessionExpiredException::new);
         tempoEventService.reportEvent(new TempoEvent(event));
         return ResponseEntity.ok().build();
     }
