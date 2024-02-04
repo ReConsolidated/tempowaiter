@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class WaiterService {
     private final WaiterRequestRepository waiterRequestRepository;
-    private final WebSocketNotifier webSocketNotifier;
+    private final Notifier webSocketNotifier;
 
     private Optional<WaiterRequest> findByStateNotAndTableId(RequestState requestState, Long tableId) {
         List<WaiterRequest> list = waiterRequestRepository.findByStateNotAndTableId(requestState, tableId);
@@ -47,7 +47,7 @@ public class WaiterService {
         request.setTableName(tableInfo.getTableDisplayName());
         request.setAdditionalData(additionalData);
         WaiterRequest result = waiterRequestRepository.save(request);
-        webSocketNotifier.sendRequestsNotification(tableInfo.getCompanyId(), request.getState().name());
+        webSocketNotifier.sendRequestsNotification(tableInfo.getCompanyId(), request);
         return result;
     }
 
@@ -60,7 +60,7 @@ public class WaiterService {
         request.setType(requestType);
         request.setAdditionalData(additionalData);
         request = waiterRequestRepository.save(request);
-        webSocketNotifier.sendRequestsNotification(tableInfo.getCompanyId(), request.getState().name());
+        webSocketNotifier.sendRequestsNotification(tableInfo.getCompanyId(), request);
         return request;
     }
 
@@ -111,7 +111,7 @@ public class WaiterService {
         } else if (state.equals(RequestState.DONE)) {
             request.setResolvedAt(System.currentTimeMillis());
         }
-        webSocketNotifier.sendRequestsNotification(companyId, state.name());
+        webSocketNotifier.sendRequestsNotification(companyId, request);
         webSocketNotifier.sendTableNotification(request.getTableId(), state.name());
         return waiterRequestRepository.save(request);
     }
@@ -120,7 +120,7 @@ public class WaiterService {
         Optional<WaiterRequest> request = findByStateNotAndTableId(RequestState.DONE, tableId);
         if (request.isPresent()) {
             waiterRequestRepository.delete(request.get());
-            webSocketNotifier.sendRequestsNotification(request.get().getCompanyId(), "CANCELLED");
+            webSocketNotifier.sendRequestsNotification(request.get().getCompanyId(), request.get());
             webSocketNotifier.sendTableNotification(request.get().getTableId(), "CANCELLED");
             return true;
         }
