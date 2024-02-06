@@ -11,21 +11,23 @@ public class FirebaseNotificationsService {
     private final FirebaseMessaging firebaseMessaging;
 
     public void sendNotification(String topic, WaiterRequest request) {
-        System.out.println("sending notification");
         Message msg = Message.builder()
                 .setTopic(topic)
                 .setNotification(Notification.builder()
-                        .setBody("Nowe zgłoszenie przy stoliku " + request.getTableName() + " - " + request.getType())
+                        .setBody("Nowe zgłoszenie przy stoliku " + request.getTableName())
                         .setTitle("Stolik " + request.getTableName())
                         .build())
                 .setAndroidConfig(AndroidConfig.builder()
                         .setPriority(AndroidConfig.Priority.HIGH)
                         .setNotification(AndroidNotification.builder()
-                                .setIcon("stock_ticker_update")
+                                .setIcon("ic_launcher")
+                                .setBody("Nowe zgłoszenie przy stoliku " + request.getTableName())
+                                .setTitle("Stolik " + request.getTableName())
                                 .setColor("#f45342")
+                                .setTag("waiter_requests")
                                 .build())
                         .build())
-                .putData("body", "Nowe zgłoszenie przy stoliku " + request.getTableName() + " - " + request.getType())
+                .putData("body", "Nowe zgłoszenie przy stoliku " + request.getTableName())
                 .build();
         try {
             firebaseMessaging.send(msg);
