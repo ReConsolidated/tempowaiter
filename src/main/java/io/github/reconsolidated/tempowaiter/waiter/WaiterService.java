@@ -2,8 +2,10 @@ package io.github.reconsolidated.tempowaiter.waiter;
 
 import io.github.reconsolidated.tempowaiter.table.TableInfo;
 import lombok.AllArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,6 +33,20 @@ public class WaiterService {
         return Optional.of(newestRequest);
     }
 
+    @Scheduled(fixedRate = 30000)
+    public void remindWaiter() {
+        List<WaiterRequest> unresolvedRequests = waiterRequestRepository.findByState(RequestState.WAITING);
+        List<Long> companyIds = unresolvedRequests.stream().map(WaiterRequest::getCompanyId).distinct().toList();
+        for (Long companyId : companyIds) {
+            WaiterRequest latestRequest = unresolvedRequests.stream()
+                    .filter(request -> request.getCompanyId().equals(companyId))
+                    .max(Comparator.comparingLong(WaiterRequest::getRequestedAt))
+                    .orElseThrow();
+            if (System.currentTimeMillis() - latestRequest.getRequestedAt() > 20000) {
+                webSocketNotifier.sendRequestsNotification(companyId, latestRequest, true);
+            }
+        }
+    }
 
     public WaiterRequest callToTable(String requestType, TableInfo tableInfo, Long cardId, String additionalData) {
         Optional<WaiterRequest> existing = findByStateNotAndTableId(RequestState.DONE, tableInfo.getTableId());
