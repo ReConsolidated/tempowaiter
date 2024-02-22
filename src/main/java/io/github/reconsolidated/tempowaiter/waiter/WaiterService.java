@@ -1,18 +1,26 @@
 package io.github.reconsolidated.tempowaiter.waiter;
 
+import io.github.reconsolidated.tempowaiter.company.Company;
+import io.github.reconsolidated.tempowaiter.company.CompanyService;
+import io.github.reconsolidated.tempowaiter.infrastracture.email.EmailService;
 import io.github.reconsolidated.tempowaiter.table.TableInfo;
 import lombok.AllArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class WaiterService {
     private final WaiterRequestRepository waiterRequestRepository;
-    private final WebSocketNotifier webSocketNotifier;
+    private final Notifier webSocketNotifier;
+    private final EmailService emailService;
+    private final CompanyService companyService;
 
     private Optional<WaiterRequest> findByStateNotAndTableId(RequestState requestState, Long tableId) {
         List<WaiterRequest> list = waiterRequestRepository.findByStateNotAndTableId(requestState, tableId);
@@ -31,6 +39,60 @@ public class WaiterService {
         return Optional.of(newestRequest);
     }
 
+    @Scheduled(fixedRate = 30000)
+    public void remindWaiter() {
+        List<WaiterRequest> unresolvedRequests = waiterRequestRepository.findByState(RequestState.WAITING);
+        List<Long> companyIds = unresolvedRequests.stream().map(WaiterRequest::getCompanyId).distinct().toList();
+        for (Long companyId : companyIds) {
+            WaiterRequest latestRequest = unresolvedRequests.stream()
+                    .filter(request -> request.getCompanyId().equals(companyId))
+                    .max(Comparator.comparingLong(WaiterRequest::getRequestedAt))
+                    .orElseThrow();
+            if (System.currentTimeMillis() - latestRequest.getRequestedAt() > 20000) {
+                webSocketNotifier.sendRequestsNotification(companyId, latestRequest, true);
+            }
+        }
+        Map<Long, Integer> companyOldRequestCount = unresolvedRequests.stream()
+                .filter(request -> request.getEmailReportedAt() == null)
+                .filter(request -> System.currentTimeMillis() - request.getRequestedAt() > 600000)
+                .peek((request) -> {
+                    request.setEmailReportedAt(LocalDateTime.now());
+                    waiterRequestRepository.save(request);
+                })
+                .collect(Collectors.groupingBy(WaiterRequest::getCompanyId, Collectors.summingInt(request -> 1)));
+
+        for (Long companyId : companyOldRequestCount.keySet()) {
+            Integer count = companyOldRequestCount.get(companyId);
+            Company company = companyService.getById(companyId);
+            if (count != null && count > 0) {
+                String subject = company.getName() + " - zadzwoń, nieobsłużone zgłoszenia: " + count;
+                StringBuilder content = new StringBuilder();
+                content.append("Instrukcja obsługi dostępna tutaj: https://tempowaiter.com/instrukcja-obslugi<br/>");
+                content.append("Nowe zgłoszenia czekające na rozpatrzenie w restauracji ")
+                        .append(company.getName()).append(":<br/>");
+                for (WaiterRequest request : unresolvedRequests) {
+                    if (request.getCompanyId().equals(companyId)) {
+                        Date date = new Date(request.getRequestedAt());
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        sdf.setTimeZone(TimeZone.getTimeZone("Europe/Warsaw"));
+                        String formattedDate = sdf.format(date);
+                        content.append("Stolik ")
+                                .append(request.getTableName()).append(" - ")
+                                .append(request.getType())
+                                .append(" - ")
+                                .append(formattedDate)
+                                .append("<br/>");
+                    }
+                }
+                List<String> mailingList = List.of("gracjanpasik@gmail.com", "marekluksin@gmail.com", "maksym1305@gmail.com");
+                for (String email : mailingList) {
+                    emailService.sendSimpleMessage(email, subject, content.toString());
+                }
+            }
+        }
+
+
+    }
 
     public WaiterRequest callToTable(String requestType, TableInfo tableInfo, Long cardId, String additionalData) {
         Optional<WaiterRequest> existing = findByStateNotAndTableId(RequestState.DONE, tableInfo.getTableId());
@@ -47,7 +109,7 @@ public class WaiterService {
         request.setTableName(tableInfo.getTableDisplayName());
         request.setAdditionalData(additionalData);
         WaiterRequest result = waiterRequestRepository.save(request);
-        webSocketNotifier.sendRequestsNotification(tableInfo.getCompanyId(), request.getState().name());
+        webSocketNotifier.sendRequestsNotification(tableInfo.getCompanyId(), request, true);
         return result;
     }
 
@@ -60,7 +122,7 @@ public class WaiterService {
         request.setType(requestType);
         request.setAdditionalData(additionalData);
         request = waiterRequestRepository.save(request);
-        webSocketNotifier.sendRequestsNotification(tableInfo.getCompanyId(), request.getState().name());
+        webSocketNotifier.sendRequestsNotification(tableInfo.getCompanyId(), request, false);
         return request;
     }
 
@@ -111,7 +173,7 @@ public class WaiterService {
         } else if (state.equals(RequestState.DONE)) {
             request.setResolvedAt(System.currentTimeMillis());
         }
-        webSocketNotifier.sendRequestsNotification(companyId, state.name());
+        webSocketNotifier.sendRequestsNotification(companyId, request, false);
         webSocketNotifier.sendTableNotification(request.getTableId(), state.name());
         return waiterRequestRepository.save(request);
     }
@@ -120,7 +182,7 @@ public class WaiterService {
         Optional<WaiterRequest> request = findByStateNotAndTableId(RequestState.DONE, tableId);
         if (request.isPresent()) {
             waiterRequestRepository.delete(request.get());
-            webSocketNotifier.sendRequestsNotification(request.get().getCompanyId(), "CANCELLED");
+            webSocketNotifier.sendRequestsNotification(request.get().getCompanyId(), request.get(), false);
             webSocketNotifier.sendTableNotification(request.get().getTableId(), "CANCELLED");
             return true;
         }

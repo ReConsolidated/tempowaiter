@@ -16,6 +16,8 @@ public interface WaiterRequestRepository extends JpaRepository<WaiterRequest, Lo
 
     List<WaiterRequest> findByStateNotAndTableId(RequestState done, Long tableId);
 
+    List<WaiterRequest> findByState(RequestState requestState);
+
     @Query(value = "SELECT company_id, table_name, AVG((resolved_at - requested_at)/1000) AS \"average time seconds\", COUNT(*) " +
             "FROM waiter_request " +
             "WHERE to_timestamp(requested_at/1000) > :startDate " +
@@ -34,4 +36,6 @@ public interface WaiterRequestRepository extends JpaRepository<WaiterRequest, Lo
             "GROUP BY table_session.company_id, table_display_name", nativeQuery = true)
     List<Map<String, Object>> getTableSessionsData(@Param("startDate") LocalDateTime startDate,
                                                    @Param("endDate") LocalDateTime endDate);
+
+
 }

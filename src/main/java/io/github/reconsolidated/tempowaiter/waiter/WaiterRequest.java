@@ -5,6 +5,8 @@ import lombok.Setter;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -21,6 +23,7 @@ public class WaiterRequest {
     private Long tableId;
     private String tableName;
     private Long cardId;
+    private LocalDateTime emailReportedAt;
     private String type;
     @Column(length = 1000)
     private String additionalData;
