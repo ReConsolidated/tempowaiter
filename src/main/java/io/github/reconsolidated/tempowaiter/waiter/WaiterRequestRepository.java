@@ -18,7 +18,7 @@ public interface WaiterRequestRepository extends JpaRepository<WaiterRequest, Lo
 
     List<WaiterRequest> findByState(RequestState requestState);
 
-    @Query(value = "SELECT company_id, table_name, AVG((resolved_at - requested_at)/1000) AS \"average time seconds\", COUNT(*) " +
+    @Query(value = "SELECT company_id, table_name, AVG((resolved_at - requested_at)/1000) AS average_time_seconds, COUNT(*) " +
             "FROM waiter_request " +
             "WHERE to_timestamp(requested_at/1000) > :startDate " +
             "AND to_timestamp(requested_at/1000) < :endDate " +
