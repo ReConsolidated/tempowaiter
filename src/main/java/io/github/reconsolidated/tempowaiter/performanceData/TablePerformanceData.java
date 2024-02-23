@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 @AllArgsConstructor
@@ -20,7 +21,7 @@ public class TablePerformanceData {
     public TablePerformanceData(Map<String, Object> map) {
         this.companyId = Long.parseLong( "" + map.get("company_id"));
         this.tableName = (String) map.get("table_name");
-        this.averageTimeSeconds = (Double) map.get("average_time_seconds");
+        this.averageTimeSeconds = ((BigDecimal) map.get("average_time_seconds")).doubleValue();
         this.count = Integer.parseInt("" + map.get("count"));
     }
 }
