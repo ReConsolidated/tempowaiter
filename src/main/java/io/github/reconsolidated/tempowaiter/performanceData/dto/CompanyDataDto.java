@@ -10,11 +10,13 @@ import java.util.List;
 public class CompanyDataDto<T> {
     private Long companyId;
     private String companyName;
+    private int cardsCount;
     private List<T> data;
 
-    public CompanyDataDto(Long companyId, String companyName, List<T> data) {
+    public CompanyDataDto(Long companyId, String companyName, int cardsCount, List<T> data) {
         this.companyId = companyId;
         this.companyName = companyName;
+        this.cardsCount = cardsCount;
         this.data = data;
     }
 }

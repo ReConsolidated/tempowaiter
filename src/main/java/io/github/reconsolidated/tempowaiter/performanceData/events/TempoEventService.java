@@ -1,5 +1,6 @@
 package io.github.reconsolidated.tempowaiter.performanceData.events;
 
+import io.github.reconsolidated.tempowaiter.card.CardService;
 import io.github.reconsolidated.tempowaiter.company.CompanyService;
 import io.github.reconsolidated.tempowaiter.performanceData.TablePerformanceData;
 import io.github.reconsolidated.tempowaiter.performanceData.TableSessionsData;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 public class TempoEventService {
     private final TempoEventRepository tempoEventRepository;
     private final CompanyService companyService;
+    private final CardService cardService;
 
     public void reportEvent(TempoEvent event) {
         tempoEventRepository.save(event);
@@ -40,8 +42,13 @@ public class TempoEventService {
                 .map(entry -> new CompanyDataDto<>(
                         entry.getKey(),
                         companyService.getCompany(entry.getKey(), entry.getKey()).getName(),
+                        getCompanyCardsCount(entry.getKey()),
                         entry.getValue()))
                 .toList();
         return new CompaniesEventsDataDto(companyDataDtos);
+    }
+
+    private int getCompanyCardsCount(Long companyId) {
+        return cardService.getCards(companyId).size();
     }
 }
