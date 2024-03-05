@@ -20,6 +20,7 @@ public class WaiterRequest {
     private Long inProgressWaiterAppUserId;
     private Long resolvedAt;
     private Long companyId;
+    private LocalDateTime lastNotificationAt;
     private Long tableId;
     private String tableName;
     private Long cardId;

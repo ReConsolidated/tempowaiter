@@ -7,10 +7,12 @@ import io.github.reconsolidated.tempowaiter.table.TableInfo;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -39,16 +41,27 @@ public class WaiterService {
         return Optional.of(newestRequest);
     }
 
-    @Scheduled(fixedRate = 30000)
+    @Scheduled(fixedRate = 50000)
+    @Transactional
     public void remindWaiter() {
         List<WaiterRequest> unresolvedRequests = waiterRequestRepository.findByState(RequestState.WAITING);
         List<Long> companyIds = unresolvedRequests.stream().map(WaiterRequest::getCompanyId).distinct().toList();
         for (Long companyId : companyIds) {
             WaiterRequest latestRequest = unresolvedRequests.stream()
                     .filter(request -> request.getCompanyId().equals(companyId))
-                    .max(Comparator.comparingLong(WaiterRequest::getRequestedAt))
+                    .max(Comparator.comparing((request) -> {
+                        if (request.getLastNotificationAt() == null) {
+                            return LocalDateTime.ofEpochSecond(request.getRequestedAt()/1000,
+                                    0, ZoneOffset.ofHours(0));
+                        }
+                        return request.getLastNotificationAt();
+                    }))
                     .orElseThrow();
-            if (System.currentTimeMillis() - latestRequest.getRequestedAt() > 20000) {
+
+            if (latestRequest.getLastNotificationAt() != null &&
+                    LocalDateTime.now().isAfter(latestRequest.getLastNotificationAt().plusSeconds(30))) {
+                latestRequest.setLastNotificationAt(LocalDateTime.now());
+                waiterRequestRepository.save(latestRequest);
                 webSocketNotifier.sendRequestsNotification(companyId, latestRequest, true);
             }
         }
@@ -65,33 +78,35 @@ public class WaiterService {
             Integer count = companyOldRequestCount.get(companyId);
             Company company = companyService.getById(companyId);
             if (count != null && count > 0) {
-                String subject = company.getName() + " - zadzwoń, nieobsłużone zgłoszenia: " + count;
-                StringBuilder content = new StringBuilder();
-                content.append("Instrukcja obsługi dostępna tutaj: https://tempowaiter.com/instrukcja-obslugi<br/>");
-                content.append("Nowe zgłoszenia czekające na rozpatrzenie w restauracji ")
-                        .append(company.getName()).append(":<br/>");
-                for (WaiterRequest request : unresolvedRequests) {
-                    if (request.getCompanyId().equals(companyId)) {
-                        Date date = new Date(request.getRequestedAt());
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                        sdf.setTimeZone(TimeZone.getTimeZone("Europe/Warsaw"));
-                        String formattedDate = sdf.format(date);
-                        content.append("Stolik ")
-                                .append(request.getTableName()).append(" - ")
-                                .append(request.getType())
-                                .append(" - ")
-                                .append(formattedDate)
-                                .append("<br/>");
-                    }
-                }
-                List<String> mailingList = List.of("gracjanpasik@gmail.com", "marekluksin@gmail.com", "maksym1305@gmail.com");
-                for (String email : mailingList) {
-                    emailService.sendSimpleMessage(email, subject, content.toString());
-                }
+                sendEmail(companyId, company, count, unresolvedRequests);
             }
         }
+    }
 
-
+    private void sendEmail(Long companyId, Company company, Integer count, List<WaiterRequest> unresolvedRequests) {
+        String subject = company.getName() + " - zadzwoń, nieobsłużone zgłoszenia: " + count;
+        StringBuilder content = new StringBuilder();
+        content.append("Instrukcja obsługi dostępna tutaj: https://tempowaiter.com/instrukcja-obslugi<br/>");
+        content.append("Nowe zgłoszenia czekające na rozpatrzenie w restauracji ")
+                .append(company.getName()).append(":<br/>");
+        for (WaiterRequest request : unresolvedRequests) {
+            if (request.getCompanyId().equals(companyId)) {
+                Date date = new Date(request.getRequestedAt());
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                sdf.setTimeZone(TimeZone.getTimeZone("Europe/Warsaw"));
+                String formattedDate = sdf.format(date);
+                content.append("Stolik ")
+                        .append(request.getTableName()).append(" - ")
+                        .append(request.getType())
+                        .append(" - ")
+                        .append(formattedDate)
+                        .append("<br/>");
+            }
+        }
+        List<String> mailingList = List.of("gracjanpasik@gmail.com", "marekluksin@gmail.com", "maksym1305@gmail.com");
+        for (String email : mailingList) {
+            emailService.sendSimpleMessage(email, subject, content.toString());
+        }
     }
 
     public WaiterRequest callToTable(String requestType, TableInfo tableInfo, Long cardId, String additionalData) {
@@ -108,6 +123,7 @@ public class WaiterService {
         request.setState(RequestState.WAITING);
         request.setTableName(tableInfo.getTableDisplayName());
         request.setAdditionalData(additionalData);
+        request.setLastNotificationAt(LocalDateTime.now());
         WaiterRequest result = waiterRequestRepository.save(request);
         webSocketNotifier.sendRequestsNotification(tableInfo.getCompanyId(), request, true);
         return result;
