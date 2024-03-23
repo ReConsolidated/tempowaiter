@@ -1,4 +1,4 @@
-package io.github.reconsolidated.tempowaiter.api;
+package io.github.reconsolidated.tempowaiter.infrastracture.api;
 
 import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUser;
 import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUserRole;

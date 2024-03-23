@@ -1,4 +1,4 @@
-package io.github.reconsolidated.tempowaiter.api;
+package io.github.reconsolidated.tempowaiter.infrastracture.api;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;

@@ -1,14 +1,10 @@
 package io.github.reconsolidated.tempowaiter.domain.menu;
 
 import io.github.reconsolidated.tempowaiter.company.Company;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 
 @Getter
 @NoArgsConstructor
@@ -20,10 +16,11 @@ public class MenuItem {
     private Long id;
     @ManyToOne
     private Company company;
-
     private String name;
     private Long price;
     private Long lowestHistoricalPrice;
+    @Column(length = 1000)
     private String description;
     private String imageUrl;
+    private boolean upsellingActive;
 }
