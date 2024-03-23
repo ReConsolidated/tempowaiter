@@ -1,4 +1,9 @@
 spring:
+  security:
+    user:
+      name: "user"
+      password: "3fc5786d-7ca8-4c3e-a9f8-f61c22bd5c0b"
+      roles: "USER"
   datasource:
     password: docker
     url: jdbc:postgresql://localhost:5432/postgres
@@ -11,10 +16,18 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     show-sql: false
+  mail:
+    host: "pro3.mail.ovh.net"
+    port: 587
+    username: "kontakt@tempowaiter.pl"
+    password: ${SPRING_MAIL_PASSWORD}
+    test-connection: true
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
 
-keycloak:
-  realm: staffect
-  auth-server-url: https://keycloak-docker.fly.dev/
-  resource: spring-app
-  bearer-only: true
-  ssl-required: NONE
+JWT_SECRET_KEY: "secret"

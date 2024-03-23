@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.bouncycastle.crypto.CipherParameters;
 import org.bouncycastle.crypto.engines.AESEngine;
 import org.bouncycastle.crypto.modes.CBCBlockCipher;
+import org.bouncycastle.crypto.modes.CBCModeCipher;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.crypto.params.ParametersWithIV;
 import org.bouncycastle.util.encoders.Hex;
@@ -29,7 +30,7 @@ public class NtagDecryptionService {
         byte[] encryptedData = Hex.decode(e);
 
         CipherParameters keyParam = new KeyParameter(keyBytes);
-        CBCBlockCipher blockCipher = new CBCBlockCipher(new AESEngine());
+        CBCModeCipher blockCipher = CBCBlockCipher.newInstance(AESEngine.newInstance());
         blockCipher.init(false, new ParametersWithIV(keyParam, ivBytes));
 
         byte[] PICCData = new byte[encryptedData.length];

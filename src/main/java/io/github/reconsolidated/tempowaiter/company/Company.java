@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +15,7 @@ import java.util.List;
 public class Company {
     @Id
     @GeneratedValue(generator = "companies")
+    @SequenceGenerator(name = "companies", allocationSize = 1)
     private Long id;
     private String name;
     @Column(length = 1000)
@@ -30,4 +31,6 @@ public class Company {
     private String tiktokLink;
     @Column(length = 1000)
     private String googleReviewLink;
+    @Column(length = 1000)
+    private String tripadvisorLink;
 }

@@ -1,4 +1,4 @@
-package io.github.reconsolidated.tempowaiter.config;
+package io.github.reconsolidated.tempowaiter.infrastracture.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

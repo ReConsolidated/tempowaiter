@@ -1,27 +1,37 @@
 package io.github.reconsolidated.tempowaiter;
 
 import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUser;
+import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUserDto;
 import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUserService;
 import io.github.reconsolidated.tempowaiter.card.Card;
 import io.github.reconsolidated.tempowaiter.card.CardService;
 import io.github.reconsolidated.tempowaiter.company.Company;
 import io.github.reconsolidated.tempowaiter.company.CompanyService;
+import io.github.reconsolidated.tempowaiter.infrastracture.email.EmailService;
 import io.github.reconsolidated.tempowaiter.table.TableInfo;
 import io.github.reconsolidated.tempowaiter.table.TableService;
 import io.github.reconsolidated.tempowaiter.waiter.RequestState;
 import io.github.reconsolidated.tempowaiter.waiter.WaiterRequest;
 import io.github.reconsolidated.tempowaiter.waiter.WaiterService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class WaiterRequestIT {
+    @MockBean
+    private JavaMailSender javaMailSender;
     @Autowired
     private WaiterService waiterService;
     @Autowired
@@ -40,8 +50,8 @@ public class WaiterRequestIT {
         TableInfo tableInfo = tableService.createTable(company.getId(),  "test table");
         waiterService.callToTable("test_request_type", tableInfo, 1L, "");
         String email = "test@user.com";
-        AppUser appUser = appUserService.getOrCreateUser("test_user",
-                email, "Tom", "Hanks");
+        appUserService.register(email, email);
+        AppUser appUser = appUserService.getUser(email).orElseThrow();
 
         appUserService.setCompanyId(email, company.getId());
         List<WaiterRequest> requestList = waiterService.getRequests(appUser.getId(), appUser.getCompanyId());
@@ -60,8 +70,8 @@ public class WaiterRequestIT {
         tableService.startSession(sessionId, card.getCardUid(), 15L);
         WaiterRequest request = waiterService.callToTable("test_request_type", tableInfo, card.getId(), "");
         String email = "test@user.com";
-        AppUser appUser = appUserService.getOrCreateUser("test_user",
-                email, "Tom", "Hanks");
+        appUserService.register(email, email);
+        AppUser appUser = appUserService.getUser(email).orElseThrow();
 
         appUserService.setCompanyId(email, company.getId());
         List<WaiterRequest> requestList = waiterService.getRequests(appUser.getId(), appUser.getCompanyId());
@@ -83,11 +93,11 @@ public class WaiterRequestIT {
         String sessionId = "any_id";
         WaiterRequest request = waiterService.callToTable("test_request_type", tableInfo, 1L, "");
         String appUserEmail = "test@user.com";
-        AppUser appUser = appUserService.getOrCreateUser("test_user",
-                appUserEmail, "Tom", "Hanks");
+        appUserService.register(appUserEmail, appUserEmail);
+        AppUser appUser = appUserService.getUser(appUserEmail).orElseThrow();
         String otherUserEmail = "other@waiter.com";
-        AppUser otherWaiter = appUserService.getOrCreateUser("other_waiter",
-                "other@waiter.com", "Other", "Waiter");
+        appUserService.register(otherUserEmail, otherUserEmail);
+        AppUser otherWaiter = appUserService.getUser(otherUserEmail).orElseThrow();
 
         appUserService.setCompanyId(appUserEmail, company.getId());
         appUserService.setCompanyId(otherUserEmail, company.getId());

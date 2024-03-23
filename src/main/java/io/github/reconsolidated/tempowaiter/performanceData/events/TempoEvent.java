@@ -4,9 +4,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Setter
 public class TempoEvent {
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator = "tempo_events_generator")
     private Long id;
     private LocalDateTime time;
     private Long companyId;

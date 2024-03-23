@@ -1,8 +1,8 @@
 package io.github.reconsolidated.tempowaiter.authentication.currentUser;
 
 import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUserService;
+import io.github.reconsolidated.tempowaiter.infrastracture.security.JwtAuthenticationToken;
 import lombok.AllArgsConstructor;
-import org.keycloak.KeycloakPrincipal;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -26,20 +26,15 @@ public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolve
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal() == null) {
-            throw new BadCredentialsException("Authentication required");
+            throw new UnauthenticatedException();
         }
-        if (!(authentication.getPrincipal() instanceof KeycloakPrincipal principal)) {
-            throw new BadCredentialsException("User not found");
+        if (!(authentication instanceof JwtAuthenticationToken principal)) {
+            throw new UnauthenticatedException();
         }
-        String keycloakId = principal.getName();
-        String email = principal.getKeycloakSecurityContext().getToken().getEmail();
-        String firstName = principal.getKeycloakSecurityContext().getToken().getGivenName();
-        String lastName = principal.getKeycloakSecurityContext().getToken().getFamilyName();
-        if (keycloakId == null || keycloakId.length() == 0) {
-            throw new BadCredentialsException("Keycloak id not found");
-        }
+        String email = principal.getName();
 
-        return appUserService.getOrCreateUser(keycloakId, email, firstName, lastName);
+        return appUserService.getUser(email).orElseThrow(UnauthenticatedException::new);
     }
 
 }
+

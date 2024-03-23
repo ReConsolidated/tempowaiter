@@ -3,19 +3,20 @@ package io.github.reconsolidated.tempowaiter.api;
 import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUser;
 import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUserRole;
 import io.github.reconsolidated.tempowaiter.authentication.currentUser.CurrentUser;
-import io.github.reconsolidated.tempowaiter.performanceData.CompaniesPerformanceDataDto;
-import io.github.reconsolidated.tempowaiter.performanceData.CompaniesSessionsDataDto;
+import io.github.reconsolidated.tempowaiter.performanceData.dto.CompaniesPerformanceDataDto;
+import io.github.reconsolidated.tempowaiter.performanceData.dto.CompaniesSessionsDataDto;
 import io.github.reconsolidated.tempowaiter.performanceData.PerformanceDataService;
 import io.github.reconsolidated.tempowaiter.performanceData.TimeRange;
 import io.github.reconsolidated.tempowaiter.performanceData.events.TempoEvent;
 import io.github.reconsolidated.tempowaiter.performanceData.events.TempoEventDto;
 import io.github.reconsolidated.tempowaiter.performanceData.events.TempoEventService;
 import io.github.reconsolidated.tempowaiter.table.TableService;
+import io.github.reconsolidated.tempowaiter.table.exceptions.SessionExpiredException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
@@ -30,9 +31,7 @@ public class PerformanceDataController {
     public ResponseEntity<CompaniesPerformanceDataDto> tableAverageTime(@CurrentUser AppUser currentUser,
                                                                         @RequestParam Long unixMillisFrom,
                                                                         @RequestParam Long unixMillisTo) {
-        TimeRange timeRange = new TimeRange(
-                LocalDateTime.ofEpochSecond(unixMillisFrom/1000, 0, ZoneOffset.UTC),
-                LocalDateTime.ofEpochSecond(unixMillisTo/1000, 0, ZoneOffset.UTC));
+        TimeRange timeRange = getTimeRange(unixMillisFrom, unixMillisTo);
         if (currentUser.getRole().equals(AppUserRole.ADMIN)) {
             return ResponseEntity.ok(performanceDataService.getTablePerformanceData(null, timeRange));
         } else {
@@ -44,10 +43,7 @@ public class PerformanceDataController {
     public ResponseEntity<CompaniesSessionsDataDto> sessionsPerTable(@CurrentUser AppUser currentUser,
                                                                      @RequestParam Long unixMillisFrom,
                                                                      @RequestParam Long unixMillisTo) {
-        TimeRange timeRange = new TimeRange(
-                LocalDateTime.ofEpochSecond(unixMillisFrom/1000, 0, ZoneOffset.UTC),
-                LocalDateTime.ofEpochSecond(unixMillisTo/1000, 0, ZoneOffset.UTC));
-
+        TimeRange timeRange = getTimeRange(unixMillisFrom, unixMillisTo);
         if (currentUser.getRole().equals(AppUserRole.ADMIN)) {
             return ResponseEntity.ok(performanceDataService.getTableSessionData(null, timeRange));
         } else {
@@ -55,11 +51,29 @@ public class PerformanceDataController {
         }
     }
 
+    @GetMapping("/performance-data/events")
+    public ResponseEntity<?> getEvents(@CurrentUser AppUser currentUser,
+                                       @RequestParam Long unixMillisFrom,
+                                       @RequestParam Long unixMillisTo) {
+        TimeRange timeRange = getTimeRange(unixMillisFrom, unixMillisTo);
+        if (currentUser.getRole().equals(AppUserRole.ADMIN)) {
+            return ResponseEntity.ok(tempoEventService.getEventsData(null, timeRange));
+        } else {
+            return ResponseEntity.ok(tempoEventService.getEventsData(currentUser.getCompanyId(), timeRange));
+        }
+    }
+
     @PostMapping("/performance-data/events")
     public ResponseEntity<?> reportEvent(@RequestParam @NotNull String sessionId,
                                          @RequestBody TempoEventDto event) {
-        tableService.getSession(sessionId).orElseThrow(() -> new IllegalArgumentException("No such session"));
+        tableService.getSession(sessionId).orElseThrow(SessionExpiredException::new);
         tempoEventService.reportEvent(new TempoEvent(event));
         return ResponseEntity.ok().build();
+    }
+
+    private static TimeRange getTimeRange(Long unixMillisFrom, Long unixMillisTo) {
+        return new TimeRange(
+                LocalDateTime.ofEpochSecond(unixMillisFrom/1000, 0, ZoneOffset.UTC),
+                LocalDateTime.ofEpochSecond(unixMillisTo/1000, 0, ZoneOffset.UTC));
     }
 }

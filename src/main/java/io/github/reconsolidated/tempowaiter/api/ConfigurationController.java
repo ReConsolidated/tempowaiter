@@ -134,7 +134,7 @@ public class ConfigurationController {
 
     @PutMapping("/companies/{companyId}")
     public ResponseEntity<Company> setCompanyName(@CurrentUser AppUser currentUser, @PathVariable Long companyId, @RequestParam String companyName) {
-        return ResponseEntity.ok(companyService.setCompanyName(currentUser.getCompanyId(), companyId, companyName));
+        return ResponseEntity.ok(companyService.setCompanyName(currentUser, companyId, companyName));
     }
 
     @PutMapping("/companies/{companyId}/menu_link")
@@ -169,6 +169,22 @@ public class ConfigurationController {
         );
     }
 
+    @PutMapping("/companies/{companyId}/tripadvisor_link")
+    public ResponseEntity<Company> setCompanyTripadvisorLink(@CurrentUser AppUser currentUser,
+                                                              @PathVariable Long companyId,
+                                                              @RequestBody SingleStringDto tripAdvisorLink) {
+        if (currentUser.getRole().equals(AppUserRole.ADMIN)) {
+            return ResponseEntity.ok(companyService.setCompanyTripadvisorLink(companyId, companyId, tripAdvisorLink.getContent()));
+        }
+        return ResponseEntity.ok(
+                companyService.setCompanyTripadvisorLink(
+                        currentUser.getCompanyId(),
+                        companyId,
+                        tripAdvisorLink.getContent()
+                )
+        );
+    }
+
     @PutMapping("/companies/{companyId}/background_image")
     public ResponseEntity<Company> addCompanyBackgroundImage(@CurrentUser AppUser currentUser,
                                                       @PathVariable Long companyId,
@@ -190,6 +206,10 @@ public class ConfigurationController {
                                                              @PathVariable Long companyId,
                                                              @RequestParam Integer imageId,
                                                              @RequestBody SingleStringDto backgroundImage) {
+        if (backgroundImage.getContent() == null) {
+            throw new IllegalArgumentException("Background image content cannot be null");
+        }
+
         if (currentUser.getRole().equals(AppUserRole.ADMIN)) {
             return ResponseEntity.ok(companyService.updateCompanyBackgroundImage(companyId, companyId, imageId, backgroundImage.getContent()));
         }

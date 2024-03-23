@@ -25,6 +25,7 @@ public class TableSessionDto {
     private String instagramLink;
     private String tiktokLink;
     private String googleReviewLink;
+    private String tripadvisorLink;
 
     public TableSessionDto(TableSession tableSession) {
         this.tableId = tableSession.getTableId();
@@ -43,5 +44,6 @@ public class TableSessionDto {
         this.instagramLink = tableSession.getCompany().getInstagramLink();
         this.tiktokLink = tableSession.getCompany().getTiktokLink();
         this.googleReviewLink = tableSession.getCompany().getGoogleReviewLink();
+        this.tripadvisorLink = tableSession.getCompany().getTripadvisorLink();
     }
 }

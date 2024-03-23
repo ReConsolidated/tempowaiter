@@ -10,11 +10,11 @@ import io.github.reconsolidated.tempowaiter.table.exceptions.SessionExpiredExcep
 import io.github.reconsolidated.tempowaiter.table.exceptions.TableNotFoundException;
 import io.github.reconsolidated.tempowaiter.waiter.WaiterRequest;
 import io.github.reconsolidated.tempowaiter.waiter.WaiterService;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -50,11 +50,12 @@ public class TableService {
             throw new OutdatedTableRequestException(cardId);
         }
 
-        Optional<TableSession> overwrittenSession = sessionRepository
-                .findByCardIdAndIsOverwrittenFalseAndExpirationDateGreaterThan(cardId, LocalDateTime.now());
-        if (overwrittenSession.isPresent()) {
-            overwrittenSession.get().setOverwritten(true);
-            sessionRepository.save(overwrittenSession.get());
+        List<TableSession> availableSessions = sessionRepository
+                .findAllByCardIdAndIsOverwrittenFalseAndExpirationDateGreaterThan(cardId, LocalDateTime.now()); ;
+        for (int i = 0; i<availableSessions.size(); i++) {
+            TableSession availableSession = availableSessions.get(i);
+            availableSession.setOverwritten(true);
+            sessionRepository.save(availableSession);
         }
 
         Company company = companyService.getById(tableInfo.getCompanyId());
@@ -83,11 +84,14 @@ public class TableService {
             return tableInfoMapper.toDto(tableInfo);
         }
 
-        Optional<TableSession> overwrittenSession = sessionRepository
-                .findByCardIdAndIsOverwrittenFalseAndExpirationDateGreaterThan(cardId, LocalDateTime.now());
-        if (overwrittenSession.isPresent()) {
-            overwrittenSession.get().setOverwritten(true);
-            sessionRepository.save(overwrittenSession.get());
+        List<TableSession> availableSessions = sessionRepository
+                .findAllByCardIdAndIsOverwrittenFalseAndExpirationDateGreaterThan(cardId, LocalDateTime.now()); ;
+        if (availableSessions.size() > 1) {
+            for (int i = 0; i< availableSessions.size() - 1; i++) {
+                TableSession availableSession = availableSessions.get(i);
+                availableSession.setOverwritten(true);
+                sessionRepository.save(availableSession);
+            }
         }
 
         Company company = companyService.getById(tableInfo.getCompanyId());
