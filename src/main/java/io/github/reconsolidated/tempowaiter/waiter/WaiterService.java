@@ -2,6 +2,7 @@ package io.github.reconsolidated.tempowaiter.waiter;
 
 import io.github.reconsolidated.tempowaiter.company.Company;
 import io.github.reconsolidated.tempowaiter.company.CompanyService;
+import io.github.reconsolidated.tempowaiter.domain.menu.MenuItemDto;
 import io.github.reconsolidated.tempowaiter.infrastracture.email.EmailService;
 import io.github.reconsolidated.tempowaiter.table.TableInfo;
 import lombok.AllArgsConstructor;
@@ -24,8 +25,8 @@ public class WaiterService {
     private final EmailService emailService;
     private final CompanyService companyService;
 
-    private Optional<WaiterRequest> findByStateNotAndTableId(RequestState requestState, Long tableId) {
-        List<WaiterRequest> list = waiterRequestRepository.findByStateNotAndTableId(requestState, tableId);
+    private Optional<WaiterRequest> findByStateNotAndTableIdAndType(RequestState requestState, Long tableId, String type) {
+        List<WaiterRequest> list = waiterRequestRepository.findByStateNotAndTableIdAndType(requestState, tableId, type);
         if (list.isEmpty()) {
             return Optional.empty();
         }
@@ -110,7 +111,7 @@ public class WaiterService {
     }
 
     public WaiterRequest callToTable(String requestType, TableInfo tableInfo, Long cardId, String additionalData) {
-        Optional<WaiterRequest> existing = findByStateNotAndTableId(RequestState.DONE, tableInfo.getTableId());
+        Optional<WaiterRequest> existing = findByStateNotAndTableIdAndType(RequestState.DONE, tableInfo.getTableId(), requestType);
         if (existing.isPresent()) {
             return existing.get();
         }
@@ -130,7 +131,7 @@ public class WaiterService {
     }
 
     public WaiterRequest updateCallToTable(String requestType, TableInfo tableInfo, Long cardId, String additionalData) {
-        Optional<WaiterRequest> existing = findByStateNotAndTableId(RequestState.DONE, tableInfo.getTableId());
+        Optional<WaiterRequest> existing = findByStateNotAndTableIdAndType(RequestState.DONE, tableInfo.getTableId(), requestType);
         if (existing.isEmpty()) {
             throw new IllegalArgumentException("You do not have any active request, so you can't update one");
         }
@@ -156,8 +157,8 @@ public class WaiterService {
         }).collect(Collectors.toList());
     }
 
-    public Optional<WaiterRequest> getRequest(Long tableId) {
-        return findByStateNotAndTableId(RequestState.DONE, tableId);
+    public List<WaiterRequest> getRequests(Long tableId) {
+        return waiterRequestRepository.findByStateNotAndTableId(RequestState.DONE, tableId);
     }
 
     private int scoreRequest(WaiterRequest request) {
@@ -195,8 +196,8 @@ public class WaiterService {
         return waiterRequestRepository.save(request);
     }
 
-    public boolean deleteRequest(Long tableId) {
-        Optional<WaiterRequest> request = findByStateNotAndTableId(RequestState.DONE, tableId);
+    public boolean deleteRequest(Long tableId, String callType) {
+        Optional<WaiterRequest> request = findByStateNotAndTableIdAndType(RequestState.DONE, tableId, callType);
         if (request.isPresent()) {
             waiterRequestRepository.delete(request.get());
             webSocketNotifier.sendRequestsNotification(request.get().getCompanyId(), request.get(), false);

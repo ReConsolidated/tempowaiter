@@ -46,8 +46,8 @@ public class MenuService {
         return MenuItemDto.fromEntity(menuItemRepository.save(item.toEntity(company)));
     }
 
-    public List<MenuItemDto> listItems(AppUser currentUser) {
-        return menuItemRepository.findByCompanyId(currentUser.getCompanyId()).stream()
+    public List<MenuItemDto> listItems(Long companyId) {
+        return menuItemRepository.findByCompanyId(companyId).stream()
                 .map(MenuItemDto::fromEntity)
                 .toList();
     }

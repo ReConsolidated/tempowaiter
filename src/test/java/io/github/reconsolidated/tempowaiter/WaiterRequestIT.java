@@ -78,7 +78,7 @@ public class WaiterRequestIT {
 
         assertThat(requestList).hasSize(1);
 
-        assertThat(tableService.cancelCall(sessionId, card.getId())).isTrue();
+        assertThat(tableService.cancelCall(sessionId, card.getId(), "test_request_type")).isTrue();
 
         requestList = waiterService.getRequests(appUser.getId(), appUser.getCompanyId());
 

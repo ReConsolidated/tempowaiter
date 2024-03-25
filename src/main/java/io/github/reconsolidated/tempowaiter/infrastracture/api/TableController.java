@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUser;
 import io.github.reconsolidated.tempowaiter.authentication.currentUser.CurrentUser;
+import io.github.reconsolidated.tempowaiter.domain.menu.MenuItemDto;
 import io.github.reconsolidated.tempowaiter.ntag_decryption.NtagDecryptionService;
 import io.github.reconsolidated.tempowaiter.ntag_decryption.NtagInfo;
 import io.github.reconsolidated.tempowaiter.table.*;
@@ -12,6 +13,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -69,18 +71,24 @@ public class TableController {
         return ResponseEntity.ok(tableService.updateWaiterCall(sessionId, callType, cardId, additionalData));
     }
 
+    @GetMapping("/public/menu-items")
+    public List<MenuItemDto> getMenuItems(@RequestParam String sessionId,
+                                          @RequestParam Long cardId) {
+        return tableService.listMenuItems(sessionId, cardId);
+    }
+
     @PostMapping("/public/cancel_call")
     public ResponseEntity<?> cancelCall(@RequestParam String sessionId,
-                                                    @RequestParam Long cardId) {
-        if (tableService.cancelCall(sessionId, cardId)) {
+                                                    @RequestParam Long cardId,
+                                                    @RequestParam String callType) {
+        if (tableService.cancelCall(sessionId, cardId, callType)) {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/public/call_state")
-    public ResponseEntity<WaiterRequest> callState(@RequestParam String sessionId, @RequestParam Long cardId) {
-        WaiterRequest request = tableService.getRequest(sessionId, cardId).orElseThrow();
-        return ResponseEntity.ok(request);
+    public ResponseEntity<List<WaiterRequest>> callState(@RequestParam String sessionId, @RequestParam Long cardId) {
+        return ResponseEntity.ok(tableService.getRequests(sessionId, cardId));
     }
 }

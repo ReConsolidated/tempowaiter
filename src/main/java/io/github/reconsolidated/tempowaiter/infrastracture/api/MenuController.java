@@ -27,7 +27,7 @@ public class MenuController {
 
     @GetMapping("/menu/items")
     public List<MenuItemDto> getMenuItems(@CurrentUser AppUser currentUser) {
-        return menuService.listItems(currentUser);
+        return menuService.listItems(currentUser.getCompanyId());
     }
 
     @PatchMapping("/menu/items/{id}")

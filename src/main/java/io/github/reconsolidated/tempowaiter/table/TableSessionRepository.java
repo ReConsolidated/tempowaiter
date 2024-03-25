@@ -13,4 +13,5 @@ public interface TableSessionRepository extends JpaRepository<TableSession, Long
     List<TableSession> findAllByCardIdAndIsOverwrittenFalseAndExpirationDateGreaterThan(Long cardId, LocalDateTime expirationDate);
 
     Optional<TableSession> findBySessionIdAndExpirationDateGreaterThanAndIsOverwrittenFalse(String sessionId, LocalDateTime now);
+
 }

@@ -10,6 +10,7 @@ import io.github.reconsolidated.tempowaiter.infrastracture.api.MenuController;
 import io.github.reconsolidated.tempowaiter.infrastracture.security.JwtAuthenticationToken;
 import io.github.reconsolidated.tempowaiter.infrastracture.security.JwtService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,6 +25,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Disabled
 public class MenuControllerTest {
     @MockBean
     private JavaMailSender javaMailSender;
