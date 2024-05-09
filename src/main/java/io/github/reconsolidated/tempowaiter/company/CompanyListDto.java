@@ -5,6 +5,7 @@ import io.github.reconsolidated.tempowaiter.table.TableInfoDto;
 import io.github.reconsolidated.tempowaiter.table.TableService;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class CompanyListDto {
         private final String googleReviewLink;
         private final String tripadvisorLink;
         private final List<CompanyListTableInfoDto> tableList;
+        private final LocalDateTime lastViewedRequests;
 
         public CompanyDto(Company company, List<TableInfo> tableInfoList) {
             this.id = company.getId();
@@ -41,6 +43,7 @@ public class CompanyListDto {
             this.googleReviewLink = company.getGoogleReviewLink();
             this.tripadvisorLink = company.getTripadvisorLink();
             this.tableList = tableInfoList.stream().map((CompanyListTableInfoDto::new)).toList();
+            this.lastViewedRequests = company.getLastViewedRequests();
         }
     }
 
