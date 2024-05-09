@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -23,6 +24,12 @@ public class CompanyService {
         Company company = new Company();
         company.setName(name);
         return companyRepository.save(company);
+    }
+
+    public void onRequestsViewed(Long companyId) {
+        Company company = getById(companyId);
+        company.setLastViewedRequests(LocalDateTime.now());
+        companyRepository.save(company);
     }
 
     public CompanyListDto listCompanies() {

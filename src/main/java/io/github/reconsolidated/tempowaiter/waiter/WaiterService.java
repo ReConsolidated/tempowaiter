@@ -4,6 +4,9 @@ import io.github.reconsolidated.tempowaiter.company.Company;
 import io.github.reconsolidated.tempowaiter.company.CompanyService;
 import io.github.reconsolidated.tempowaiter.domain.menu.MenuItemDto;
 import io.github.reconsolidated.tempowaiter.infrastracture.email.EmailService;
+import io.github.reconsolidated.tempowaiter.performanceData.events.TempoEvent;
+import io.github.reconsolidated.tempowaiter.performanceData.events.TempoEventDto;
+import io.github.reconsolidated.tempowaiter.performanceData.events.TempoEventService;
 import io.github.reconsolidated.tempowaiter.table.TableInfo;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -24,6 +27,7 @@ public class WaiterService {
     private final Notifier webSocketNotifier;
     private final EmailService emailService;
     private final CompanyService companyService;
+    private final TempoEventService tempoEventService;
 
     private Optional<WaiterRequest> findByStateNotAndTableIdAndType(RequestState requestState, Long tableId, String type) {
         List<WaiterRequest> list = waiterRequestRepository.findByStateNotAndTableIdAndType(requestState, tableId, type);
@@ -149,6 +153,11 @@ public class WaiterService {
                 request -> !request.getState().equals(RequestState.IN_PROGRESS)
                         || request.getInProgressWaiterAppUserId().equals(appUserId))
                 .toList();
+
+        Thread reportRequestsViewed = new Thread(() -> {
+            companyService.onRequestsViewed(companyId);
+        });
+        reportRequestsViewed.start();
 
         return waiterRequests.stream().sorted((request1, request2) -> {
             int score1 = scoreRequest(request1);

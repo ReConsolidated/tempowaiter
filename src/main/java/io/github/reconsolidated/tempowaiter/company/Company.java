@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,4 +35,5 @@ public class Company {
     private String googleReviewLink;
     @Column(length = 1000)
     private String tripadvisorLink;
+    private LocalDateTime lastViewedRequests;
 }
