@@ -1,10 +1,12 @@
 package io.github.reconsolidated.tempowaiter.table;
 
+import io.github.reconsolidated.tempowaiter.application.menu.MenuService;
 import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUser;
 import io.github.reconsolidated.tempowaiter.card.Card;
 import io.github.reconsolidated.tempowaiter.card.CardService;
 import io.github.reconsolidated.tempowaiter.company.Company;
 import io.github.reconsolidated.tempowaiter.company.CompanyService;
+import io.github.reconsolidated.tempowaiter.domain.menu.MenuItemDto;
 import io.github.reconsolidated.tempowaiter.table.exceptions.OutdatedTableRequestException;
 import io.github.reconsolidated.tempowaiter.table.exceptions.SessionExpiredException;
 import io.github.reconsolidated.tempowaiter.table.exceptions.TableNotFoundException;
@@ -32,6 +34,7 @@ public class TableService {
     private final CardService cardService;
     private final TableInfoMapper tableInfoMapper;
     private final CompanyService companyService;
+    private final MenuService menuService;
 
     public TableInfoDto startSession(String sessionId, String cardUid, Long ctr) {
         Long cardId = cardService.getCardId(cardUid);
@@ -183,28 +186,28 @@ public class TableService {
         return sessionRepository.findBySessionIdAndExpirationDateGreaterThanAndIsOverwrittenFalse(sessionId, LocalDateTime.now());
     }
 
-    public boolean cancelCall(String sessionId, Long cardId) {
+    public boolean cancelCall(String sessionId, Long cardId, String callType) {
         TableSession tableSession = sessionRepository
                 .findBySessionIdAndCardIdAndExpirationDateGreaterThanAndIsOverwrittenFalse(
                         sessionId,
                         cardId,
                         LocalDateTime.now())
                 .orElseThrow(SessionExpiredException::new);
-        return waiterService.deleteRequest(tableSession.getTableId());
+        return waiterService.deleteRequest(tableSession.getTableId(), callType);
     }
 
     public List<TableInfo> listTables(Long companyId) {
         return tableInfoRepository.findAllByCompanyIdEquals(companyId);
     }
 
-    public Optional<WaiterRequest> getRequest(String sessionId, Long cardId) {
+    public List<WaiterRequest> getRequests(String sessionId, Long cardId) {
         TableSession tableSession = sessionRepository
                 .findBySessionIdAndCardIdAndExpirationDateGreaterThanAndIsOverwrittenFalse(
                         sessionId,
                         cardId,
                         LocalDateTime.now())
                 .orElseThrow(SessionExpiredException::new);
-        return waiterService.getRequest(tableSession.getTableId());
+        return waiterService.getRequests(tableSession.getTableId());
     }
 
     public void deleteTable(Long companyId, Long tableId) {
@@ -232,5 +235,17 @@ public class TableService {
             tableInfo.setCardId(null);
             tableInfoRepository.save(tableInfo);
         });
+    }
+
+
+    public List<MenuItemDto> listMenuItems(String sessionId, Long cardId) {
+        // tableSession has to be polled for security to check if session exists
+        TableSession tableSession = sessionRepository
+                .findBySessionIdAndCardIdAndExpirationDateGreaterThanAndIsOverwrittenFalse(
+                        sessionId,
+                        cardId,
+                        LocalDateTime.now())
+                .orElseThrow(SessionExpiredException::new);
+        return menuService.listItems(tableSession.getCompany().getId());
     }
 }

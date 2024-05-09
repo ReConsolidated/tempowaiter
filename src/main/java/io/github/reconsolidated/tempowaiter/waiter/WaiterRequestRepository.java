@@ -14,8 +14,6 @@ import java.util.Map;
 public interface WaiterRequestRepository extends JpaRepository<WaiterRequest, Long> {
     List<WaiterRequest> findByStateNotAndCompanyIdEquals(RequestState state, Long companyId);
 
-    List<WaiterRequest> findByStateNotAndTableId(RequestState done, Long tableId);
-
     List<WaiterRequest> findByState(RequestState requestState);
 
     @Query(value = "SELECT company_id, table_name, AVG((resolved_at - requested_at)/1000) AS average_time_seconds, COUNT(*) " +
@@ -38,4 +36,7 @@ public interface WaiterRequestRepository extends JpaRepository<WaiterRequest, Lo
                                                    @Param("endDate") LocalDateTime endDate);
 
 
+    List<WaiterRequest> findByStateNotAndTableIdAndType(RequestState requestState, Long tableId, String type);
+
+    List<WaiterRequest> findByStateNotAndTableId(RequestState requestState, Long tableId);
 }
