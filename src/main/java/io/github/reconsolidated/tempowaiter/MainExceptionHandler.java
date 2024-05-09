@@ -23,6 +23,20 @@ import java.util.NoSuchElementException;
 public class MainExceptionHandler extends ResponseEntityExceptionHandler {
     private boolean debug = true;
 
+    @ExceptionHandler(value = { RuntimeException.class})
+    protected ResponseEntity<Object> handleRuntimeException(
+            RuntimeException ex, WebRequest request) {
+        StringBuilder bodyOfResponse = new StringBuilder(ex.getMessage());
+        if (debug) {
+            for (StackTraceElement line : ex.getStackTrace()) {
+                bodyOfResponse.append("\n");
+                bodyOfResponse.append(line.toString());
+            }
+        }
+        return handleExceptionInternal(ex, bodyOfResponse,
+                new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+    }
+
     @ExceptionHandler(value
             = { TableNotFoundException.class })
     protected ResponseEntity<Object> handleTableNotFound(

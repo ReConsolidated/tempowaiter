@@ -13,13 +13,16 @@ import java.util.Map;
 public class FileService {
 
     private final OkHttpClient client = new OkHttpClient();
-    private final String storageZoneName = "tempowaiter";
+    private final String storageZoneName = "mamzadanie";
     private final String cdnUrl = "https://tempowaiter.b-cdn.net/";
     private final String apiKey = "5424a220-8da0-44be-8b72f2bcd470-f5b5-467e";
     private final String baseUrl = "https://storage.bunnycdn.com/" + storageZoneName + "/";
 
     public List<String> saveFiles(String path, Map<String,String> base64FileContents) {
         List<String> fileUrls = new ArrayList<>();
+        if (base64FileContents == null) {
+            return fileUrls;
+        }
 
         for (Map.Entry<String, String> entry : base64FileContents.entrySet()) {
             String base64Content = entry.getValue();

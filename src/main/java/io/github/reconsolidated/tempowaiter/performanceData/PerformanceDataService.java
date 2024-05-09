@@ -29,7 +29,7 @@ public class PerformanceDataService {
         if (companyId != null) {
             data = data.stream()
                     .filter(tablePerformanceData -> tablePerformanceData.getCompanyId().equals(companyId))
-                    .collect(Collectors.toList());
+                    .toList();
         }
 
         Map<Long, List<TablePerformanceData>> result = data.stream()

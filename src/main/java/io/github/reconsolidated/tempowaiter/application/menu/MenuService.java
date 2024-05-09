@@ -77,4 +77,13 @@ public class MenuService {
         existingItem.setUpsellingActive(item.isUpsellingActive());
         return MenuItemDto.fromEntity(menuItemRepository.save(existingItem));
     }
+
+    public void deleteMenuItem(AppUser currentUser, Long id) {
+        MenuItem item = menuItemRepository.findById(id).orElseThrow(() ->
+                new NoSuchElementException("No menu item found with id " + id));
+        if (!Objects.equals(item.getCompany().getId(), currentUser.getCompanyId())) {
+            throw new IllegalArgumentException("Company id must match current user's company id.");
+        }
+        menuItemRepository.delete(item);
+    }
 }

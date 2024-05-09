@@ -26,6 +26,7 @@ public class MenuItemDto {
     private String description;
     private String imageUrl;
     private boolean upsellingActive;
+    @NotNull
     private Map<String, String> imagesToSave;
 
     public static MenuItemDto fromEntity(MenuItem menuItem) {
