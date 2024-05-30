@@ -21,7 +21,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.Collections;
 import java.util.List;
 
-@Profile("!test")
 @Configuration
 @EnableWebMvc
 @AllArgsConstructor

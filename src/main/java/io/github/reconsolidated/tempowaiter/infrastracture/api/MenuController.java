@@ -34,6 +34,9 @@ public class MenuController {
     public MenuItemDto updateMenuItem(@CurrentUser AppUser currentUser,
                                             @PathVariable Long id,
                                             @RequestBody MenuItemDto item) {
+        if (!id.equals(item.getId())) {
+            throw new IllegalArgumentException("Id in path and in body must be the same");
+        }
         return menuService.updateMenuItem(currentUser, item);
     }
 

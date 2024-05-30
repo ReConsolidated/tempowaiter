@@ -2,6 +2,8 @@ server:
   address: 0.0.0.0
 
 spring:
+  profiles:
+    active: test
   datasource:
     password: sa
     driver-class-name: org.h2.Driver
@@ -15,5 +17,7 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
         format_sql: false
     show-sql: false
+  main:
+    allow-bean-definition-overriding: true
 
 JWT_SECRET_KEY: "secret"

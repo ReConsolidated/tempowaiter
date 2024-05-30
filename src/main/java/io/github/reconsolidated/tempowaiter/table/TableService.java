@@ -165,6 +165,12 @@ public class TableService {
         return tableInfo;
     }
 
+    public TableInfo getTableInfo(TableSession tableSession) {
+        return tableInfoRepository.findById(tableSession.getTableId()).orElseThrow(() ->
+                new TableNotFoundException(tableSession.getTableId())
+        );
+    }
+
     public TableInfo removeCardId(Long companyId, Long tableId, Long cardId) {
         TableInfo tableInfo = tableInfoRepository.findById(tableId).orElseThrow(() -> new TableNotFoundException(tableId));
         if (!tableInfo.getCompanyId().equals(companyId)) {
@@ -184,6 +190,11 @@ public class TableService {
 
     public Optional<TableSession> getSession(String sessionId) {
         return sessionRepository.findBySessionIdAndExpirationDateGreaterThanAndIsOverwrittenFalse(sessionId, LocalDateTime.now());
+    }
+
+    public TableSession getSessionOrThrow(String sessionId) {
+        return sessionRepository.findBySessionIdAndExpirationDateGreaterThanAndIsOverwrittenFalse(sessionId, LocalDateTime.now())
+                .orElseThrow(SessionExpiredException::new);
     }
 
     public boolean cancelCall(String sessionId, Long cardId, String callType) {

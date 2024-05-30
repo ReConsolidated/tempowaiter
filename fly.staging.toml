@@ -5,8 +5,8 @@ primary_region = "waw"
 
 [env]
 SPRING_DATASOURCE_PASSWORD = "compose-postgres"
-SPRING_DATASOURCE_URL = "jdbc:postgresql://146.59.93.121:5432/compose-postgres?sslmode=disable"
-SPRING_DATASOURCE_USERNAME = "compose-postgres"
+SPRING_DATASOURCE_URL = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:5432/staging"
+SPRING_DATASOURCE_USERNAME = "postgres.ruexpbcygjdotksrkzbn"
 swap_size_mb = "512"
 
 [http_service]

@@ -1,6 +1,7 @@
 package io.github.reconsolidated.tempowaiter.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.reconsolidated.tempowaiter.TestConfig;
 import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUserDto;
 import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUserService;
 import io.github.reconsolidated.tempowaiter.company.Company;
@@ -15,9 +16,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -26,9 +26,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Disabled
+@Import(TestConfig.class)
 public class MenuControllerTest {
-    @MockBean
-    private JavaMailSender javaMailSender;
     @Autowired
     private MockMvc mockMvc;
     @Autowired

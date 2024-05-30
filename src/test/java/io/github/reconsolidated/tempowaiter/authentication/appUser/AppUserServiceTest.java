@@ -1,18 +1,17 @@
 package io.github.reconsolidated.tempowaiter.authentication.appUser;
 
+import io.github.reconsolidated.tempowaiter.TestConfig;
 import io.github.reconsolidated.tempowaiter.waitingCompanyAssignment.WaitingCompanyAssignmentRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.context.annotation.Import;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Import(TestConfig.class)
 class AppUserServiceTest {
-    @MockBean
-    private JavaMailSender javaMailSender;
     @Autowired
     private AppUserService appUserService;
     @Autowired

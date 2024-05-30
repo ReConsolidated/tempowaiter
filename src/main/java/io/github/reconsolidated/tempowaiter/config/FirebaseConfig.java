@@ -7,11 +7,13 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import java.io.InputStream;
 
 @Configuration
 @AllArgsConstructor
+@Profile("!test")
 public class FirebaseConfig {
     @Bean
     FirebaseMessaging firebaseMessaging(FirebaseApp firebaseApp) {
