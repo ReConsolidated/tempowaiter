@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByTableInfoAndFulfilledAtIsNull(TableInfo tableInfo);
+
+    List<Order> findByTableInfoCompanyId(Long companyId);
 }

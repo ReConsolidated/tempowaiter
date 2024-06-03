@@ -1,4 +1,4 @@
-package io.github.reconsolidated.tempowaiter.infrastracture.api;
+package io.github.reconsolidated.tempowaiter.infrastracture.api.orders;
 
 import io.github.reconsolidated.tempowaiter.order.OrderDto;
 import io.github.reconsolidated.tempowaiter.order.OrderMapper;

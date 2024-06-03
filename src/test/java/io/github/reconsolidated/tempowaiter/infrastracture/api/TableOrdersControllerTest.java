@@ -8,6 +8,7 @@ import io.github.reconsolidated.tempowaiter.card.Card;
 import io.github.reconsolidated.tempowaiter.card.CardService;
 import io.github.reconsolidated.tempowaiter.company.Company;
 import io.github.reconsolidated.tempowaiter.company.CompanyService;
+import io.github.reconsolidated.tempowaiter.infrastracture.api.orders.TableOrdersController;
 import io.github.reconsolidated.tempowaiter.order.OrderDto;
 import io.github.reconsolidated.tempowaiter.order.orderEntry.OrderEntryDto;
 import io.github.reconsolidated.tempowaiter.table.TableInfo;

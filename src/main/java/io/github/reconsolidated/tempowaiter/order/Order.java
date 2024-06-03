@@ -23,6 +23,8 @@ public class Order {
     @OneToMany(mappedBy = "order")
     @Cascade(CascadeType.ALL)
     private List<OrderEntry> orderEntries;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
     private LocalDateTime orderedAt;
     private LocalDateTime acknowledgedAt;
     private LocalDateTime fulfilledAt;
