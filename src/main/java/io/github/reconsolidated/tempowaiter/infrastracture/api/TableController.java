@@ -11,7 +11,6 @@ import io.github.reconsolidated.tempowaiter.domain.table.TableSession;
 import io.github.reconsolidated.tempowaiter.domain.table.TableSessionDto;
 import io.github.reconsolidated.tempowaiter.infrastracture.ntagDecryption.NtagDecryptionService;
 import io.github.reconsolidated.tempowaiter.infrastracture.ntagDecryption.NtagInfo;
-import io.github.reconsolidated.tempowaiter.table.*;
 import io.github.reconsolidated.tempowaiter.domain.waiter.WaiterRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
