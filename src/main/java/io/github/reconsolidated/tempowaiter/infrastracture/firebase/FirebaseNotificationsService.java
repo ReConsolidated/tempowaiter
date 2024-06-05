@@ -1,7 +1,7 @@
 package io.github.reconsolidated.tempowaiter.infrastracture.firebase;
 
 import com.google.firebase.messaging.*;
-import io.github.reconsolidated.tempowaiter.waiter.WaiterRequest;
+import io.github.reconsolidated.tempowaiter.domain.waiter.WaiterRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

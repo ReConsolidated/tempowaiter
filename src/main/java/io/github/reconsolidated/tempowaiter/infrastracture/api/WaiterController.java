@@ -1,16 +1,12 @@
 package io.github.reconsolidated.tempowaiter.infrastracture.api;
 
-import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUser;
-import io.github.reconsolidated.tempowaiter.authentication.currentUser.CurrentUser;
-import io.github.reconsolidated.tempowaiter.company.CompanyService;
-import io.github.reconsolidated.tempowaiter.waiter.RequestState;
-import io.github.reconsolidated.tempowaiter.waiter.WaiterRequest;
-import io.github.reconsolidated.tempowaiter.waiter.WaiterService;
+import io.github.reconsolidated.tempowaiter.domain.authentication.appUser.AppUser;
+import io.github.reconsolidated.tempowaiter.domain.authentication.currentUser.CurrentUser;
+import io.github.reconsolidated.tempowaiter.domain.waiter.RequestState;
+import io.github.reconsolidated.tempowaiter.domain.waiter.WaiterRequest;
+import io.github.reconsolidated.tempowaiter.application.waiter.WaiterService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

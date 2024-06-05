@@ -1,6 +1,6 @@
 package io.github.reconsolidated.tempowaiter.domain.menu;
 
-import io.github.reconsolidated.tempowaiter.company.Company;
+import io.github.reconsolidated.tempowaiter.domain.company.Company;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,13 +1,10 @@
 package io.github.reconsolidated.tempowaiter.infrastracture.api.orders;
 
-import io.github.reconsolidated.tempowaiter.order.OrderDto;
-import io.github.reconsolidated.tempowaiter.order.OrderMapper;
-import io.github.reconsolidated.tempowaiter.order.OrderService;
-import io.github.reconsolidated.tempowaiter.order.orderEntry.OrderEntry;
-import io.github.reconsolidated.tempowaiter.order.orderEntry.OrderEntryDto;
-import io.github.reconsolidated.tempowaiter.table.TableInfo;
-import io.github.reconsolidated.tempowaiter.table.TableService;
-import io.github.reconsolidated.tempowaiter.table.TableSession;
+import io.github.reconsolidated.tempowaiter.domain.order.OrderDto;
+import io.github.reconsolidated.tempowaiter.domain.order.OrderMapper;
+import io.github.reconsolidated.tempowaiter.application.order.OrderService;
+import io.github.reconsolidated.tempowaiter.domain.order.orderEntry.OrderEntry;
+import io.github.reconsolidated.tempowaiter.domain.order.orderEntry.OrderEntryDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,7 +1,8 @@
 package io.github.reconsolidated.tempowaiter.authentication.appUser;
 
 import io.github.reconsolidated.tempowaiter.TestConfig;
-import io.github.reconsolidated.tempowaiter.waitingCompanyAssignment.WaitingCompanyAssignmentRepository;
+import io.github.reconsolidated.tempowaiter.domain.authentication.appUser.AppUserService;
+import io.github.reconsolidated.tempowaiter.domain.waitingCompanyAssignment.WaitingCompanyAssignmentRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

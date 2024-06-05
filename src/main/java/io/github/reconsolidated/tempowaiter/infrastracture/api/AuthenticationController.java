@@ -1,12 +1,12 @@
 package io.github.reconsolidated.tempowaiter.infrastracture.api;
 
-import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUser;
-import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUserDto;
-import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUserService;
-import io.github.reconsolidated.tempowaiter.authentication.currentUser.CurrentUser;
+import io.github.reconsolidated.tempowaiter.domain.authentication.appUser.AppUser;
+import io.github.reconsolidated.tempowaiter.domain.authentication.appUser.AppUserDto;
+import io.github.reconsolidated.tempowaiter.domain.authentication.appUser.AppUserService;
+import io.github.reconsolidated.tempowaiter.domain.authentication.currentUser.CurrentUser;
 import io.github.reconsolidated.tempowaiter.domain.UserCredentials;
 import io.github.reconsolidated.tempowaiter.infrastracture.security.JwtService;
-import io.github.reconsolidated.tempowaiter.utils.DummyDto;
+import io.github.reconsolidated.tempowaiter.domain.DummyDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

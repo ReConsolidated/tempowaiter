@@ -1,7 +1,6 @@
 package io.github.reconsolidated.tempowaiter.domain.menu;
 
-import io.github.reconsolidated.tempowaiter.company.Company;
-import jakarta.persistence.Column;
+import io.github.reconsolidated.tempowaiter.domain.company.Company;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

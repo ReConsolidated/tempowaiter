@@ -1,11 +1,14 @@
 package io.github.reconsolidated.tempowaiter.order;
 
 import io.github.reconsolidated.tempowaiter.TestConfig;
-import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUser;
-import io.github.reconsolidated.tempowaiter.order.orderEntry.OrderEntry;
-import io.github.reconsolidated.tempowaiter.table.TableInfo;
-import io.github.reconsolidated.tempowaiter.table.TableService;
-import io.github.reconsolidated.tempowaiter.table.TableSession;
+import io.github.reconsolidated.tempowaiter.domain.authentication.appUser.AppUser;
+import io.github.reconsolidated.tempowaiter.domain.order.Order;
+import io.github.reconsolidated.tempowaiter.domain.order.OrderRepository;
+import io.github.reconsolidated.tempowaiter.application.order.OrderService;
+import io.github.reconsolidated.tempowaiter.domain.order.orderEntry.OrderEntry;
+import io.github.reconsolidated.tempowaiter.domain.table.TableInfo;
+import io.github.reconsolidated.tempowaiter.application.table.TableService;
+import io.github.reconsolidated.tempowaiter.domain.table.TableSession;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

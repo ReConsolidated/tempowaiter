@@ -1,11 +1,10 @@
 package io.github.reconsolidated.tempowaiter.infrastracture.security;
 
-import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUserService;
-import io.github.reconsolidated.tempowaiter.authentication.currentUser.CurrentUserArgumentResolver;
+import io.github.reconsolidated.tempowaiter.domain.authentication.appUser.AppUserService;
+import io.github.reconsolidated.tempowaiter.domain.authentication.currentUser.CurrentUserArgumentResolver;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;

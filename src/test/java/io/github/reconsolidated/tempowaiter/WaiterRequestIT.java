@@ -1,16 +1,16 @@
 package io.github.reconsolidated.tempowaiter;
 
-import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUser;
-import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUserService;
-import io.github.reconsolidated.tempowaiter.card.Card;
-import io.github.reconsolidated.tempowaiter.card.CardService;
-import io.github.reconsolidated.tempowaiter.company.Company;
-import io.github.reconsolidated.tempowaiter.company.CompanyService;
-import io.github.reconsolidated.tempowaiter.table.TableInfo;
-import io.github.reconsolidated.tempowaiter.table.TableService;
-import io.github.reconsolidated.tempowaiter.waiter.RequestState;
-import io.github.reconsolidated.tempowaiter.waiter.WaiterRequest;
-import io.github.reconsolidated.tempowaiter.waiter.WaiterService;
+import io.github.reconsolidated.tempowaiter.domain.authentication.appUser.AppUser;
+import io.github.reconsolidated.tempowaiter.domain.authentication.appUser.AppUserService;
+import io.github.reconsolidated.tempowaiter.domain.card.Card;
+import io.github.reconsolidated.tempowaiter.application.card.CardService;
+import io.github.reconsolidated.tempowaiter.domain.company.Company;
+import io.github.reconsolidated.tempowaiter.application.company.CompanyService;
+import io.github.reconsolidated.tempowaiter.domain.table.TableInfo;
+import io.github.reconsolidated.tempowaiter.application.table.TableService;
+import io.github.reconsolidated.tempowaiter.domain.waiter.RequestState;
+import io.github.reconsolidated.tempowaiter.domain.waiter.WaiterRequest;
+import io.github.reconsolidated.tempowaiter.application.waiter.WaiterService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

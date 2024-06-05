@@ -1,9 +1,9 @@
 package io.github.reconsolidated.tempowaiter;
 
-import io.github.reconsolidated.tempowaiter.card.Card;
-import io.github.reconsolidated.tempowaiter.card.CardRepository;
-import io.github.reconsolidated.tempowaiter.card.CardService;
-import io.github.reconsolidated.tempowaiter.company.CompanyService;
+import io.github.reconsolidated.tempowaiter.domain.card.Card;
+import io.github.reconsolidated.tempowaiter.domain.card.CardRepository;
+import io.github.reconsolidated.tempowaiter.application.card.CardService;
+import io.github.reconsolidated.tempowaiter.application.company.CompanyService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

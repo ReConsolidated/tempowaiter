@@ -1,15 +1,14 @@
 package io.github.reconsolidated.tempowaiter.application.menu;
 
-import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUser;
-import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUserRole;
-import io.github.reconsolidated.tempowaiter.company.Company;
-import io.github.reconsolidated.tempowaiter.company.CompanyService;
+import io.github.reconsolidated.tempowaiter.domain.authentication.appUser.AppUser;
+import io.github.reconsolidated.tempowaiter.domain.authentication.appUser.AppUserRole;
+import io.github.reconsolidated.tempowaiter.domain.company.Company;
+import io.github.reconsolidated.tempowaiter.application.company.CompanyService;
 import io.github.reconsolidated.tempowaiter.domain.menu.MenuItem;
 import io.github.reconsolidated.tempowaiter.domain.menu.MenuItemDto;
 import io.github.reconsolidated.tempowaiter.domain.menu.MenuItemRepository;
 import io.github.reconsolidated.tempowaiter.infrastracture.fileStorage.FileService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -1,11 +1,11 @@
 package io.github.reconsolidated.tempowaiter.infrastracture.api.orders;
 
-import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUser;
-import io.github.reconsolidated.tempowaiter.authentication.currentUser.CurrentUser;
-import io.github.reconsolidated.tempowaiter.order.OrderDto;
-import io.github.reconsolidated.tempowaiter.order.OrderMapper;
-import io.github.reconsolidated.tempowaiter.order.OrderService;
-import io.github.reconsolidated.tempowaiter.order.OrderStatus;
+import io.github.reconsolidated.tempowaiter.domain.authentication.appUser.AppUser;
+import io.github.reconsolidated.tempowaiter.domain.authentication.currentUser.CurrentUser;
+import io.github.reconsolidated.tempowaiter.domain.order.OrderDto;
+import io.github.reconsolidated.tempowaiter.domain.order.OrderMapper;
+import io.github.reconsolidated.tempowaiter.application.order.OrderService;
+import io.github.reconsolidated.tempowaiter.domain.order.OrderStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

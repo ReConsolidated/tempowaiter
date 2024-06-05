@@ -2,10 +2,10 @@ package io.github.reconsolidated.tempowaiter.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.reconsolidated.tempowaiter.TestConfig;
-import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUserDto;
-import io.github.reconsolidated.tempowaiter.authentication.appUser.AppUserService;
-import io.github.reconsolidated.tempowaiter.company.Company;
-import io.github.reconsolidated.tempowaiter.company.CompanyService;
+import io.github.reconsolidated.tempowaiter.domain.authentication.appUser.AppUserDto;
+import io.github.reconsolidated.tempowaiter.domain.authentication.appUser.AppUserService;
+import io.github.reconsolidated.tempowaiter.domain.company.Company;
+import io.github.reconsolidated.tempowaiter.application.company.CompanyService;
 import io.github.reconsolidated.tempowaiter.domain.menu.MenuItemDto;
 import io.github.reconsolidated.tempowaiter.infrastracture.api.MenuController;
 import io.github.reconsolidated.tempowaiter.infrastracture.security.JwtAuthenticationToken;
