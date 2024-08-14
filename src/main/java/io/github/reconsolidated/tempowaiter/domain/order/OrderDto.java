@@ -12,6 +12,7 @@ import java.util.List;
 public class OrderDto {
     private Long id;
     private Long tableId;
+    private String tableName;
     private List<OrderEntryDto> orderEntries;
     private OrderStatus orderStatus;
     private LocalDateTime orderedAt;

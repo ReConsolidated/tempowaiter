@@ -10,6 +10,11 @@ public class OrderMapper {
     public OrderDto toDto(Order order) {
         OrderDto orderDto = new OrderDto();
         orderDto.setId(order.getId());
+        orderDto.setTableId(order.getTableInfo().getTableId());
+        orderDto.setTableName(order.getTableInfo().getTableDisplayName());
+        orderDto.setOrderStatus(order.getOrderStatus());
+        orderDto.setAcknowledgedAt(order.getAcknowledgedAt());
+        orderDto.setFulfilledAt(order.getFulfilledAt());
         orderDto.setOrderedAt(order.getOrderedAt());
         orderDto.setOrderEntries(
                 order.getOrderEntries().stream().map(this::toDto).toList()

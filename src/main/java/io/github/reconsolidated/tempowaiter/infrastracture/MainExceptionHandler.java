@@ -22,6 +22,10 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = { RuntimeException.class})
     protected ResponseEntity<Object> handleRuntimeException(
             RuntimeException ex, WebRequest request) {
+        if (ex.getMessage() == null) {
+            return handleExceptionInternal(ex, "Internal server error",
+                    new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+        }
         StringBuilder bodyOfResponse = new StringBuilder(ex.getMessage());
         if (debug) {
             for (StackTraceElement line : ex.getStackTrace()) {

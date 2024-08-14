@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import(TestConfig.class)
-public class TableOrdersControllerIT {
+public class TableOrdersControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired

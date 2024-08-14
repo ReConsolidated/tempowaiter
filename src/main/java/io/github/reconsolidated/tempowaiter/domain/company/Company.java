@@ -36,4 +36,12 @@ public class Company {
     @Column(length = 1000)
     private String tripadvisorLink;
     private LocalDateTime lastViewedRequests;
+    private Boolean isOrderingActivated = false;
+
+    public Boolean getIsOrderingActivated() {
+        if (isOrderingActivated == null) {
+            return false;
+        }
+        return isOrderingActivated;
+    }
 }

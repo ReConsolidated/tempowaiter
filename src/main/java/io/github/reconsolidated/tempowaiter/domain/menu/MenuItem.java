@@ -17,8 +17,8 @@ public class MenuItem {
     @ManyToOne
     private Company company;
     private String name;
-    private Long price;
-    private Long lowestHistoricalPrice;
+    private Double price;
+    private Double lowestHistoricalPrice;
     @Column(length = 1000)
     private String description;
     private String imageUrl;

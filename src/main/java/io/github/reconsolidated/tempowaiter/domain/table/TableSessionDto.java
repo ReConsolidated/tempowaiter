@@ -26,6 +26,7 @@ public class TableSessionDto {
     private String tiktokLink;
     private String googleReviewLink;
     private String tripadvisorLink;
+    private boolean isOrderingActivated;
 
     public TableSessionDto(TableSession tableSession) {
         this.tableId = tableSession.getTableId();
@@ -45,5 +46,6 @@ public class TableSessionDto {
         this.tiktokLink = tableSession.getCompany().getTiktokLink();
         this.googleReviewLink = tableSession.getCompany().getGoogleReviewLink();
         this.tripadvisorLink = tableSession.getCompany().getTripadvisorLink();
+        this.isOrderingActivated = tableSession.getCompany().getIsOrderingActivated();
     }
 }

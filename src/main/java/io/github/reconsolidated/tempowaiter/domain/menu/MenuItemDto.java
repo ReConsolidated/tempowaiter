@@ -20,8 +20,8 @@ public class MenuItemDto {
     private String name;
     @NotNull
     private Long companyId;
-    private Long price;
-    private Long lowestHistoricalPrice;
+    private Double price;
+    private Double lowestHistoricalPrice;
     private String description;
     private String imageUrl;
     private boolean upsellingActive;
