@@ -2,7 +2,7 @@ spring:
   security:
     user:
       name: "user"
-      password: "3fc5786d-7ca8-4c3e-a9f8-f61c22bd5c0b"
+      password: ${SPRING_SECURITY_USER_PASSWORD}
       roles: "USER"
   datasource:
     password: docker
